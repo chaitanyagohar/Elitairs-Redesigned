@@ -1,33 +1,38 @@
-// src/validations/project.schema.ts
 import { z } from "zod";
 
-export const galleryItemSchema = z.object({
-  url: z.string().url(),
-  public_id: z.string().optional().nullable(),
-  alt: z.string().optional().nullable(),
+export const projectSchema = z.object({
+  // Required fields
+  title: z.string().min(1, "Title is required"),
+  slug: z.string().min(1, "Slug is required"), // ✅ Added this to fix your error
+
+  // Optional fields (Matching your Prisma Schema)
+  propertyType: z.string().optional(),
+  builder: z.string().optional(),
+  city: z.string().optional(),
+  status: z.string().optional(),
+  location: z.string().optional(),
+  rera: z.string().optional(),
+  
+  // Description
+  overview: z.string().optional(), // Note: Use 'overview', not 'summary'
+  videoUrl: z.string().optional(),
+  googleMapUrl: z.string().optional(),
+
+  // Arrays
+  amenities: z.array(z.string()).default([]),
+  connectivity: z.array(z.string()).default([]),
+  nearbyAmenities: z.array(z.string()).default([]),
+
+  // Media
+  coverImage: z.string().optional(),
+  brochure: z.string().optional(),
+
+  // Details
+  price: z.string().optional(),
+  launchDate: z.string().optional(),
+  totalUnits: z.string().optional(),
+  area: z.string().optional(),
 });
 
-export const createProjectSchema = z.object({
-  title: z.string().min(1),
-  summary: z.string().optional().nullable(),
-  location: z.string().optional().nullable(),
-  price: z.string().optional().nullable(),
-  propertyType: z.string().optional().nullable(),
-  coverImageUrl: z.string().url().optional().nullable(),
-  gallery: z.array(galleryItemSchema).optional().nullable(),
-  developerId: z.string().optional().nullable(),
-  city: z.string().optional().nullable(),
-  rera: z.string().optional().nullable(),
-  overview: z.string().optional().nullable(),
-  flags: z.object({ featured: z.boolean().optional(), popular: z.boolean().optional() }).optional().nullable(),
-});
-
-export const updateProjectSchema = createProjectSchema.extend({
-  id: z.string().min(1),
-  // gallery in update uses same structure
-});
-
-export const deleteProjectSchema = z.object({
-  id: z.string().min(1),
-  removeCloudinary: z.boolean().optional().default(false),
-});
+// Export the type so other files can use it
+export type CreateProjectInput = z.infer<typeof projectSchema>;

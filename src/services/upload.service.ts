@@ -1,5 +1,5 @@
 // src/services/upload.service.ts
-import { cloud } from "@/lib/cloudinary";
+import cloud from "@/lib/cloudinary";
 
 export async function uploadImageBase64(base64: string, folder = "elitairs") {
   const result = await cloud.uploader.upload(base64, { folder, resource_type: "image" });

@@ -79,7 +79,7 @@ export default async function ViewProjectPage({ params }: PageProps) {
             </div>
             <div className="bg-white p-4 rounded border shadow-sm">
               <span className="block text-xs text-gray-500 uppercase font-semibold">Developer</span>
-              <span className="text-lg font-medium truncate">{project.developerId || "N/A"}</span>
+              <span className="text-lg font-medium truncate">{project.builder || "N/A"}</span>
             </div>
           </div>
           

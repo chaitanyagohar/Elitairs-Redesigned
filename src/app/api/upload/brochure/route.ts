@@ -1,5 +1,6 @@
-import cloudinary from "@/lib/cloudinary";
 import { NextResponse } from "next/server";
+import cloudinary from "@/lib/cloudinary";
+import { UploadApiResponse } from "cloudinary";
 
 export async function POST(req: Request) {
   try {
@@ -13,27 +14,29 @@ export async function POST(req: Request) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const uploadRes = await cloudinary.uploader.upload_stream(
-      { folder: "elitairs" },
-      (error: any, result: any) => {
-        if (error) throw error;
-      }
-    );
-
-    // workaround for stream upload in Next.js
-    await new Promise((resolve, reject) => {
+    // ✅ FIX: Capture the result from the Promise
+    const result = await new Promise<UploadApiResponse>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: "elitairs" },
         (error, result) => {
-          if (error) return reject(error);
-          resolve(result);
+          if (error) {
+            reject(error);
+          } else if (result) {
+            resolve(result);
+          } else {
+            reject(new Error("Upload failed with no result"));
+          }
         }
       );
+      
+      // End the stream with the file buffer to start upload
       stream.end(buffer);
     });
 
-    return NextResponse.json({ success: true, url: uploadRes.secure_url });
-  } catch (err) {
+    // ✅ Now 'result' is the actual data (UploadApiResponse), so secure_url exists
+    return NextResponse.json({ success: true, url: result.secure_url });
+
+  } catch (err: any) {
     console.error("Upload error:", err);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }

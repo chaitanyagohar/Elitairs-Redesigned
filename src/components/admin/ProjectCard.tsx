@@ -21,7 +21,7 @@ export default function ProjectCard({ project }: any) {
       <h3 className="text-lg font-bold">{project.title}</h3>
       <p className="text-sm text-gray-300">{project.summary}</p>
       <div className="mt-3 flex gap-2">
-        <AdminProjectForm project={project} />
+        <AdminProjectForm initialData={project} />
         <button onClick={doDelete} disabled={deleting} className="px-3 py-1 border rounded text-red-400">
           {deleting ? "Deleting…" : "Delete"}
         </button>

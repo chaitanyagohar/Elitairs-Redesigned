@@ -45,7 +45,7 @@ export default function AnimatedStats() {
       ].map((s, i) => (
         <div key={i} className="p-4">
           <h3 className="text-4xl md:text-5xl font-extrabold text-[#ffc40c] mb-2 font-serif">
-            <CountUp end={s.val} prefix={s.prefix} suffix={s.suffix} />
+            <CountUp end={s.val} suffix={s.suffix} />
           </h3>
           <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">{s.label}</p>
         </div>

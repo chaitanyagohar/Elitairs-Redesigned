@@ -1,39 +1,81 @@
-// src/app/api/projects/route.ts
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/auth"; // we exported prisma in lib/auth earlier
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
+// 1. Define schema that MATCHES your Prisma Schema
 const createSchema = z.object({
-  title: z.string().min(2),
-  slug: z.string().min(2),
-  summary: z.string().optional(),
-  overview: z.string().optional(),
-  price: z.string().optional(),
-  priceTable: z.any().optional(),
-  features: z.string().optional(),
-  amenities: z.string().optional(),
-  address: z.string().optional(),
+  title: z.string().min(1, "Title is required"), // REQUIRED
+  slug: z.string().min(1, "Slug is required"),   // REQUIRED
+  
+  // Optional fields (must match schema.prisma names)
+  propertyType: z.string().optional(),
+  builder: z.string().optional(),
+  city: z.string().optional(),
+  status: z.string().optional(),
   location: z.string().optional(),
+  rera: z.string().optional(),
+  overview: z.string().optional(),
+  videoUrl: z.string().optional(),
+  googleMapUrl: z.string().optional(),
+  
+  // Arrays (ensure these are arrays of strings)
+  amenities: z.array(z.string()).optional(), 
+  connectivity: z.array(z.string()).optional(),
+  nearbyAmenities: z.array(z.string()).optional(),
+  
+  // Media
+  coverImage: z.string().optional(),
   brochure: z.string().optional(),
+  
+  // Details
+  price: z.string().optional(),
+  launchDate: z.string().optional(),
+  totalUnits: z.string().optional(),
+  area: z.string().optional(),
 });
 
-export async function GET() {
-  const projects = await prisma.project.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { gallery: true, floorplans: true },
-  });
-  return NextResponse.json({ projects });
-}
-
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json();
+    const body = await request.json();
+    
+    // 2. Validate the data
     const data = createSchema.parse(body);
+
+    // 3. Create project only with valid fields
     const project = await prisma.project.create({
-      data: data,
+      data: {
+        title: data.title,
+        slug: data.slug,
+        propertyType: data.propertyType,
+        builder: data.builder,
+        city: data.city,
+        status: data.status,
+        location: data.location,
+        rera: data.rera,
+        overview: data.overview,
+        videoUrl: data.videoUrl,
+        googleMapUrl: data.googleMapUrl,
+        
+        // Handle arrays (Prisma needs explicit arrays)
+        amenities: data.amenities || [],
+        connectivity: data.connectivity || [],
+        nearbyAmenities: data.nearbyAmenities || [],
+        
+        coverImage: data.coverImage,
+        brochure: data.brochure,
+        price: data.price,
+        launchDate: data.launchDate,
+        totalUnits: data.totalUnits,
+        area: data.area,
+      },
     });
+
     return NextResponse.json({ ok: true, project }, { status: 201 });
   } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Invalid data" }, { status: 400 });
+    console.error("Error creating project:", err);
+    return NextResponse.json(
+      { ok: false, error: err.message || "Failed to create project" },
+      { status: 500 }
+    );
   }
 }
