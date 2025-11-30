@@ -12,7 +12,9 @@ function makeSlug(title: string) {
 }
 
 export async function POST(req: Request) {
+  console.log("🟢 1. API Route Started");
   try {
+    console.log("🟢 2. Parsing Body");
     const body = await req.json();
     
     // Validate required fields
