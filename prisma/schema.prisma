@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  
+  // Basic Info
+  propertyType    String? 
+  builder         String?
+  city            String?
+  status          String?  @default("New Launch")
+  location        String?
+  rera            String?
+  
+  // Description & Specs
+  overview        String?
+  videoUrl        String?
+  googleMapUrl    String?  // <--- This was likely missing
+  
+  // Arrays
+  amenities       String[] @default([])
+  connectivity    String[] @default([]) // <--- This was likely missing
+  nearbyAmenities String[] @default([]) // <--- This was likely missing
+  projectAmenities Amenity[]
+
+  // Media
+  coverImage      String?
+  brochure        String?
+  
+  // Details
+  price           String?
+  launchDate      String?
+  totalUnits      String?
+  area            String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  gallery         GalleryImage[]
+  floorplans      FloorPlan[]
+}
+
+model GalleryImage {
+  id        String   @id @default(uuid())
+  url       String
+  alt       String?
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Amenity {
+  id        String   @id @default(uuid())
+  name      String
+  icon      String   // URL for the image
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model FloorPlan {
+  id        String   @id @default(uuid())
+  url       String
+  alt       String?
+  type      String   @default("unit") // <--- Add this field ("master" or "unit")
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  message   String?
+  source    String?  @default("Website")
+  createdAt DateTime @default(now())
+}

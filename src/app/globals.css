@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+  background: #0A0A0A;
+}
+
+/* Golden Line Reveal Animation */
+@keyframes goldLine {
+  0% { transform: scaleX(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+.line-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.line-reveal::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #B48C2C, #F9E8A6, #B48C2C);
+  transform-origin: left;
+  animation: goldLine 1.4s ease-out forwards;
+}
+
+/* Hero reveal fade */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
