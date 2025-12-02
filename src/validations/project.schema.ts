@@ -3,20 +3,24 @@ import { z } from "zod";
 export const projectSchema = z.object({
   // Required fields
   title: z.string().min(1, "Title is required"),
-  slug: z.string().min(1, "Slug is required"), // ✅ Added this to fix your error
+  slug: z.string().min(1, "Slug is required"),
 
-  // Optional fields (Matching your Prisma Schema)
+  // Optional fields
   propertyType: z.string().optional(),
   builder: z.string().optional(),
-  city: z.string().optional(),
-  status: z.string().optional(),
-  location: z.string().optional(),
-  rera: z.string().optional(),
   
-  // Description
-  overview: z.string().optional(), // Note: Use 'overview', not 'summary'
+  // ✅ Location Logic
+  city: z.string().optional(),     // Dropdown (Noida, Gurugram...)
+  location: z.string().optional(), // Text (Sector 32...)
+  
+  status: z.string().optional(),
+  rera: z.string().optional(),
+  overview: z.string().optional(),
   videoUrl: z.string().optional(),
   googleMapUrl: z.string().optional(),
+
+  // ✅ NEW: Configurations (BHKs)
+  configurations: z.array(z.string()).default([]), 
 
   // Arrays
   amenities: z.array(z.string()).default([]),
@@ -34,5 +38,4 @@ export const projectSchema = z.object({
   area: z.string().optional(),
 });
 
-// Export the type so other files can use it
 export type CreateProjectInput = z.infer<typeof projectSchema>;

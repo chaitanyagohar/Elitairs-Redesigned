@@ -2,32 +2,25 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
-// 1. Define schema that MATCHES your Prisma Schema
+// Schema definition (Copy from validation file or keep inline)
 const createSchema = z.object({
-  title: z.string().min(1, "Title is required"), // REQUIRED
-  slug: z.string().min(1, "Slug is required"),   // REQUIRED
-  
-  // Optional fields (must match schema.prisma names)
+  title: z.string().min(1),
+  slug: z.string().min(1),
   propertyType: z.string().optional(),
   builder: z.string().optional(),
   city: z.string().optional(),
-  status: z.string().optional(),
   location: z.string().optional(),
+  status: z.string().optional(),
   rera: z.string().optional(),
   overview: z.string().optional(),
   videoUrl: z.string().optional(),
   googleMapUrl: z.string().optional(),
-  
-  // Arrays (ensure these are arrays of strings)
-  amenities: z.array(z.string()).optional(), 
+  configurations: z.array(z.string()).optional(), // ✅ NEW
+  amenities: z.array(z.string()).optional(),
   connectivity: z.array(z.string()).optional(),
   nearbyAmenities: z.array(z.string()).optional(),
-  
-  // Media
   coverImage: z.string().optional(),
   brochure: z.string().optional(),
-  
-  // Details
   price: z.string().optional(),
   launchDate: z.string().optional(),
   totalUnits: z.string().optional(),
@@ -37,11 +30,8 @@ const createSchema = z.object({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
-    // 2. Validate the data
     const data = createSchema.parse(body);
 
-    // 3. Create project only with valid fields
     const project = await prisma.project.create({
       data: {
         title: data.title,
@@ -49,14 +39,16 @@ export async function POST(request: Request) {
         propertyType: data.propertyType,
         builder: data.builder,
         city: data.city,
-        status: data.status,
         location: data.location,
+        status: data.status,
         rera: data.rera,
         overview: data.overview,
         videoUrl: data.videoUrl,
         googleMapUrl: data.googleMapUrl,
         
-        // Handle arrays (Prisma needs explicit arrays)
+        // ✅ NEW: Save BHK configurations
+        configurations: data.configurations || [],
+
         amenities: data.amenities || [],
         connectivity: data.connectivity || [],
         nearbyAmenities: data.nearbyAmenities || [],

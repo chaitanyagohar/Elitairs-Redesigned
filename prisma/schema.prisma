@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // Uses Port 6543 (Fast for App)
+  directUrl = env("DIRECT_URL")   // ✅ Uses Port 5432 (Required for db push)
 }
 
 model Admin {
@@ -15,32 +16,48 @@ model Admin {
 }
 
 model Project {
-  id               String         @id @default(uuid())
-  title            String
-  slug             String         @unique
-  location         String?
-  overview         String?
-  amenities        String[]       @default([])
-  brochure         String?
-  createdAt        DateTime       @default(now())
-  updatedAt        DateTime       @updatedAt
-  area             String?
-  builder          String?
-  city             String?
-  connectivity     String[]       @default([])
-  coverImage       String?
-  launchDate       String?
-  nearbyAmenities  String[]       @default([])
-  price            String?
-  propertyType     String?
-  rera             String?
-  totalUnits       String?
-  videoUrl         String?
-  googleMapUrl     String?
-  status           String?        @default("New Launch")
+  id              String   @id @default(uuid())
+  title           String
+  slug            String   @unique
+  
+  // Locations
+  city            String?  // e.g. "Gurugram", "Noida"
+  location        String?  // e.g. "Sector 150"
+  
+  // Specs
+  status          String?  @default("New Launch")
+  propertyType    String?  // "Residential", "Commercial"
+  configurations  String[] @default([]) // ✅ NEW: ["2 BHK", "3 BHK", "Penthouse"]
+  
+  // Details
+  price           String?
+  area            String?
+  totalUnits      String?
+  launchDate      String?
+  rera            String?
+  builder         String?
+  
+  // Descriptions
+  overview        String?
+  videoUrl        String?
+  googleMapUrl    String?
+  
+  // Arrays
+  amenities       String[] @default([])
+  connectivity    String[] @default([])
+  nearbyAmenities String[] @default([])
+
+  // Media
+  coverImage      String?
+  brochure        String?
+  
+  // Relations
   projectAmenities Amenity[]
-  floorplans       FloorPlan[]
-  gallery          GalleryImage[]
+  floorplans      FloorPlan[]
+  gallery         GalleryImage[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model GalleryImage {

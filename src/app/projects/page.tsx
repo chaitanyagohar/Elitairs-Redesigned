@@ -1,4 +1,3 @@
-// app/projects/page.tsx
 import React from "react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
@@ -6,148 +5,225 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RevealStyles from "@/components/home/RevealStyles";
 import ScrollReveal from "@/components/home/ScrollReveal";
+import ProjectFilters from "@/components/project/ProjectFilters";
+import ProjectSort from "@/components/project/ProjectSort";
 
 export const dynamic = "force-dynamic";
 
-async function getAllProjects() {
-  return await prisma.project.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+// --- HELPER: Price Logic ---
+function parsePrice(priceStr: string | null): number {
+  if (!priceStr) return 0;
+  const clean = priceStr.toLowerCase().replace(/,/g, '').trim();
+  const match = clean.match(/([\d.]+)/);
+  if (!match) return 0;
+  let val = parseFloat(match[1]);
+  if (clean.includes("cr")) val *= 10000000;
+  else if (clean.includes("l")) val *= 100000;
+  else if (clean.includes("k")) val *= 1000;
+  return val;
 }
 
-export default async function ProjectsPage() {
-  const projects = await getAllProjects();
+// --- FETCH & FILTER LOGIC ---
+async function getFilteredProjects(searchParams: { [key: string]: string | string[] | undefined }) {
+  const where: any = {};
+
+  if (typeof searchParams.search === 'string' && searchParams.search.length > 0) {
+    where.OR = [
+      { title: { contains: searchParams.search, mode: 'insensitive' } },
+      { builder: { contains: searchParams.search, mode: 'insensitive' } }
+    ];
+  }
+
+  if (typeof searchParams.location === 'string' && searchParams.location.length > 0) {
+    where.OR = [
+       ...(where.OR || []),
+       { city: { contains: searchParams.location, mode: 'insensitive' } },
+       { location: { contains: searchParams.location, mode: 'insensitive' } }
+    ];
+  }
+
+  const bhk = searchParams.bhk;
+  if (bhk) {
+    const bhkList = Array.isArray(bhk) ? bhk : [bhk];
+    if (bhkList.length > 0) {
+       where.configurations = { hasSome: bhkList };
+    }
+  }
+
+  let projects = await prisma.project.findMany({
+    where,
+    orderBy: { createdAt: "desc" },
+  });
+
+  const minPriceVal = parsePrice(searchParams.minPrice as string);
+  const maxPriceVal = parsePrice(searchParams.maxPrice as string);
+  const sortOption = searchParams.sort as string; 
+
+  if (minPriceVal > 0 || maxPriceVal > 0) {
+    projects = projects.filter(p => {
+      const pVal = parsePrice(p.price);
+      if (minPriceVal > 0 && pVal < minPriceVal) return false;
+      if (maxPriceVal > 0 && pVal > maxPriceVal) return false;
+      return true;
+    });
+  }
+
+  if (sortOption === "price_asc") {
+    projects.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+  } else if (sortOption === "price_desc") {
+    projects.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+  }
+
+  return projects;
+}
+
+export default async function ProjectsPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const projects = await getFilteredProjects(searchParams);
+  const searchTerm = typeof searchParams.search === 'string' ? searchParams.search : "";
 
   return (
-    <div className="bg-white text-black font-sans selection:bg-[#FFC40C] selection:text-white">
+    <div className="bg-gray-50 text-black font-sans selection:bg-[#FFC40C] selection:text-white min-h-screen pb-20 lg:pb-0">
       <Navbar />
-
-      {/* mount client helpers */}
       <ScrollReveal />
       <RevealStyles />
 
-      {/* ===== HERO SECTION ===== */}
-      <section className="relative h-[60vh] flex flex-col justify-center items-center text-center px-6 pt-20">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="/img5.jpg"
-            className="w-full h-full object-cover"
-            alt="Projects Hero"
-          />
-          <div className="absolute inset-0 bg-black/40 z-10" />
-        </div>
-
-        <div className="relative z-20 max-w-4xl">
-          <div className="reveal-on-scroll" data-delay="60">
-            <p className="text-[#FFC40C] uppercase tracking-[0.4em] text-xs font-bold mb-4">The Portfolio</p>
-            <h1 className="text-6xl md:text-8xl font-medium mb-6 text-white/90 tracking-tight">
-              Signature <span className="text-[#FFC40C] italic">Collection.</span>
+      <section className="bg-white border-b border-gray-200 pt-24 pb-4 md:pb-8 sticky top-0 z-30 lg:relative lg:top-auto">
+        <div className="container mx-auto px-4">
+            <div className="text-xs md:text-sm text-gray-500 mb-1 md:mb-2">
+                <Link href="/" className="hover:text-[#FFC40C]">Home</Link> &gt; <span className="text-gray-800">Properties</span>
+            </div>
+            <h1 className="text-xl md:text-3xl font-bold text-gray-900">
+                {searchTerm ? `Results for "${searchTerm}"` : "All Properties"} 
+                <span className="text-gray-400 font-normal text-sm md:text-lg ml-2">({projects.length} Listings)</span>
             </h1>
-            <p className="text-gray-100 text-lg md:text-xl font-light max-w-2xl mx-auto">
-              Explore our exclusive portfolio of residential and commercial developments across Gurugram's most coveted addresses.
-            </p>
-          </div>
         </div>
       </section>
 
-      {/* ===== FILTER STRIP (Visual) ===== */}
-      <div className="sticky top-20 z-30 bg-white/80 backdrop-blur-md border-y border-gray-100">
-        <div className="container mx-auto px-6 py-4 overflow-x-auto scrollbar-hide">
-          <div className="flex gap-8 md:justify-center min-w-max">
-            {["All Projects", "Residential", "Commercial"].map((filter, i) => (
-              <button
-                key={i}
-                className={`filter-btn reveal-on-scroll px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest transition-colors ${i === 0 ? "active" : "text-gray-400 hover:text-black"}`}
-                data-delay={100 + i * 80}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      <section className="container mx-auto px-4 py-4 md:py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+            <ProjectFilters />
 
-      {/* ===== PROJECTS GRID (Staggered) ===== */}
-      <section className="py-24 px-6 md:px-12 bg-white">
-        <div className="container mx-auto">
-          {projects.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-24">
-              {projects.map((project, index) => (
-                <Link
-                  href={`/projects/${project.slug ?? project.id}`}
-                  key={project.id}
-                  className={`group block reveal-on-scroll project-card`}
-                  data-delay={120 + (index % 6) * 60}
-                >
-                  {/* Image Card */}
-                  <div className={`relative aspect-[3/4] overflow-hidden mb-8 bg-gray-100 rounded-sm shadow-sm transition-all duration-500 ${index % 2 !== 0 ? 'md:translate-y-20' : ''}`}>
-                    {project.coverImage ? (
-                      <img
-                        src={project.coverImage}
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-300">
-                        Image Unavailable
-                      </div>
+            <main className="w-full lg:w-3/4">
+                <div className="hidden lg:flex justify-between items-center mb-6 bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                    <span className="text-sm text-gray-500">Showing <span className="font-bold text-black">{projects.length}</span> Properties</span>
+                    <ProjectSort />
+                </div>
+
+                <div className="space-y-4 md:space-y-6">
+                    {projects.map((project) => (
+                        <div 
+                            key={project.id} 
+                            className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row group reveal-on-scroll"
+                            data-delay={100}
+                        >
+                            {/* Image (Left/Top) */}
+                            <div className="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden bg-gray-200">
+                                {project.coverImage ? (
+                                    <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image</div>
+                                )}
+                                <div className="absolute top-3 left-3 bg-[#FFC40C] text-black text-[10px] font-bold px-2 py-1 rounded uppercase shadow-sm">
+                                    {project.status ?? "For Sale"}
+                                </div>
+                                <div className="absolute bottom-3 left-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-md">
+                                    {project.propertyType ?? "Residential"}
+                                </div>
+                            </div>
+
+                            {/* Details (Right/Bottom) */}
+                            <div className="w-full md:w-3/5 p-4 md:p-6 flex flex-col justify-between">
+                                <div>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h2 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-[#FFC40C] transition-colors truncate">
+                                                {project.title}
+                                            </h2>
+                                            <p className="text-xs md:text-sm text-gray-500 flex items-center gap-1 mt-1">
+                                                📍 {project.location ?? "Gurugram"}, {project.city}
+                                            </p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-xl md:text-2xl font-bold text-[#FFC40C]">{project.price ?? "Call"}</p>
+                                            <p className="text-[10px] text-gray-400 uppercase">Starting Price</p>
+                                        </div>
+                                    </div>
+
+                                    {/* ✅ NEW: INFORMATIVE GRID */}
+                                    <div className="grid grid-cols-2 gap-3 my-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">🏠</span>
+                                            <div>
+                                                <span className="block text-[10px] text-gray-400 uppercase font-bold">Config</span>
+                                                <span className="text-xs font-semibold text-gray-800">
+                                                    {project.configurations?.length > 0 ? project.configurations.slice(0,2).join(", ") + (project.configurations.length > 2 ? "..." : "") : "N/A"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">📐</span>
+                                            <div>
+                                                <span className="block text-[10px] text-gray-400 uppercase font-bold">Area</span>
+                                                <span className="text-xs font-semibold text-gray-800">{project.area ?? "On Request"}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">🏗️</span>
+                                            <div>
+                                                <span className="block text-[10px] text-gray-400 uppercase font-bold">Builder</span>
+                                                <span className="text-xs font-semibold text-gray-800 truncate max-w-[100px]">{project.builder ?? "Elitairs"}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg">📅</span>
+                                            <div>
+                                                <span className="block text-[10px] text-gray-400 uppercase font-bold">Possession</span>
+                                                <span className="text-xs font-semibold text-gray-800">{project.launchDate ?? "Soon"}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* RERA Badge */}
+                                    {project.rera && (
+                                        <div className="mb-4 inline-flex items-center gap-1 bg-green-50 px-2 py-1 rounded border border-green-100">
+                                            <span className="text-green-600 text-xs">✅</span>
+                                            <span className="text-[10px] text-green-700 font-medium">RERA: {project.rera}</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex gap-3 mt-auto">
+                                    <Link 
+                                        href={`/projects/${project.slug ?? project.id}`}
+                                        className="flex-1 bg-black text-white text-center py-3 rounded font-bold uppercase text-[10px] md:text-xs tracking-wider hover:bg-[#FFC40C] hover:text-black transition-all"
+                                    >
+                                        View Details
+                                    </Link>
+                                    <Link 
+                                        href="/contact"
+                                        className="flex-1 border border-black text-black text-center py-3 rounded font-bold uppercase text-[10px] md:text-xs tracking-wider hover:bg-black hover:text-white transition-all"
+                                    >
+                                        Enquire
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    {projects.length === 0 && (
+                        <div className="bg-white p-12 text-center rounded-xl border border-gray-200">
+                            <div className="text-4xl mb-2">🔍</div>
+                            <h3 className="font-bold text-lg">No properties found</h3>
+                            <p className="text-gray-500 text-sm">Try adjusting your filters.</p>
+                            <Link href="/projects" className="text-[#FFC40C] font-bold text-sm mt-4 inline-block underline">Clear All Filters</Link>
+                        </div>
                     )}
-
-                    {/* Floating Status Badge */}
-                    <div className="absolute top-6 left-6 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-black shadow-md">
-                      {project.status || "Active"}
-                    </div>
-
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                      <span className="bg-[#FFC40C] text-black px-8 py-3 font-bold uppercase tracking-widest text-xs transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        View Details
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Project Details */}
-                  <div className="flex justify-between items-start border-t-2 p-5 border-transparent group-hover:border-[#FFC40C] pt-6 transition-colors duration-300">
-                    <div className="max-w-[70%]">
-                      <h3 className="text-3xl font-medium mb-2 group-hover:text-[#FFC40C] transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-gray-400 text-xs uppercase tracking-widest font-bold">
-                        {project.location || "Gurugram"}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className="block text-xl font-bold text-black">{project.price}</span>
-                      <span className="text-gray-400 text-[10px] uppercase">{project.propertyType}</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-32 text-center reveal-on-scroll" data-delay="160">
-              <div className="text-6xl mb-4">📂</div>
-              <h3 className="text-2xl font-medium text-gray-900">No projects found.</h3>
-              <p className="text-gray-500 mt-2">Check back later for new exclusive listings.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ===== CTA ===== */}
-      <section className="py-32 bg-[#0a0a0a] text-white text-center">
-        <div className="container mx-auto px-6">
-          <div className="reveal-on-scroll" data-delay="200">
-            <h2 className="text-4xl md:text-6xl font-medium mb-8">Can't find what you're looking for?</h2>
-            <p className="text-gray-400 max-w-xl mx-auto mb-12 text-lg font-light">
-              We have access to exclusive off-market listings that are not publicly advertised.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Link href="/contact" className="px-10 py-4 bg-[#FFC40C] text-black font-bold uppercase tracking-widest hover:bg-white transition-colors rounded-md">
-                Contact Our Team
-              </Link>
-            </div>
-          </div>
+                </div>
+            </main>
         </div>
       </section>
 
