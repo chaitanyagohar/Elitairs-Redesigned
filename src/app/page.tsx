@@ -6,6 +6,9 @@ import Footer from "@/components/layout/Footer";
 import HeroVideo from "@/components/home/HeroVideo";
 import ScrollReveal from "@/components/home/ScrollReveal";
 import RevealStyles from "@/components/home/RevealStyles";
+import StatsStrip from "@/components/home/StatsStrip";
+
+
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +44,49 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 
   // City Tabs
   const cityTabs = ["All", "Gurugram", "New Delhi", "Noida", "Faridabad"];
+
+  const statsData = [
+  {
+    id: "props",
+    label: "Properties",
+    value: 229,
+    icon: (
+      // building SVG (keeps look similar to screenshot)
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    id: "happy",
+    label: "Happy Customers",
+    value: 158,
+    icon: "😊",
+  },
+  {
+    id: "team",
+    label: "Team Members",
+    value: 61,
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 00-3-3.87" />
+        <path d="M16 3.13a4 4 0 010 7.75" />
+      </svg>
+    ),
+  },
+  {
+    id: "sqft",
+    label: "Total Sq. Ft",
+    value: 1300000, // 1.3M+
+    suffix: "+",
+    icon: "📏",
+  },
+];
 
   return (
     <div className="bg-white text-black font-sans selection:bg-[#FFC40C] selection:text-white overflow-x-hidden">
@@ -116,13 +162,13 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
       </section>
 
       {/* --- 2. PREMIUM PICKS (NOW A SLIDER) --- */}
-      <section className="py-12 md:py-20 container mx-auto px-4 md:px-8">
-        <div className="mb-8 reveal-on-scroll">
+      <section className="py-8 md:py-8 container mx-auto px-4 md:px-8">
+        <div className="mb-8 ">
             <h2 className="text-2xl md:text-3xl font-bold mb-2">Premium Picks</h2>
-            <p className="text-sm md:text-base text-gray-500">Explore the finest homes across premium locations.</p>
+            <p className="reveal-on-scroll text-sm md:text-base text-gray-500">Explore the finest homes across premium locations.</p>
             
             {/* City Tabs */}
-            <div className="flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 md:pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="reveal-on-scroll flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 md:pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                 {cityTabs.map((city) => {
                     const isActive = activeCity.toLowerCase() === city.toLowerCase();
                     return (
@@ -164,30 +210,119 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
         </div>
       </section>
 
-      {/* --- 3. SERVICES --- */}
-      <section className="py-12 md:py-20 bg-[#FDF8E9]"> 
-        <div className="container mx-auto px-4 text-center mb-8 md:mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">Your Home, Our Hustle</h2>
-            <p className="text-sm md:text-base text-gray-500">We simplify your property journey with expert support.</p>
-        </div>
-        
-        <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 reveal-on-scroll">
-            {[
-                { title: "Consultancy", icon: "💬", desc: "Get comprehensive advice from Elitairs experts." },
-                { title: "Guided Site Visits", icon: "🚗", desc: "Explore your dream home at your time of choice." },
-                { title: "Post-Sales Support", icon: "🤝", desc: "From home loans to handovers, we handle it all." },
-                { title: "Portfolio Management", icon: "📈", desc: "Achieve long term financial goals with advisory." },
-            ].map((item, i) => (
-                <div key={i} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all border border-transparent hover:border-[#FFC40C] text-center md:text-left">
-                    <div className="w-12 h-12 bg-yellow-100 text-[#FFC40C] rounded-full flex items-center justify-center text-2xl mb-4 mx-auto md:mx-0">
-                        {item.icon}
-                    </div>
-                    <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-                </div>
-            ))}
-        </div>
-      </section>
+   {/* --- 3. YOUR HOME, OUR HUSTLE (IMAGE CARDS) --- */}
+<section id="services" className="py-12 md:py-20 bg-gradient-to-b from-[#FFF7E6] to-[#FDF8E9]">
+  <div className="container mx-auto px-4">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+      <div>
+        <h2 className="text-2xl md:text-3xl font-extrabold mb-2">We Handle It — You Move In</h2>
+        <p className="text-sm md:text-base text-gray-600 max-w-xl">
+          Premium, worry-free property services.
+        </p>
+      </div>
+
+      {/* Quick CTA */}
+      <div className="flex gap-3 items-center">
+        <a
+          href="/contact"
+          className="inline-flex items-center gap-3 bg-[#FFC40C] hover:bg-[#e6b500] text-black font-semibold px-4 md:px-5 py-2.5 md:py-3 rounded-2xl shadow-lg transition transform md:hover:-translate-y-0.5"
+        >
+          Book a Free Consult
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+
+        <a
+          href="tel:+919898009900"
+          className="hidden md:inline-flex items-center gap-2 text-sm text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:bg-white/70 transition"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#FFC40C]" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
+            <path d="M2.003 5.884l2-3A1 1 0 015 2h3a1 1 0 011 .883L9 6a1 1 0 01-.293.707l-1 1A13.034 13.034 0 0011 11a13.034 13.034 0 003.293-1.293l1-1A1 1 0 0116 8l3 1a1 1 0 01.883 1V16a1 1 0 01-1 1h-2c-7.18 0-13-5.82-13-13V6a1 1 0 01.003-.116z" />
+          </svg>
+          +91 98 9800 9900
+        </a>
+      </div>
+    </div>
+
+    {/* Feature Grid (with images) */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      {[
+        {
+          title: "Consultation",
+          desc: "Shortlist matched to your needs.",
+          img: "/services/consulting.jpg",
+        },
+        {
+          title: "Site Visits",
+          desc: "Organised tours with an expert.",
+          img: "/services/sitevisit.jpeg",
+        },
+        {
+          title: "Finance Help",
+          desc: "Loan support & paperwork.",
+          img: "/services/finance.jpeg",
+        },
+        {
+          title: "Handover Support",
+          desc: "Smooth final delivery & follow-up.",
+          img: "/services/handover.jpeg",
+        },
+      ].map((item, i) => (
+        <article
+          key={i}
+          className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-transparent md:hover:border-[#FFE08A] md:group-hover:shadow-lg transition"
+        >
+          {/* Image */}
+          <div className="w-full h-32 md:h-40 overflow-hidden bg-gray-100">
+            <img
+              src={item.img}
+              alt={item.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              loading="lazy"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="p-5">
+            <h3 className="text-sm md:text-base font-semibold text-gray-900 mb-1">
+              {item.title}
+            </h3>
+            <p className="text-xs md:text-sm text-gray-500">{item.desc}</p>
+
+            {/* subtle CTA */}
+            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+              <span className="text-[11px] text-gray-400 uppercase tracking-wider">Service</span>
+              <a
+                href="/contact"
+                className="text-sm font-medium text-[#B06C00] hover:text-[#8a4f00] transition"
+              >
+                Learn more →
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {/* Secondary CTA strip */}
+    <div className="mt-10 bg-white/80 border border-gray-100 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="text-center md:text-left">
+        <p className="text-sm text-gray-700"><span className="font-semibold">Need a personalised plan?</span> We'll craft a shortlist of properties tailored to your budget and goal.</p>
+      </div>
+
+      <div className="flex w-full md:w-auto gap-3 flex-col sm:flex-row mt-3 md:mt-0">
+        <a href="/projects" className="w-full sm:w-auto px-4 py-2 rounded-md bg-transparent border border-[#FFC40C] text-[#B06C00] font-semibold hover:bg-[#FFF0C6] transition text-center">
+          View Properties
+        </a>
+        <a href="/contact" className="w-full sm:w-auto px-4 py-2 rounded-md bg-[#FFC40C] text-black font-semibold hover:bg-[#e6b500] transition text-center">
+          Schedule Call
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* --- 4. LOCALITIES SLIDERS --- */}
       <section className="py-12 md:py-20 bg-white container mx-auto px-4 md:px-8">
@@ -285,43 +420,87 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
         </div>
       </section>
 
-      {/* --- 7. MEDIA & UPDATES --- */}
+     {/* --- 7. MEDIA & UPDATES (6 Latest Articles) --- */}
       <section className="py-12 md:py-20 bg-white container mx-auto px-4">
-         <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-center md:text-left">Media and Latest Updates</h2>
+         <div className="flex justify-between items-end mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-center md:text-left">Media and Latest Updates</h2>
+            <Link href="/media" className="hidden md:block text-[#FFC40C] font-bold text-sm uppercase tracking-widest hover:text-black">
+                View All Insights →
+            </Link>
+         </div>
+
          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
-            {[1, 2, 3].map((i) => (
-                <div key={i} className="group cursor-pointer">
-                    <div className="h-40 md:h-48 bg-gray-200 rounded-xl mb-4 overflow-hidden relative">
-                         <div className="absolute inset-0 bg-gray-300"></div>
-                         <div className="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black/60 to-transparent">
-                            <span className="text-white text-[10px] md:text-xs font-bold px-2">News</span>
+            {[
+                {
+                    title: "Things You Need To Know Before Buying Resale Flat in Gurgaon",
+                    slug: "things-to-know-resale-flat-gurgaon",
+                    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80",
+                    tag: "Guide"
+                },
+                {
+                    title: "Sohna Road: Connectivity & Future Appreciation Analysis",
+                    slug: "sohna-road-connectivity-analysis",
+                    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+                    tag: "Market Update"
+                },
+                {
+                    title: "Commercial vs Residential: Where is the Smart Money?",
+                    slug: "commercial-vs-residential",
+                    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+                    tag: "Investment"
+                },
+                {
+                    title: "Is Dwarka Expressway the New Golf Course Road?",
+                    slug: "dwarka-expressway-investment",
+                    image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=800&q=80",
+                    tag: "Trends"
+                },
+                {
+                    title: "NRI Investment Guide 2024: Rules & Opportunities",
+                    slug: "nri-investment-guide-2024",
+                    image: "https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=800&q=80",
+                    tag: "Guide"
+                },
+                {
+                    title: "Namo Bharat Train (RRTS) Impact on Gurugram Realty",
+                    slug: "delhi-alwar-rrts-impact",
+                    image: "https://images.unsplash.com/photo-1470723710355-95304d8aece4?auto=format&fit=crop&w=800&q=80",
+                    tag: "Infra News"
+                }
+            ].map((item, i) => (
+                <Link href={`/media/${item.slug}`} key={i} className="group cursor-pointer block h-full">
+                    <div className="h-48 md:h-56 bg-gray-200 rounded-xl mb-4 overflow-hidden relative">
+                         <img 
+                            src={item.image} 
+                            alt={item.title} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                         />
+                         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                         <div className="absolute bottom-4 left-4">
+                            <span className="bg-[#FFC40C] text-black text-[10px] md:text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-widest">
+                                {item.tag}
+                            </span>
                          </div>
                     </div>
-                    <h3 className="font-bold text-base md:text-lg leading-tight group-hover:text-[#FFC40C] transition-colors">
-                        Things You Need To Know Before Buying Resale Flat in Gurgaon
+                    <h3 className="font-bold text-lg md:text-xl leading-snug group-hover:text-[#FFC40C] transition-colors line-clamp-2">
+                        {item.title}
                     </h3>
-                </div>
+                    <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-3 flex items-center gap-2 group-hover:gap-3 transition-all">
+                        Read Article <span>→</span>
+                    </p>
+                </Link>
             ))}
+         </div>
+         
+         {/* Mobile Only View All Button */}
+         <div className="mt-8 text-center md:hidden">
+            <Link href="/media" className="text-[#FFC40C] font-bold text-sm uppercase tracking-widest border-b border-[#FFC40C] pb-1">
+                View All Insights
+            </Link>
          </div>
       </section>
 
-      {/* --- 8. STATS COUNTER --- */}
-      <section className="py-12 md:py-16 bg-[#1a1a1a] text-white">
-        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:divide-x divide-gray-700">
-            {[
-                { label: "Properties", val: "229", icon: "🏢" },
-                { label: "Happy Customers", val: "158", icon: "😊" },
-                { label: "Team Members", val: "61", icon: "👥" },
-                { label: "Total Sq. Ft", val: "1.3M+", icon: "📏" },
-            ].map((stat, i) => (
-                <div key={i} className="px-2">
-                    <div className="text-[#FFC40C] text-2xl md:text-3xl mb-2">{stat.icon}</div>
-                    <div className="text-2xl md:text-4xl font-bold mb-1">{stat.val}</div>
-                    <div className="text-[10px] md:text-xs text-gray-400 uppercase tracking-wider">{stat.label}</div>
-                </div>
-            ))}
-        </div>
-      </section>
+    <StatsStrip items={statsData} />
 
       {/* --- 9. GALLERY --- */}
       <section className="py-12 md:py-20 container mx-auto px-4 text-center">

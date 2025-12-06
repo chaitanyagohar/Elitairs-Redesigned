@@ -120,21 +120,24 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
   }, [gallery?.length]);
 
   // keep thumbnails visible when main changes
-  useEffect(() => {
-    // horizontal thumbs (mobile) - center the active thumb
+useEffect(() => {
+    // 1. Horizontal thumbs (Mobile)
     const mobileThumb = thumbsRowRef.current?.querySelectorAll<HTMLElement>("button")[galleryIndex];
     if (mobileThumb && thumbsRowRef.current) {
       const parent = thumbsRowRef.current;
       const left = mobileThumb.offsetLeft - parent.clientWidth / 2 + mobileThumb.clientWidth / 2;
       parent.scrollTo({ left, behavior: "smooth" });
     }
-// AFTER (fix)
 const vThumb = verticalThumbsRef.current?.querySelectorAll<HTMLElement>("button")[galleryIndex];
-if (vThumb && verticalThumbsRef.current) {
-  // center the active vertical thumb smoothly
-  vThumb.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-}
-
+    if (vThumb && verticalThumbsRef.current) {
+      const parent = verticalThumbsRef.current;
+      
+      // Calculate the 'top' position to center the element
+      const top = vThumb.offsetTop - parent.clientHeight / 2 + vThumb.clientHeight / 2;
+      
+      // Use standard scrollTo options (top, behavior)
+      parent.scrollTo({ top, behavior: "smooth" });
+    }
   }, [galleryIndex]);
 
   // manual controls

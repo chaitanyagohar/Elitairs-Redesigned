@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import CloudinaryUploader from "@/app/admin/CloudinaryUploader";
 
-const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "5+ BHK", "Penthouse", "Villa", "Plot"];
+const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK", "4 BHK","4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot"];
 const CITY_OPTIONS = ["Gurugram", "New Delhi", "Noida", "Faridabad", "Dwarka"];
 
 export default function AdminProjectForm({ initialData }: { initialData?: any }) {
@@ -22,7 +22,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     
     city: initialData?.city || "Gurugram",
     location: initialData?.location || "",
-    rera: initialData?.rera || "",
+    rera: initialData?.rera || "", // State already exists
     
     overview: initialData?.overview || "",
     videoUrl: initialData?.videoUrl || "", 
@@ -31,11 +31,11 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     // Arrays
     connectivity: initialData?.connectivity || [],
     nearbyAmenities: initialData?.nearbyAmenities || [], 
-    amenities: initialData?.amenities || [], // Legacy text amenities
+    amenities: initialData?.amenities || [], 
     configurations: initialData?.configurations || [],
 
     // Visual Assets
-    projectAmenities: initialData?.projectAmenities || [], // ✅ Visual Amenities (Name + Icon)
+    projectAmenities: initialData?.projectAmenities || [], 
     floorPlans: initialData?.floorplans || [], 
 
     coverImage: initialData?.coverImage || "",
@@ -216,6 +216,12 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
              </select>
              {formData.builder === "Other" && <input name="otherBuilder" value={formData.otherBuilder} onChange={handleChange} className="w-full border p-2 mt-2 rounded" placeholder="Builder Name"/>}
           </div>
+          
+          {/* ✅ ADDED RERA FIELD HERE */}
+          <div>
+             <label className="block text-sm font-medium mb-1">RERA Number <span className="text-gray-400 font-normal">(Optional)</span></label>
+             <input name="rera" value={formData.rera} onChange={handleChange} className="w-full border p-2 rounded" placeholder="e.g. GGM/..." />
+          </div>
         </div>
       </div>
       
@@ -303,11 +309,10 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
            </div>
         </div>
 
-        {/* ✅ 2. VISUAL AMENITIES (Title + Image) */}
+        {/* 2. VISUAL AMENITIES */}
         <div className="bg-gray-50 p-6 rounded border mb-8">
            <h4 className="font-bold mb-4 text-gray-900 text-lg">2. Project Amenities (with Icons)</h4>
            
-           {/* Add New Input Row */}
            <div className="flex flex-col sm:flex-row gap-4 mb-6 items-end bg-white p-4 rounded border shadow-sm">
               <div className="flex-1 w-full">
                  <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Amenity Title</label>
@@ -328,7 +333,6 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
               </button>
            </div>
 
-           {/* List of Added Amenities */}
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {formData.projectAmenities.map((am: any, i: number) => (
                 <div key={i} className="flex items-center gap-3 bg-white p-3 rounded border shadow-sm">

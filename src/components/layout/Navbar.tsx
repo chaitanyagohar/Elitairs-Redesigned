@@ -26,30 +26,36 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center pt-6`}
-      >
-        <div
-          className={`
-            flex items-center justify-between px-8 py-4 rounded-full transition-all duration-500
-            ${
-              scrolled
-                ? "bg-black/80 backdrop-blur-xl border border-white/10 shadow-2xl w-[90%] md:w-[70%]"
-                : "w-[95%] bg-transparent"
-            }
-          `}
-        >
-          {/* Logo */}
-          <Link href="/" className="z-50 flex items-center">
-            <Image
-              src="/elitairs-logo2trans.png" // <-- PLACE LOGO IN /public FOLDER
-              alt="Elitairs"
-              width={140}
-              height={50}
-              className="object-fit"
-              priority
-            />
-          </Link>
+  <header
+  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center 
+    ${scrolled ? "pt-3" : "pt-4 md:pt-6"}`}
+>
+  <div
+    className={`
+      flex items-center justify-between 
+      px-4 md:px-8 py-2 md:py-4 
+      rounded-2xl md:rounded-full
+      transition-all duration-500
+      ${
+        scrolled
+          ? "bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg w-[92%] md:w-[70%]"
+          : "bg-transparent w-[95%]"
+      }
+    `}
+  >
+    <Link href="/" className="z-50 flex items-center">
+      <Image
+        src="/elitairs-logo2trans.png"
+        alt="Elitairs"
+        width={110}     // smaller on mobile
+        height={40}
+        className="object-contain md:w-[140px]"
+        priority
+      />
+    </Link>
+
+    {/* keep your other content same */}
+
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
