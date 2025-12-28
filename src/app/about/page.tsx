@@ -74,7 +74,7 @@ export default function AboutPage() {
       <Navbar />
 
       {/* ===== HERO ===== */}
-      <section className="relative py-20 pt-32">
+      <section className="relative bg-gradient-to-b from-black via-gray-100 to-white py-20 pt-32">
         <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7">
             <div className="rounded-3xl overflow-hidden shadow-2xl relative group">
@@ -82,7 +82,7 @@ export default function AboutPage() {
               <img
                 src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?q=80&w=2000&auto=format&fit=crop"
                 alt="Elitairs - property"
-                className="w-full h-[520px] object-cover grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-105"
+                className="w-full h-[520px] object-cover transition-all duration-700 transform group-hover:scale-105"
               />
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function AboutPage() {
                <div className="absolute top-0 right-0 w-2/3 h-full bg-[#FFC40C] rounded-2xl opacity-10 transform translate-x-4 translate-y-4"></div>
                <img 
                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2669&auto=format&fit=crop" 
-                 className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl grayscale hover:grayscale-0 transition-all duration-700"
+                 className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-xl transition-all duration-700"
                  alt="Office Team" 
                />
             </div>
@@ -238,7 +238,7 @@ export default function AboutPage() {
             ].map((item, i) => (
               <Reveal key={i} delay={i * 100}>
                 <div className="p-8 border border-white/10 rounded-xl hover:bg-white/5 transition-colors group">
-                  <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all">{item.icon}</div>
+                  <div className="text-4xl mb-4  transition-all">{item.icon}</div>
                   <h3 className="text-xl font-bold mb-3 text-white group-hover:text-[#FFC40C] transition-colors">{item.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
                 </div>

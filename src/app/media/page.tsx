@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export const metadata = {
-  title: "Media & Insights | Elitairs Real Estate",
+  title: "Media & Insights | Elitairs",
   description: "Latest updates, market trends, and expert insights on Indian Real Estate.",
 };
 

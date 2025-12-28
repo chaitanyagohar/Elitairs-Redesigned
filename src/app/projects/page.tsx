@@ -90,15 +90,14 @@ export default async function ProjectsPage({
       <Navbar />
       <ScrollReveal />
       <RevealStyles />
-
-      <section className="bg-white border-b border-gray-200 pt-24 pb-4 md:pb-8 sticky top-0 z-30 lg:relative lg:top-auto">
+<section className="bg-gradient-to-b from-black via-gray-500 to-white border-b border-gray-200 pt-24 pb-4 md:pb-8 sticky top-0 z-30 lg:relative lg:top-auto">
         <div className="container mx-auto px-4">
-            <div className="text-xs md:text-sm text-gray-500 mb-1 md:mb-2">
-                <Link href="/" className="hover:text-[#FFC40C]">Home</Link> &gt; <span className="text-gray-800">Properties</span>
+            <div className="text-xs md:text-sm text-gray-800 mb-1 md:mb-2">
+                <Link href="/" className="hover:text-white">Home</Link> &gt; <span className="text-gray-800">Properties</span>
             </div>
             <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                 {searchTerm ? `Results for "${searchTerm}"` : "All Properties"} 
-                <span className="text-gray-400 font-normal text-sm md:text-lg ml-2">({projects.length} Listings)</span>
+                <span className="text-[#ffb900] font-normal text-sm md:text-lg ml-2">({projects.length} Listings)</span>
             </h1>
         </div>
       </section>
