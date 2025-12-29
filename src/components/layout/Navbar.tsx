@@ -26,64 +26,86 @@ export default function Navbar() {
 
   return (
     <>
-  <header
-  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center 
-    ${scrolled ? "pt-3" : "pt-4 md:pt-6"}`}
->
-  <div
-    className={`
-      flex items-center justify-between 
-      px-4 md:px-8 py-2 md:py-4 
-      rounded-2xl md:rounded-full
-      transition-all duration-500
-      ${
-        scrolled
-          ? "bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg w-[92%] md:w-[70%]"
-          : "bg-transparent w-[95%]"
-      }
-    `}
-  >
-    <Link href="/" className="z-50 flex items-center">
-      <Image
-        src="/elitairs-logo2trans.png"
-        alt="Elitairs"
-        width={110}     // smaller on mobile
-        height={40}
-        className="object-contain md:w-[140px]"
-        priority
-      />
-    </Link>
+      {/* HEADER */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 flex justify-center 
+        ${scrolled ? "pt-3" : "pt-4 md:pt-6"}`}
+      >
+        <div
+          className={`
+            flex items-center justify-between 
+            px-4 md:px-8 py-2 md:py-4 
+            rounded-2xl md:rounded-full
+            transition-all duration-500
+            ${
+              scrolled
+                ? "bg-black/80 backdrop-blur-xl border border-white/10 shadow-lg w-[92%] md:w-[70%]"
+                : "bg-transparent w-[95%]"
+            }
+          `}
+        >
+          {/* LOGO */}
+          <Link href="/" className="z-50 flex items-center">
+            <Image
+              src="/elitairs-logo2trans.png"
+              alt="Elitairs"
+              width={110}
+              height={40}
+              className="object-contain md:w-[140px]"
+              priority
+            />
+          </Link>
 
-    {/* keep your other content same */}
-
-
-          {/* Desktop Nav */}
+          {/* DESKTOP NAV */}
           <nav className="hidden md:flex items-center gap-8">
-            {links.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="text-xs font-bold uppercase tracking-[0.2em] text-gray-300 hover:text-[#FFC40C] transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+            {links.map((link) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`relative text-xs font-bold uppercase tracking-[0.2em] transition-colors
+                    ${
+                      isActive
+                        ? "text-[#FFC40C]"
+                        : "text-gray-300 hover:text-[#FFC40C]"
+                    }
+
+                    after:absolute after:left-0 after:-bottom-2
+                    after:h-[2px] after:rounded-full
+                    after:bg-gradient-to-r after:from-[#FFD76A] after:via-[#FFC40C] after:to-[#FFD76A]
+                    after:shadow-[0_0_8px_rgba(255,196,12,0.8)]
+                    after:transition-all after:duration-300
+                    ${
+                      isActive
+                        ? "after:w-full after:opacity-100"
+                        : "after:w-0 after:opacity-0 hover:after:w-full hover:after:opacity-100"
+                    }
+                  `}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* Action & Menu */}
+          {/* ACTIONS */}
           <div className="flex items-center gap-4">
             <Link
               href="/contact"
-              className={`hidden md:block px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
-                scrolled
-                  ? "bg-[#FFC40C] text-black hover:bg-white"
-                  : "bg-white text-black hover:bg-[#FFC40C]"
-              }`}
+              className={`hidden md:block px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all
+                ${
+                  scrolled
+                    ? "bg-[#FFC40C] text-black hover:bg-white"
+                    : "bg-white text-black hover:bg-[#FFC40C]"
+                }
+              `}
             >
               Contact
             </Link>
 
-            {/* Mobile Menu Toggle */}
+            {/* MOBILE TOGGLE */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden text-white p-2 z-50"
@@ -110,23 +132,33 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Full Screen Menu Overlay */}
+      {/* MOBILE FULLSCREEN MENU */}
       <div
         className={`fixed inset-0 bg-[#0a0a0a] z-40 flex items-center justify-center transition-transform duration-700 ${
           menuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
         <div className="flex flex-col items-center gap-8 text-center">
-          {links.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="text-5xl font-serif text-white hover:text-[#FFC40C] hover:italic transition-all duration-300"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const isActive = pathname === link.href;
+
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`text-5xl font-serif transition-all duration-300
+                  ${
+                    isActive
+                      ? "text-[#FFC40C] italic"
+                      : "text-white hover:text-[#FFC40C] hover:italic"
+                  }
+                `}
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </div>
       </div>
     </>

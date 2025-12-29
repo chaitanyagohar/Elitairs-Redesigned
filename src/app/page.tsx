@@ -137,7 +137,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
       <ScrollReveal />
 
       {/* --- 1. HERO SECTION (UPDATED) --- */}
-      <section className="relative h-[80vh] md:h-[68vh] w-full overflow-hidden flex flex-col items-center justify-center bg-black">
+      <section className="relative h-[80vh] md:h-[80vh] w-full overflow-hidden flex flex-col items-center justify-center bg-black">
         
         {/* ✅ REPLACED Video with Slideshow */}
         <HeroSlideshow images={slideshowImages} />
@@ -439,34 +439,77 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 
       {/* --- 11. FOOTER CONTACT FORM --- */}
       <section className="bg-white py-12 border-t border-gray-200">
-         <div className="container mx-auto px-4 flex flex-col md:flex-row gap-8">
-            <div className="w-full md:w-1/2">
-                <div className="bg-gray-100 h-48 md:h-64 w-full rounded-xl mb-6 relative overflow-hidden group">
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">Google Map Preview</div>
-                    <div className="absolute bottom-4 left-4 bg-white p-2 rounded shadow text-xs">
-                        <p className="font-bold">Elitairs Office</p>
-                        <p>Sector 32, Gurugram</p>
-                    </div>
-                </div>
-                <div className="space-y-2 text-center md:text-left">
-                    <p className="font-bold">Elitairs</p>
-                    <p className="text-sm text-gray-600">95, Institutional Area, Sector 32, Gurugram</p>
-                    <p className="font-bold text-[#FFC40C] mt-2">+91 98 9800 9900</p>
-                    <p className="text-sm text-gray-500">marketing@elitairs.com</p>
-                </div>
-            </div>
-            <div className="w-full md:w-1/2 bg-[#F9F9F9] p-6 md:p-8 rounded-xl border border-gray-200">
-                <h3 className="font-bold text-lg md:text-xl mb-1">Please share your contact details</h3>
-                <p className="text-xs text-gray-500 mb-6 uppercase tracking-wider">To Unlock Exclusive Deals</p>
-                <form className="space-y-4">
-                    <input type="text" placeholder="Name" className="w-full p-3 text-sm rounded border border-gray-300 outline-none focus:border-[#FFC40C]" />
-                    <input type="text" placeholder="Phone Number" className="w-full p-3 text-sm rounded border border-gray-300 outline-none focus:border-[#FFC40C]" />
-                    <input type="email" placeholder="Email" className="w-full p-3 text-sm rounded border border-gray-300 outline-none focus:border-[#FFC40C]" />
-                    <button className="w-full bg-[#FFC40C] text-white font-bold py-3 rounded hover:bg-black transition-all uppercase tracking-wider text-sm">Submit</button>
-                </form>
-            </div>
-         </div>
-      </section>
+  <div className="container mx-auto px-4 flex flex-col md:flex-row gap-8">
+    
+    {/* LEFT: MAP + DETAILS */}
+    <div className="w-full md:w-1/2">
+      <div className="bg-gray-100 h-48 md:h-64 w-full rounded-xl mb-6 relative overflow-hidden">
+        
+        {/* Google Map Embed */}
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.4112281189273!2d77.07922007528266!3d28.467159775755448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d191751850aad%3A0xea9c107b7288b8f4!2sElitairs!5e0!3m2!1sen!2sin!4v1767016799849!5m2!1sen!2sin"
+          className="absolute inset-0 w-full h-full border-0"
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+
+        {/* Office Label */}
+        <div className="absolute bottom-4 left-4 bg-white p-2 rounded shadow text-xs">
+          <p className="font-bold">Elitairs Office</p>
+          <p>Sector 32, Gurugram</p>
+        </div>
+      </div>
+
+      {/* Contact Info */}
+      <div className="space-y-2 text-center md:text-left">
+        <p className="font-bold">Elitairs</p>
+        <p className="text-sm text-gray-600">
+          95, Institutional Area, Sector 32, Gurugram
+        </p>
+        <p className="font-bold text-[#FFC40C] mt-2">
+          +91 98 9800 9900
+        </p>
+        <p className="text-sm text-gray-500">
+          marketing@elitairs.com
+        </p>
+      </div>
+    </div>
+
+    {/* RIGHT: FORM */}
+    <div className="w-full md:w-1/2 bg-[#F9F9F9] p-6 md:p-8 rounded-xl border border-gray-200">
+      <h3 className="font-bold text-lg md:text-xl mb-1">
+        Please share your contact details
+      </h3>
+      <p className="text-xs text-gray-500 mb-6 uppercase tracking-wider">
+        To Unlock Exclusive Deals
+      </p>
+
+      <form className="space-y-4">
+        <input
+          type="text"
+          placeholder="Name"
+          className="w-full p-3 text-sm rounded border border-gray-300 outline-none focus:border-[#FFC40C]"
+        />
+        <input
+          type="text"
+          placeholder="Phone Number"
+          className="w-full p-3 text-sm rounded border border-gray-300 outline-none focus:border-[#FFC40C]"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-3 text-sm rounded border border-gray-300 outline-none focus:border-[#FFC40C]"
+        />
+        <button className="w-full bg-[#FFC40C] text-white font-bold py-3 rounded hover:bg-black transition-all uppercase tracking-wider text-sm">
+          Submit
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
 
       {/* --- BANNER CTA --- */}
       <div className="bg-[#FDF8E9] py-6 text-center">
