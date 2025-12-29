@@ -175,10 +175,10 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
       <section className="py-8 md:py-8 container mx-auto px-4 md:px-8">
         <div className="mb-8 ">
             <h2 className="text-2xl md:text-3xl font-bold mb-2">Premium Picks</h2>
-            <p className="reveal-on-scroll text-sm md:text-base text-gray-500">Explore the finest homes across premium locations.</p>
+            <p className="text-sm md:text-base text-gray-500">Explore the finest homes across premium locations.</p>
             
             {/* City Tabs */}
-            <div className="reveal-on-scroll flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 md:pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 md:pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                 {cityTabs.map((city) => {
                     const isActive = activeCity.toLowerCase() === city.toLowerCase();
                     return (
