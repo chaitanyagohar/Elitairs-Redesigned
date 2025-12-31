@@ -465,7 +465,9 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
       <div className="space-y-2 text-center md:text-left">
         <p className="font-bold">Elitairs</p>
         <p className="text-sm text-gray-600">
-          95, Institutional Area, Sector 32, Gurugram
+         Two Horizon Center,
+Golf Course Road,
+Gurugram, Haryana 122002
         </p>
         <p className="font-bold text-[#FFC40C] mt-2">
           +91 98 9800 9900
