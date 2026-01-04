@@ -27,42 +27,56 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const body = await req.json();
     const { id } = params;
 
-    // 1. Prepare Update Data (Scalar Fields)
+    // 1. Prepare Update Data (Scalar Fields & Simple Arrays)
     const updateData: any = {
       title: body.title,
+      slug: body.slug,
+      
       propertyType: body.propertyType,
       builder: body.builder,
       city: body.city,
       location: body.location,
       rera: body.rera,
+      
+      // ✅ NEW FIELDS (Highlights)
+      status: body.projectStatus || body.status, // Handle key mismatch
+      landArea: body.landArea,
+      paymentPlan: body.paymentPlan,
+      isFeatured: body.isFeatured,
+
       overview: body.overview,
       videoUrl: body.videoUrl,
       googleMapUrl: body.googleMapUrl,
+      
       price: body.price,
       launchDate: body.launchDate,
       totalUnits: body.totalUnits,
       area: body.area,
+      
       coverImage: body.coverImage,
-      brochure: body.brochure || body.brochureUrl, // Handle key mismatch if any
-      amenities: body.amenities,
-      connectivity: body.connectivity,
-      nearbyAmenities: body.nearbyAmenities,
+      brochure: body.brochureUrl || body.brochure, 
+
+      // ✅ ARRAYS (Connectivity & Amenities)
+      amenities: body.amenities || [],       // General Text Amenities
+      connectivity: body.connectivity || [], // Connectivity points
+      schools: body.schools || [],           // Schools list
+      hospitals: body.hospitals || [],       // Hospitals list
+      nearbyAmenities: body.nearbyAmenities || [], // Malls/Business Hubs
+      configurations: body.configurations || [],
     };
     
-    if (body.brochureUrl) updateData.brochure = body.brochureUrl;
-
-    // Remove undefined keys
+    // Remove undefined keys so we don't overwrite with nulls unnecessarily
     Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
 
     // 2. Transaction for Relations (Delete Old -> Create New)
     await prisma.$transaction(async (tx) => {
-      // Update scalar
+      // Update Scalar Fields
       await tx.project.update({
         where: { id },
         data: updateData,
       });
 
-      // Update Visual Amenities
+      // Update Visual Amenities (Slider Images)
       if (body.projectAmenities) {
         await tx.amenity.deleteMany({ where: { projectId: id } });
         if (body.projectAmenities.length > 0) {

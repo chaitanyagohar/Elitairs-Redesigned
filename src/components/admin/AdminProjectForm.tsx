@@ -4,8 +4,17 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import CloudinaryUploader from "@/app/admin/CloudinaryUploader";
 
-const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK", "4 BHK","4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot"];
+const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot", "SCO"];
 const CITY_OPTIONS = ["Gurugram", "New Delhi", "Noida", "Faridabad", "Dwarka"];
+const STATUS_OPTIONS = ["New Launch", "Under Construction", "Ready to Move", "Sold Out"];
+const TYPE_OPTIONS = ["Residential", "Commercial", "Plots", "Industrial"];
+
+const COMMON_AMENITIES = [
+  "Swimming Pool", "Gym", "24/7 Security", "Power Backup", 
+  "Car Parking", "Kids Play Area", "Club House", "Jogging Track", 
+  "Yoga Room", "Pet Park", "Senior Citizen Sit Out", "Tennis Court",
+  "Badminton Court", "Basketball Court", "Library", "Spa & Sauna"
+];
 
 export default function AdminProjectForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
@@ -18,26 +27,32 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     slug: initialData?.slug || "",
     propertyType: initialData?.propertyType || "Residential",
     builder: initialData?.builder || "Sobha",
-    otherBuilder: "",
-    
     city: initialData?.city || "Gurugram",
+    projectStatus: initialData?.status || "New Launch", 
     location: initialData?.location || "",
-    rera: initialData?.rera || "", // State already exists
+    rera: initialData?.rera || "",
     
+    // Highlights
+    landArea: initialData?.landArea || "",
+    paymentPlan: initialData?.paymentPlan || "",
+    isFeatured: initialData?.isFeatured || false,
+
     overview: initialData?.overview || "",
     videoUrl: initialData?.videoUrl || "", 
     googleMapUrl: initialData?.googleMapUrl || "",
 
-    // Arrays
+    // ✅ LOCALITY ARRAYS (Updated)
     connectivity: initialData?.connectivity || [],
-    nearbyAmenities: initialData?.nearbyAmenities || [], 
+    schools: initialData?.schools || [],       // New
+    hospitals: initialData?.hospitals || [],   // New
+    nearbyAmenities: initialData?.nearbyAmenities || [], // Malls/Business Hubs
+    
     amenities: initialData?.amenities || [], 
     configurations: initialData?.configurations || [],
 
     // Visual Assets
     projectAmenities: initialData?.projectAmenities || [], 
     floorPlans: initialData?.floorplans || [], 
-
     coverImage: initialData?.coverImage || "",
     brochureUrl: initialData?.brochure || "",
     gallery: initialData?.gallery || [], 
@@ -46,18 +61,23 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     launchDate: initialData?.launchDate || "",
     totalUnits: initialData?.totalUnits || "",
     area: initialData?.area || "", 
+    otherBuilder: "",
   });
 
-  // Local state for adding new Visual Amenity
+  // Local state for Visual Amenity
   const [newAmenityName, setNewAmenityName] = useState("");
   const [newAmenityImage, setNewAmenityImage] = useState("");
 
+  // Handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    if (type === 'checkbox' && e.target instanceof HTMLInputElement) {
+        setFormData((prev) => ({ ...prev, [name]: e.target.checked }));
+    } else {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  // Smart Map Handler
   const handleMapChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const input = e.target.value;
     const srcMatch = input.match(/src="([^"]+)"/);
@@ -68,30 +88,29 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     }
   };
 
-  // BHK Configuration Toggle
-  const toggleConfiguration = (config: string) => {
+  const toggleSelection = (field: "amenities" | "configurations", value: string) => {
     setFormData(prev => {
-        const current = prev.configurations || [];
-        if (current.includes(config)) {
-            return { ...prev, configurations: current.filter((c: string) => c !== config) };
+        const current = prev[field] || [];
+        if (current.includes(value)) {
+            return { ...prev, [field]: current.filter((c: string) => c !== value) };
         } else {
-            return { ...prev, configurations: [...current, config] };
+            return { ...prev, [field]: [...current, value] };
         }
     });
   };
 
-  // --- ARRAY HELPERS ---
-  const addItem = (field: "connectivity" | "nearbyAmenities" | "amenities", value: string) => {
+  // ✅ GENERIC ARRAY HANDLER (For Connectivity, Schools, Hospitals, Landmarks)
+  const addItem = (field: "connectivity" | "schools" | "hospitals" | "nearbyAmenities", value: string) => {
     if (!value.trim()) return;
     setFormData(prev => ({ ...prev, [field]: [...(prev[field] as string[]), value] }));
   };
-  const removeItem = (field: "connectivity" | "nearbyAmenities" | "amenities", index: number) => {
+  const removeItem = (field: "connectivity" | "schools" | "hospitals" | "nearbyAmenities", index: number) => {
     setFormData(prev => ({ ...prev, [field]: (prev[field] as string[]).filter((_, i) => i !== index) }));
   };
 
-  // ✅ VISUAL AMENITY HELPERS
+  // Visual Amenity Helpers
   const addVisualAmenity = () => {
-    if (!newAmenityName || !newAmenityImage) return alert("Please enter title and upload an icon image");
+    if (!newAmenityName || !newAmenityImage) return alert("Please enter title and upload an image");
     setFormData(prev => ({
       ...prev,
       projectAmenities: [...prev.projectAmenities, { name: newAmenityName, icon: newAmenityImage }]
@@ -99,7 +118,6 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     setNewAmenityName("");
     setNewAmenityImage("");
   };
-
   const removeVisualAmenity = (index: number) => {
     setFormData(prev => ({
       ...prev,
@@ -114,6 +132,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
   const addGalleryImage = (res: any) => { if (res?.url) setFormData(prev => ({ ...prev, gallery: [...prev.gallery, { url: res.url, alt: "" }] })); };
   const removeGalleryImage = (index: number) => { setFormData(prev => ({ ...prev, gallery: prev.gallery.filter((_: any, i: number) => i !== index) })); };
 
+  // Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -123,6 +142,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
         ...formData, 
         builder: finalBuilder,
         slug: formData.slug || formData.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
+        status: formData.projectStatus 
       };
 
       const url = isEditMode ? `/api/projects/${initialData.id}` : `/api/projects/create`;
@@ -145,23 +165,26 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     }
   };
 
-  // Reusable Input List Component
-  const InputList = ({ label, field, placeholder }: { label: string, field: "connectivity" | "nearbyAmenities" | "amenities", placeholder: string }) => (
+  // ✅ REUSABLE INPUT LIST COMPONENT
+  const InputList = ({ label, field, placeholder, icon }: { label: string, field: "connectivity" | "schools" | "hospitals" | "nearbyAmenities", placeholder: string, icon: string }) => (
     <div>
-      <label className="block text-sm font-medium mb-1 text-gray-700">{label}</label>
+      <label className="block text-sm font-bold mb-1 text-gray-700 flex items-center gap-2">
+        <span>{icon}</span> {label}
+      </label>
       <div className="flex gap-2 mb-2">
         <input id={`input-${field}`} className="flex-1 border p-2 rounded text-sm text-black" placeholder={placeholder} />
         <button type="button" onClick={() => {
           const el = document.getElementById(`input-${field}`) as HTMLInputElement;
           addItem(field, el.value);
           el.value = "";
-        }} className="bg-gray-100 px-4 py-2 rounded text-black font-bold">+</button>
+        }} className="bg-gray-100 px-4 py-2 rounded text-black font-bold hover:bg-[#FFC40C] transition-colors">+</button>
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-2">
         {formData[field].map((item: string, i: number) => (
-          <span key={i} className="bg-gray-50 border px-2 py-1 text-xs rounded flex items-center gap-2 text-gray-700">
-            {item} <button type="button" onClick={() => removeItem(field, i)} className="text-red-500 font-bold">×</button>
-          </span>
+          <div key={i} className="bg-gray-50 border px-3 py-2 text-sm rounded flex items-center justify-between text-gray-700">
+            <span>{item}</span>
+            <button type="button" onClick={() => removeItem(field, i)} className="text-red-500 font-bold hover:text-red-700">×</button>
+          </div>
         ))}
       </div>
     </div>
@@ -190,8 +213,8 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
              <input required name="title" value={formData.title} onChange={handleChange} className="w-full border p-2 rounded" />
           </div>
           <div>
-             <label className="block text-sm font-medium mb-1">Slug (URL) *</label>
-             <input name="slug" value={formData.slug} onChange={handleChange} className="w-full border p-2 rounded text-gray-500" placeholder="Auto-generated if empty" />
+             <label className="block text-sm font-medium mb-1">Slug *</label>
+             <input name="slug" value={formData.slug} onChange={handleChange} className="w-full border p-2 rounded text-gray-500" placeholder="Auto-generated" />
           </div>
           <div>
              <label className="block text-sm font-medium mb-1">City *</label>
@@ -200,14 +223,8 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
              </select>
           </div>
           <div>
-             <label className="block text-sm font-medium mb-1">Location / Sector *</label>
+             <label className="block text-sm font-medium mb-1">Location *</label>
              <input required name="location" value={formData.location} onChange={handleChange} className="w-full border p-2 rounded" placeholder="e.g. Sector 150" />
-          </div>
-          <div>
-             <label className="block text-sm font-medium mb-1">Type *</label>
-             <select name="propertyType" value={formData.propertyType} onChange={handleChange} className="w-full border p-2 rounded">
-                 <option>Residential</option><option>Commercial</option><option>Plots</option>
-             </select>
           </div>
           <div>
              <label className="block text-sm font-medium mb-1">Builder</label>
@@ -216,86 +233,129 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
              </select>
              {formData.builder === "Other" && <input name="otherBuilder" value={formData.otherBuilder} onChange={handleChange} className="w-full border p-2 mt-2 rounded" placeholder="Builder Name"/>}
           </div>
-          
-          {/* ✅ ADDED RERA FIELD HERE */}
           <div>
-             <label className="block text-sm font-medium mb-1">RERA Number <span className="text-gray-400 font-normal">(Optional)</span></label>
-             <input name="rera" value={formData.rera} onChange={handleChange} className="w-full border p-2 rounded" placeholder="e.g. GGM/..." />
+             <label className="block text-sm font-medium mb-1">RERA Number</label>
+             <input name="rera" value={formData.rera} onChange={handleChange} className="w-full border p-2 rounded" />
           </div>
         </div>
       </div>
       
-      {/* B. UNIT CONFIGURATION */}
+      {/* B. CONFIGURATION */}
       <div className="mb-10">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">B. Unit Configuration</h3>
         <div className="bg-gray-50 p-6 rounded border">
-            <label className="block text-sm font-bold mb-3">Select Available Units:</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                 {CONFIG_OPTIONS.map((conf) => (
-                    <label key={conf} className="flex items-center gap-2 cursor-pointer bg-white p-3 rounded border shadow-sm hover:border-[#FFC40C]">
-                        <input 
-                            type="checkbox" 
-                            checked={formData.configurations.includes(conf)} 
-                            onChange={() => toggleConfiguration(conf)}
-                            className="w-4 h-4 accent-[#FFC40C]"
-                        />
-                        <span className="text-sm font-medium">{conf}</span>
+                    <label key={conf} className={`flex items-center gap-2 cursor-pointer p-3 rounded border shadow-sm transition-all ${formData.configurations.includes(conf) ? "bg-yellow-50 border-[#FFC40C]" : "bg-white hover:border-gray-300"}`}>
+                        <input type="checkbox" checked={formData.configurations.includes(conf)} onChange={() => toggleSelection("configurations", conf)} className="w-4 h-4 accent-[#FFC40C]" />
+                        <span className="text-xs font-bold text-gray-700">{conf}</span>
                     </label>
                 ))}
             </div>
         </div>
       </div>
 
-      {/* C. DESCRIPTIONS & AMENITIES */}
+      {/* C. STATUS & HIGHLIGHTS */}
       <div className="mb-10">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">C. Details & Surroundings</h3>
-        <div className="space-y-6">
-          <div><label className="block text-sm font-medium mb-1">Overview *</label><textarea required name="overview" value={formData.overview} onChange={handleChange} rows={5} className="w-full border p-2 rounded" /></div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             {/* Video Upload */}
-             <div className="bg-gray-50 p-4 rounded border">
-                <label className="block text-sm font-bold mb-2">Intro Video (Upload)</label>
-                <CloudinaryUploader 
-                    label="Upload Video" 
-                    accept="video/*" 
-                    onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, videoUrl: res.url})) }} 
-                />
-                {formData.videoUrl && (
-                    <div className="mt-2">
-                        <video src={formData.videoUrl} controls className="w-full h-40 object-cover rounded bg-black" />
-                        <button type="button" onClick={() => setFormData(prev => ({...prev, videoUrl: ""}))} className="text-xs text-red-500 underline mt-1">Remove Video</button>
-                    </div>
-                )}
-             </div>
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">C. Status & Highlights</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 bg-yellow-50 p-6 rounded border border-yellow-100">
+           <div>
+             <label className="block text-sm font-medium mb-1">Status</label>
+             <select name="projectStatus" value={formData.projectStatus} onChange={handleChange} className="w-full border p-2 rounded bg-white">
+                {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+             </select>
+           </div>
+           <div>
+             <label className="block text-sm font-medium mb-1">Type</label>
+             <select name="propertyType" value={formData.propertyType} onChange={handleChange} className="w-full border p-2 rounded bg-white">
+                {TYPE_OPTIONS.map(t => <option key={t} value={t}>{t}</option>)}
+             </select>
+           </div>
+           <div>
+             <label className="block text-sm font-medium mb-1">Land Area</label>
+             <input name="landArea" value={formData.landArea} onChange={handleChange} className="w-full border p-2 rounded" placeholder="e.g. 12 Acres" />
+           </div>
+           <div>
+             <label className="block text-sm font-medium mb-1">Payment Plan</label>
+             <input name="paymentPlan" value={formData.paymentPlan} onChange={handleChange} className="w-full border p-2 rounded" placeholder="e.g. 30:40:30" />
+           </div>
+           <div className="md:col-span-4 pt-2">
+             <label className="flex items-center gap-3 cursor-pointer select-none bg-white p-3 rounded border w-fit shadow-sm hover:border-[#FFC40C]">
+                <input type="checkbox" name="isFeatured" checked={formData.isFeatured} onChange={handleChange} className="w-5 h-5 accent-[#FFC40C]" />
+                <span className="font-bold text-gray-900">Mark as Featured Project</span>
+             </label>
+           </div>
+        </div>
+      </div>
 
-             {/* Smart Google Map */}
-             <div>
-                <label className="block text-sm font-medium mb-1">Google Map (Paste Embed Code)</label>
+      {/* D. GENERAL AMENITIES (CHECKBOXES) */}
+      <div className="mb-10">
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">D. General Amenities</h3>
+        <div className="bg-gray-50 p-6 rounded border">
+            <p className="text-xs text-gray-500 mb-4 uppercase font-bold">Select features included in this project:</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {COMMON_AMENITIES.map((am) => (
+                    <label key={am} className={`flex items-center gap-2 cursor-pointer p-3 rounded border shadow-sm transition-all ${formData.amenities.includes(am) ? "bg-yellow-50 border-[#FFC40C]" : "bg-white hover:border-gray-300"}`}>
+                        <input type="checkbox" checked={formData.amenities.includes(am)} onChange={() => toggleSelection("amenities", am)} className="w-4 h-4 accent-[#FFC40C]" />
+                        <span className="text-xs font-bold text-gray-700">{am}</span>
+                    </label>
+                ))}
+            </div>
+        </div>
+      </div>
+
+      {/* ✅ E. LOCALITY & SURROUNDINGS (UPDATED) */}
+      <div className="mb-10">
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">E. Locality & Surroundings</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+             
+             {/* Map */}
+             <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1">Google Map Embed Code</label>
                 <textarea 
                     name="googleMapUrl" 
                     value={formData.googleMapUrl} 
                     onChange={handleMapChange}
-                    className="w-full border p-2 rounded h-40 text-xs font-mono text-gray-600" 
-                    placeholder={'<iframe src="https://www.google.com/maps/embed?..." ...></iframe>'} 
+                    className="w-full border p-2 rounded h-24 text-xs font-mono text-gray-600" 
+                    placeholder={'<iframe src="..." ...></iframe>'} 
                 />
              </div>
-          </div>
 
-          {/* Text Amenities */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-             <InputList label="Connectivity" field="connectivity" placeholder="e.g. Near Metro" />
-             <InputList label="Nearby Landmarks" field="nearbyAmenities" placeholder="e.g. Hospital 2km" />
-             <InputList label="Other Amenities (Text)" field="amenities" placeholder="e.g. Power Backup" />
-          </div>
+             {/* 1. Connectivity */}
+             <InputList icon="✈️" label="Connectivity" field="connectivity" placeholder="e.g. 5 min to Airport, Near NH-8" />
+             
+             {/* 2. Schools */}
+             <InputList icon="🎓" label="Schools / Colleges" field="schools" placeholder="e.g. DPS (2km), GD Goenka (5km)" />
+             
+             {/* 3. Hospitals */}
+             <InputList icon="🏥" label="Hospitals" field="hospitals" placeholder="e.g. Medanta (10 mins)" />
+             
+             {/* 4. Other Landmarks */}
+             <InputList icon="🛍️" label="Malls & Business Hubs" field="nearbyAmenities" placeholder="e.g. Cyber City (15 mins)" />
         </div>
       </div>
 
-      {/* D. MEDIA & VISUAL ASSETS */}
+      {/* F. MEDIA */}
       <div className="mb-10">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">D. Media & Visuals</h3>
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">F. Media & Visuals</h3>
         
-        {/* 1. Cover & Brochure */}
+        {/* Overview & Video */}
+        <div className="mb-6">
+            <label className="block text-sm font-medium mb-1">Overview Text *</label>
+            <textarea required name="overview" value={formData.overview} onChange={handleChange} rows={5} className="w-full border p-2 rounded" />
+        </div>
+        <div className="bg-gray-50 p-4 rounded border mb-6">
+            <label className="block text-sm font-bold mb-2">Intro Video (Upload)</label>
+            <CloudinaryUploader label="Upload Video" accept="video/*" onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, videoUrl: res.url})) }} />
+            {formData.videoUrl && (
+                <div className="mt-2">
+                    <video src={formData.videoUrl} controls className="w-full h-40 object-cover rounded bg-black" />
+                    <button type="button" onClick={() => setFormData(prev => ({...prev, videoUrl: ""}))} className="text-xs text-red-500 underline mt-1">Remove</button>
+                </div>
+            )}
+        </div>
+
+        {/* Cover & Brochure */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
            <div className="bg-gray-50 p-4 rounded border">
               <label className="block text-sm font-bold mb-2">Cover Image (Hero)</label>
@@ -309,64 +369,36 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
            </div>
         </div>
 
-        {/* 2. VISUAL AMENITIES */}
+        {/* Visual Amenities Slider */}
         <div className="bg-gray-50 p-6 rounded border mb-8">
-           <h4 className="font-bold mb-4 text-gray-900 text-lg">2. Project Amenities (with Icons)</h4>
-           
+           <h4 className="font-bold mb-4 text-gray-900 text-lg">Visual Amenities (Slider)</h4>
            <div className="flex flex-col sm:flex-row gap-4 mb-6 items-end bg-white p-4 rounded border shadow-sm">
               <div className="flex-1 w-full">
-                 <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Amenity Title</label>
-                 <input 
-                    value={newAmenityName} 
-                    onChange={(e) => setNewAmenityName(e.target.value)} 
-                    placeholder="e.g. Swimming Pool"
-                    className="w-full border p-2 rounded" 
-                 />
+                 <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Title</label>
+                 <input value={newAmenityName} onChange={(e) => setNewAmenityName(e.target.value)} placeholder="e.g. Golf Course View" className="w-full border p-2 rounded" />
               </div>
               <div className="flex-1 w-full">
-                 <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Icon / Image</label>
-                 <CloudinaryUploader label="Upload Icon" onUpload={(res) => { if(res?.url) setNewAmenityImage(res.url) }} />
-                 {newAmenityImage && <p className="text-xs text-green-600 mt-1">Image Ready</p>}
+                 <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Image</label>
+                 <CloudinaryUploader label="Upload Image" onUpload={(res) => { if(res?.url) setNewAmenityImage(res.url) }} />
               </div>
-              <button type="button" onClick={addVisualAmenity} className="w-full sm:w-auto px-8 py-2 bg-black text-white font-bold rounded hover:bg-gray-800">
-                Add
-              </button>
+              <button type="button" onClick={addVisualAmenity} className="px-6 py-2 bg-black text-white font-bold rounded">Add</button>
            </div>
-
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {formData.projectAmenities.map((am: any, i: number) => (
-                <div key={i} className="flex items-center gap-3 bg-white p-3 rounded border shadow-sm">
-                   <img src={am.icon} className="w-12 h-12 object-cover rounded bg-gray-100" alt={am.name} />
-                   <span className="text-sm font-medium">{am.name}</span>
-                   <button type="button" onClick={() => removeVisualAmenity(i)} className="ml-auto text-red-500 font-bold bg-red-50 w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-100">×</button>
-                </div>
-              ))}
-              {formData.projectAmenities.length === 0 && (
-                <p className="text-sm text-gray-400 italic col-span-full">No amenities added yet.</p>
-              )}
-           </div>
+           {formData.projectAmenities.length > 0 && (
+               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {formData.projectAmenities.map((am: any, i: number) => (
+                    <div key={i} className="flex items-center gap-3 bg-white p-3 rounded border shadow-sm">
+                       <img src={am.icon} className="w-12 h-12 object-cover rounded bg-gray-100" alt={am.name} />
+                       <span className="text-sm font-medium">{am.name}</span>
+                       <button type="button" onClick={() => removeVisualAmenity(i)} className="ml-auto text-red-500 font-bold">×</button>
+                    </div>
+                  ))}
+               </div>
+           )}
         </div>
         
-        {/* 3. Floor Plans */}
-         <div className="bg-gray-50 p-6 rounded border mb-8">
-            <h4 className="font-bold mb-4 text-gray-900 text-lg">3. Floor Plans</h4>
-            <div className="mb-4"><CloudinaryUploader label="Add Plan" onUpload={addFloorPlan} /></div>
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-              {formData.floorPlans.map((plan: any, i: number) => (
-                <div key={i} className="relative group bg-white p-3 rounded border shadow-sm">
-                   <div className="h-24 w-full bg-gray-100 mb-2 flex items-center justify-center rounded">
-                      <img src={plan.url} className="max-h-full max-w-full object-contain" />
-                   </div>
-                   <input value={plan.alt || ""} onChange={(e) => updateFloorPlanTitle(i, e.target.value)} className="w-full border p-1 text-xs rounded" placeholder="Plan Title (e.g. 3BHK)" />
-                   <button type="button" onClick={() => removeFloorPlan(i)} className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full text-xs flex items-center justify-center">×</button>
-                </div>
-              ))}
-            </div>
-         </div>
-         
-         {/* 4. Gallery */}
+        {/* Gallery */}
          <div className="bg-gray-50 p-6 rounded border">
-            <h4 className="font-bold mb-4 text-gray-900 text-lg">4. Photo Gallery</h4>
+            <h4 className="font-bold mb-4 text-gray-900 text-lg">Photo Gallery</h4>
             <CloudinaryUploader label="Add Photos" onUpload={addGalleryImage} />
             <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mt-4">
               {formData.gallery.map((img: any, i: number) => (
@@ -379,14 +411,14 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
          </div>
       </div>
 
-      {/* E. SPECS */}
+      {/* G. SPECS */}
       <div>
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">E. Specs & Launch Info</h3>
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">G. Specs & Launch Info</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
            <div><label className="block text-sm font-medium mb-1">Price</label><input name="price" value={formData.price} onChange={handleChange} className="w-full border p-2 rounded" /></div>
-           <div><label className="block text-sm font-medium mb-1">Launch</label><input name="launchDate" value={formData.launchDate} onChange={handleChange} className="w-full border p-2 rounded" /></div>
-           <div><label className="block text-sm font-medium mb-1">Units</label><input name="totalUnits" value={formData.totalUnits} onChange={handleChange} className="w-full border p-2 rounded" /></div>
-           <div><label className="block text-sm font-medium mb-1">Area</label><input name="area" value={formData.area} onChange={handleChange} className="w-full border p-2 rounded" /></div>
+           <div><label className="block text-sm font-medium mb-1">Launch/Possession</label><input name="launchDate" value={formData.launchDate} onChange={handleChange} className="w-full border p-2 rounded" /></div>
+           <div><label className="block text-sm font-medium mb-1">Total Units</label><input name="totalUnits" value={formData.totalUnits} onChange={handleChange} className="w-full border p-2 rounded" /></div>
+           <div><label className="block text-sm font-medium mb-1">Area Range</label><input name="area" value={formData.area} onChange={handleChange} className="w-full border p-2 rounded" /></div>
         </div>
       </div>
 

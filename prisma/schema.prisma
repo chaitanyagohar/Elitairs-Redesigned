@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = env("DATABASE_URL") // Uses Port 6543 (Fast for App)
-  directUrl = env("DIRECT_URL")   // ✅ Uses Port 5432 (Required for db push)
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Admin {
@@ -21,38 +21,48 @@ model Project {
   slug            String   @unique
   
   // Locations
-  city            String?  // e.g. "Gurugram", "Noida"
+  city            String?  // e.g. "Gurugram"
   location        String?  // e.g. "Sector 150"
   
-  // Specs
-  status          String?  @default("New Launch")
-  propertyType    String?  // "Residential", "Commercial"
-  configurations  String[] @default([]) // ✅ NEW: ["2 BHK", "3 BHK", "Penthouse"]
+  // Specs & Status
+  status          String?  @default("New Launch") // Values: "Ready to Move", "Under Construction", "New Launch"
+  propertyType    String?  // Values: "Residential", "Commercial", "SCO Plots"
+  configurations  String[] @default([]) // e.g. ["2 BHK", "3 BHK", "Penthouse"]
   
-  // Details
+  // ✅ NEW DETAILS ADDED
+  landArea        String?  // e.g. "12 Acres"
+  paymentPlan     String?  // e.g. "30:40:30"
+  isFeatured      Boolean  @default(false) // To pin to top of homepage
+  
+  // Financials
   price           String?
-  area            String?
+  area            String?  // e.g. "1200 - 4500 Sq. Ft."
   totalUnits      String?
   launchDate      String?
   rera            String?
   builder         String?
   
-  // Descriptions
+  // Descriptions & Media
   overview        String?
   videoUrl        String?
   googleMapUrl    String?
-  
-  // Arrays
-  amenities       String[] @default([])
-  connectivity    String[] @default([])
-  nearbyAmenities String[] @default([])
-
-  // Media
   coverImage      String?
   brochure        String?
   
+  // --- AMENITIES SPLIT ---
+  // 1. General Amenities: Simple text list (e.g. "Power Backup", "Lift", "Security")
+  amenities       String[] @default([]) 
+  
+  // 2. Connectivity & Landmarks (Simple text lists)
+  connectivity    String[] @default([])
+   schools         String[] @default([]) // ✅ NEW: Schools/Colleges
+  hospitals       String[] @default([]) // ✅ NEW: Hospitals/Clinics
+  nearbyAmenities String[] @default([])
+
   // Relations
+  // 3. Project Specific Amenities: Rich visuals with Icons (e.g. "Clubhouse", "Golf Course")
   projectAmenities Amenity[]
+  
   floorplans      FloorPlan[]
   gallery         GalleryImage[]
 
@@ -60,6 +70,16 @@ model Project {
   updatedAt       DateTime @updatedAt
 }
 
+// Rich Amenities (Icon + Name)
+model Amenity {
+  id        String  @id @default(uuid())
+  name      String
+  icon      String  // URL to icon image
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+// Project Photos
 model GalleryImage {
   id        String   @id @default(uuid())
   url       String
@@ -69,14 +89,7 @@ model GalleryImage {
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
-model Amenity {
-  id        String  @id @default(uuid())
-  name      String
-  icon      String
-  projectId String
-  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
-}
-
+// Floor Plans
 model FloorPlan {
   id        String   @id @default(uuid())
   url       String
@@ -87,6 +100,7 @@ model FloorPlan {
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
+// Lead Forms
 model Lead {
   id        String   @id @default(uuid())
   name      String

@@ -27,7 +27,10 @@ export async function POST(req: Request) {
     // Sanitize Arrays
     const connectivity = Array.isArray(body.connectivity) ? body.connectivity : [];
     const nearbyAmenities = Array.isArray(body.nearbyAmenities) ? body.nearbyAmenities : [];
+    const schools = Array.isArray(body.schools) ? body.schools : [];
+    const hospitals = Array.isArray(body.hospitals) ? body.hospitals : [];
     const amenities = Array.isArray(body.amenities) ? body.amenities : []; // Legacy text amenities
+    const configurations = Array.isArray(body.configurations) ? body.configurations : [];
 
     // Prepare Relations
     // 1. Visual Amenities (Icon + Name)
@@ -57,6 +60,12 @@ export async function POST(req: Request) {
         location: body.location,
         rera: body.rera,
         
+        // ✅ NEW HIGHLIGHTS
+        status: body.projectStatus || body.status || "New Launch",
+        landArea: body.landArea,
+        paymentPlan: body.paymentPlan,
+        isFeatured: body.isFeatured || false,
+
         // Description & Media
         overview: body.overview,
         videoUrl: body.videoUrl,
@@ -70,10 +79,13 @@ export async function POST(req: Request) {
         totalUnits: body.totalUnits,
         area: body.area,
 
-        // String Arrays (Postgres)
+        // ✅ ARRAYS (Now includes Schools & Hospitals)
         connectivity: connectivity,
-        nearbyAmenities: nearbyAmenities,
-        amenities: amenities,
+        nearbyAmenities: nearbyAmenities, // Malls
+        schools: schools,                 // New
+        hospitals: hospitals,             // New
+        amenities: amenities,             // General Text
+        configurations: configurations,
 
         // Relations (Nested Writes)
         projectAmenities: {

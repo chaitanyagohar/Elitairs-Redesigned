@@ -3,13 +3,12 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-// 1. Remove HeroVideo import
-// import HeroVideo from "@/components/home/HeroVideo"; 
-// 2. Import new Slideshow
 import HeroSlideshow from "@/components/home/HeroSlideshow";
 import ScrollReveal from "@/components/home/ScrollReveal";
 import RevealStyles from "@/components/home/RevealStyles";
 import StatsStrip from "@/components/home/StatsStrip";
+import BuilderLogos from "@/components/home/BuildersLogo";
+import TestimonialSlider from "@/components/home/TestimonialSlider";
 
 export const dynamic = "force-dynamic";
 
@@ -40,14 +39,11 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
   premiumPicks = premiumPicks.slice(0, 8);
 
   // 4. ✅ PREPARE IMAGES FOR SLIDESHOW
-  // We take the coverImage from the top 5 premium projects. 
-  // If a project doesn't have an image, we filter it out.
   const slideshowImages = premiumPicks
     .map(p => p.coverImage)
-    .filter((img): img is string => !!img) // Remove null/undefined
-    .slice(0, 6); // Take top 6 images
+    .filter((img): img is string => !!img) 
+    .slice(0, 6);
 
-  // If no images found, add a fallback placeholder
   if (slideshowImages.length === 0) {
     slideshowImages.push("/homepage-about.jpeg"); 
   }
@@ -56,13 +52,19 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
   const dwarkaProjects = projects.slice(0, 5); 
   const sprProjects = projects.slice(0, 5).reverse(); 
 
+  async function getProjects() {
+  return await prisma.project.findMany({
+    take: 50,
+    orderBy: { createdAt: "desc" },
+  });
+}
   // City Tabs
   const cityTabs = ["All", "Gurugram", "New Delhi", "Noida", "Faridabad"];
 
   const statsData = [
     {
       id: "props",
-      label: "Properties",
+      label: "Builder Relations",
       value: 229,
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -81,7 +83,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
     },
     {
       id: "team",
-      label: "Team Members",
+      label: "Current Running Portfolios",
       value: 61,
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -136,15 +138,11 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 
       <ScrollReveal />
 
-      {/* --- 1. HERO SECTION (UPDATED) --- */}
+      {/* --- 1. HERO SECTION --- */}
       <section className="relative h-[80vh] md:h-[80vh] w-full overflow-hidden flex flex-col items-center justify-center bg-black">
-        
-        {/* ✅ REPLACED Video with Slideshow */}
         <HeroSlideshow images={slideshowImages} />
 
         <div className="relative z-30 container mx-auto px-4 text-center mt-16 md:mt-20">
-            
-            {/* TAGLINE */}
             <div className="mb-10 reveal-on-scroll" data-delay="50">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-2">
                     <span className="metallic-text drop-shadow-sm">
@@ -156,7 +154,6 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                 </p>
             </div>
 
-            {/* SEARCH BAR */}
             <form action="/projects" method="GET" className="bg-white rounded-2xl md:rounded-full p-3 md:p-2 md:pl-6 shadow-2xl max-w-md md:max-w-3xl mx-auto flex flex-col md:flex-row items-center reveal-on-scroll" data-delay="100">
                 <input 
                     name="search"
@@ -175,9 +172,8 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
       <section className="py-8 md:py-8 container mx-auto px-4 md:px-8">
         <div className="mb-8 ">
             <h2 className="text-2xl md:text-3xl font-bold mb-2">Premium Picks</h2>
-            <p className="text-sm md:text-base text-gray-500">Explore the finest homes across premium locations.</p>
+            <p className="reveal-on-scroll text-sm md:text-base text-gray-500">Explore the finest homes across premium locations.</p>
             
-            {/* City Tabs */}
             <div className="flex gap-3 md:gap-4 mt-6 overflow-x-auto pb-4 md:pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                 {cityTabs.map((city) => {
                     const isActive = activeCity.toLowerCase() === city.toLowerCase();
@@ -200,24 +196,84 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
         </div>
 
         <div className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 reveal-on-scroll" data-delay="100">
-            {premiumPicks.length > 0 ? (
-                premiumPicks.map((project) => (
-                    <div key={project.id} className="min-w-[300px] md:min-w-[350px] snap-center">
-                        <ProjectCard project={project} />
-                    </div>
-                ))
-            ) : (
-                <div className="w-full py-10 text-center bg-gray-50 rounded-lg">
-                    <p className="text-gray-500">No premium projects found in <span className="font-bold">{activeCity}</span>.</p>
-                    <Link href="/projects" className="text-[#FFC40C] text-sm underline mt-2 inline-block">View All Properties</Link>
-                </div>
-            )}
+          {premiumPicks.length > 0 ? (
+  premiumPicks.map((project) => (
+    <div key={project.id} className="min-w-[300px] md:min-w-[350px] snap-center">
+      <ProjectCard project={project} />
+    </div>
+  ))
+) : (
+  <div className="relative w-full py-16 md:py-20 rounded-3xl border border-gray-100 bg-gradient-to-br from-[#FFFDF7] via-white to-[#FFF7E6] overflow-hidden">
+
+    {/* subtle background accent */}
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#FFC40C]/10 rounded-full blur-3xl" />
+      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-black/5 rounded-full blur-3xl" />
+    </div>
+
+    <div className="relative z-10 max-w-2xl mx-auto text-center px-6">
+
+      {/* ICON */}
+      <div className="mx-auto mb-6 w-16 h-16 rounded-full bg-[#FFF3C4] flex items-center justify-center shadow-sm">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-7 h-7 text-[#B06C00]"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
+        </svg>
+      </div>
+
+      {/* HEADLINE */}
+      <h3 className="text-xl md:text-2xl font-extrabold tracking-tight text-gray-900 mb-3">
+        Premium Properties Coming Soon
+      </h3>
+
+      {/* SUBTEXT */}
+      <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-xl mx-auto mb-8">
+        We are currently curating handpicked luxury developments in{" "}
+        <span className="font-semibold text-gray-800">{activeCity}</span>.
+        <br className="hidden md:block" />
+        Our advisory team is onboarding select premium opportunities.
+      </p>
+
+      {/* CTA */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Link
+          href="/projects"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[#FFC40C] text-[#B06C00] font-semibold text-sm hover:bg-[#FFF0C6] transition-all"
+        >
+          View All Properties
+        </Link>
+
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[#FFC40C] text-black font-bold text-sm hover:bg-black hover:text-white transition-all shadow-md"
+        >
+          Speak to an Advisor
+        </Link>
+      </div>
+
+      {/* FOOTNOTE */}
+      <p className="mt-6 text-xs text-gray-400 uppercase tracking-widest">
+        Expansion in Progress
+      </p>
+    </div>
+  </div>
+)}
+
         </div>
         
         <div className="text-center mt-6">
             <Link href="/projects" className="text-[#FFC40C] font-bold border-b border-[#FFC40C] pb-1 hover:text-black hover:border-black transition-all text-sm">View all projects</Link>
         </div>
       </section>
+
+<BuilderLogos />
+
 
       {/* --- 3. SERVICES --- */}
       <section id="services" className="py-12 md:py-20 bg-gradient-to-b from-[#FFF7E6] to-[#FDF8E9]">
@@ -235,20 +291,37 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                 Book a Free Consult
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
               </a>
-              <a href="tel:+919898009900" className="hidden md:inline-flex items-center gap-2 text-sm text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:bg-white/70 transition">
+              <a href="tel:+9170818 08180" className="hidden md:inline-flex items-center gap-2 text-sm text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:bg-white/70 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#FFC40C]" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884l2-3A1 1 0 015 2h3a1 1 0 011 .883L9 6a1 1 0 01-.293.707l-1 1A13.034 13.034 0 0011 11a13.034 13.034 0 003.293-1.293l1-1A1 1 0 0116 8l3 1a1 1 0 01.883 1V16a1 1 0 01-1 1h-2c-7.18 0-13-5.82-13-13V6a1 1 0 01.003-.116z" /></svg>
-                +91 98 9800 9900
+                +91 70818 08180
               </a>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
-              { title: "Consultation", desc: "Shortlist matched to your needs.", img: "/services/consulting.jpg" },
-              { title: "Site Visits", desc: "Organised tours with an expert.", img: "/services/sitevisit.jpeg" },
-              { title: "Finance Help", desc: "Loan support & paperwork.", img: "/services/finance.jpeg" },
-              { title: "Handover Support", desc: "Smooth final delivery & follow-up.", img: "/services/handover.jpeg" },
-            ].map((item, i) => (
+  {
+    title: "Real Estate Consulting",
+    desc: "Advisory-led property selection based on budget, location fundamentals, and long-term appreciation potential.",
+    img: "/services/consulting.jpg",
+  },
+  {
+    title: "Research & Analysis",
+    desc: "Data-backed evaluation of micro-markets, pricing trends, and risk factors before capital deployment.",
+    img: "/services/research.jpg",
+  },
+  {
+    title: "Legal & Home Loan Consulting",
+    desc: "Structured support for documentation, compliance, and loan optimisation to ensure smooth execution.",
+    img: "/services/finance.jpeg",
+  },
+  {
+    title: "After-Sales & NRI Assistance",
+    desc: "End-to-end coordination post-booking, including possession support and dedicated services for NRIs.",
+    img: "/services/handover.jpeg",
+  },
+]
+.map((item, i) => (
               <article key={i} className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-transparent md:hover:border-[#FFE08A] md:group-hover:shadow-lg transition">
                 <div className="w-full h-32 md:h-40 overflow-hidden bg-gray-100">
                   <img src={item.img} alt={item.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
@@ -405,40 +478,42 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 
       <StatsStrip items={statsData} />
 
-      {/* --- 9. GALLERY --- */}
-      <section className="py-12 md:py-20 container mx-auto px-4 text-center">
-         <h2 className="text-2xl md:text-3xl font-bold mb-2">Frames of Excellence</h2>
-         <p className="text-sm md:text-base text-gray-500 mb-6 md:mb-8">Where vision meets reality at Elitairs.</p>
-         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-             {[1,2,3,4].map((i) => (
-                 <div key={i} className="aspect-square bg-gray-100 rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300 shadow-lg">
-                    <div className="w-full h-full bg-gray-200"></div>
-                 </div>
-             ))}
-         </div>
-      </section>
+ {/* --- 9. GALLERY --- */}
+<section className="py-12 md:py-20 container mx-auto px-4 text-center">
+  <h2 className="text-2xl md:text-3xl font-bold mb-2">
+    Frames of Excellence
+  </h2>
+  <p className="text-sm md:text-base text-gray-500 mb-6 md:mb-8">
+    Where vision meets reality at Elitairs.
+  </p>
 
-      {/* --- 10. TESTIMONIALS --- */}
-      <section className="py-12 md:py-16 bg-[#FDF8E9]">
-         <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Trusted by Homebuyers</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 mt-8">
-                {[{ name: "Alka Sharma", msg: "Their professionalism and detailed approach made the process smooth." }, { name: "Manish Himthani", msg: "They understood my vision perfectly. Thank you Elitairs!" }, { name: "Amit Verma", msg: "Found a home that exceeded my expectations. Trusted partners." }].map((t, i) => (
-                    <div key={i} className="bg-white p-6 rounded-xl shadow-md relative mt-4 md:mt-0">
-                        <div className="absolute -top-4 left-6 w-8 h-8 md:w-10 md:h-10 bg-[#FFC40C] flex items-center justify-center text-white text-lg font-serif font-bold rounded">“</div>
-                        <p className="text-gray-600 italic mb-6 mt-4 text-sm leading-relaxed">"{t.msg}"</p>
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 md:w-10 md:h-10 bg-gray-200 rounded-full"></div>
-                            <div><h4 className="font-bold text-sm">{t.name}</h4><div className="text-[#FFC40C] text-xs">★★★★★</div></div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-         </div>
-      </section>
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+    {[
+      "/saurabh1.jpeg",
+      "/saurabh2.jpeg",
+      "/saurabh3.jpeg",
+      "/saurabh4.jpeg",
+    ].map((src, i) => (
+      <div
+        key={i}
+        className="group aspect-square rounded-xl overflow-hidden shadow-lg bg-gray-100"
+      >
+        <img
+          src={src}
+          alt={`Elitairs Gallery ${i + 1}`}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+        />
+      </div>
+    ))}
+  </div>
+</section>
+
+
+    <TestimonialSlider />
 
       {/* --- 11. FOOTER CONTACT FORM --- */}
-      <section className="bg-white py-12 border-t border-gray-200">
+      <section className="bg-white py-12 ">
   <div className="container mx-auto px-4 flex flex-col md:flex-row gap-8">
     
     {/* LEFT: MAP + DETAILS */}
@@ -470,10 +545,10 @@ Golf Course Road,
 Gurugram, Haryana 122002
         </p>
         <p className="font-bold text-[#FFC40C] mt-2">
-          +91 98 9800 9900
+          +91 70818 08180
         </p>
         <p className="text-sm text-gray-500">
-          marketing@elitairs.com
+          info@elitairs.com
         </p>
       </div>
     </div>
@@ -531,7 +606,7 @@ Gurugram, Haryana 122002
   );
 }
 
-// --- HELPER COMPONENT: PROPERTY CARD ---
+// --- UPDATED PROJECT CARD COMPONENT ---
 function ProjectCard({ project }: { project: any }) {
     return (
         <Link href={`/projects/${project.slug ?? project.id}`} className="group block bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
@@ -541,23 +616,39 @@ function ProjectCard({ project }: { project: any }) {
                 ) : (
                     <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">No Image</div>
                 )}
+                
+                {/* STATUS BADGE */}
                 {project.status && (
-                    <div className="absolute top-3 left-3 bg-[#FFC40C] text-white text-[10px] font-bold px-2 py-1 rounded uppercase">
+                    <div className="absolute top-3 left-3 bg-[#FFC40C] text-black text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider shadow-sm">
                         {project.status}
+                    </div>
+                )}
+
+                {/* ✅ TYPE BADGE (Moved to Top Right) */}
+                {project.propertyType && (
+                    <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wider">
+                        {project.propertyType}
                     </div>
                 )}
             </div>
             <div className="p-4 flex flex-col flex-grow">
                 <h3 className="font-bold text-gray-900 truncate mb-1 text-sm md:text-base group-hover:text-[#FFC40C] transition-colors">{project.title}</h3>
+                
+                {/* ✅ ADDED 2-LINE OVERVIEW SNIPPET */}
+                {project.overview && (
+                    <p className="text-xs text-gray-500 line-clamp-2 mb-2 leading-relaxed">
+                        {project.overview}
+                    </p>
+                )}
+
                 <p className="text-xs text-gray-500 mb-3">{project.location ?? "Gurugram"}</p>
+                
                 <div className="flex flex-wrap gap-1 mb-2">
                     {project.configurations && project.configurations.length > 0 ? (
                         project.configurations.slice(0, 2).map((conf: string, i: number) => (
                             <span key={i} className="text-[10px] bg-gray-100 px-2 py-1 rounded text-gray-600">{conf}</span>
                         ))
-                    ) : (
-                        <span className="text-[10px] bg-gray-100 px-2 py-1 rounded text-gray-600">{project.propertyType ?? "Apartment"}</span>
-                    )}
+                    ) : null} 
                 </div>
                 <div className="mt-auto pt-3 border-t border-gray-100">
                     <p className="text-[10px] text-gray-400 uppercase font-bold">Starting from</p>
