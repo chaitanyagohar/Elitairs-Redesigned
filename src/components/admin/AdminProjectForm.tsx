@@ -71,8 +71,10 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
   // Handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    if (type === 'checkbox' && e.target instanceof HTMLInputElement) {
-        setFormData((prev) => ({ ...prev, [name]: e.target.checked }));
+    
+    if (type === 'checkbox') {
+        const isChecked = (e.target as HTMLInputElement).checked;
+        setFormData((prev) => ({ ...prev, [name]: isChecked }));
     } else {
         setFormData((prev) => ({ ...prev, [name]: value }));
     }
