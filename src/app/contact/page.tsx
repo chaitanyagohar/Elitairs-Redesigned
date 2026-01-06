@@ -37,7 +37,7 @@ export default function ContactPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // 2. Handle Final Submission
+  // 2. Handle Final Submission (REAL API CALL)
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
@@ -55,14 +55,36 @@ export default function ContactPage() {
 
     setStatus("submitting");
 
-    console.log("Submitting with Captcha Token:", captchaToken);
+    try {
+      // ✅ SEND DATA TO API
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          captchaToken, // Verify human
+        }),
+      });
 
-    setTimeout(() => {
-      setStatus("success");
-      setFormData({ name: "", email: "", phone: "", message: "", honey: "" });
-      setCaptchaToken(null);
-      recaptchaRef.current?.reset(); 
-    }, 1500);
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Success
+        setStatus("success");
+        setFormData({ name: "", email: "", phone: "", message: "", honey: "" });
+        setCaptchaToken(null);
+        recaptchaRef.current?.reset(); 
+      } else {
+        // Server rejected it (e.g., bot detected)
+        alert("Error: " + (data.message || "Failed to submit"));
+        setStatus("idle");
+      }
+
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("Something went wrong. Please try again.");
+      setStatus("idle");
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -115,11 +137,11 @@ export default function ContactPage() {
                </div>
             </div>
 
-            {/* ✅ GOOGLE MAP ADDED HERE */}
+            {/* GOOGLE MAP */}
             <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg border border-gray-100 relative group">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.4112281189273!2d77.07922007528266!3d28.467159775755448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d191751850aad%3A0xea9c107b7288b8f4!2sElitairs!5e0!3m2!1sen!2sin!4v1767016799849!5m2!1sen!2sin"
-          className="absolute inset-0 w-full h-full border-0"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.892695573419!2d77.0890669!3d28.4754563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1f6096576d17%3A0x6b1f2e7c4f4b0f0!2sCross%20Point%20Mall!5e0!3m2!1sen!2sin!4v1709664582394!5m2!1sen!2sin"
+                    className="absolute inset-0 w-full h-full border-0"
                     width="100%" 
                     height="100%" 
                     style={{ border: 0 }} 
@@ -174,7 +196,7 @@ export default function ContactPage() {
                   <div className="flex justify-center md:justify-start">
                     <ReCAPTCHA
                         ref={recaptchaRef}
-                        sitekey="6Lfb5EEsAAAAAKP7IhjNGBY974dUFvEvZ7-jD7yN" // Replace this!
+                        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "YOUR_SITE_KEY_IF_ENV_FAILS"} 
                         onChange={(token) => setCaptchaToken(token)}
                     />
                   </div>

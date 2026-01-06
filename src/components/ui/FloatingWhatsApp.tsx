@@ -1,7 +1,12 @@
 "use client";
 import React from "react";
+import { usePathname } from "next/navigation";
 
 export default function FloatingWhatsApp() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
   const handleClick = () => {
     const phone = "917081808180"; 
     const text = "Hi Elitairs, I am interested in exploring premium real estate opportunities.";

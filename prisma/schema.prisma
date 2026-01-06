@@ -102,11 +102,12 @@ model FloorPlan {
 
 // Lead Forms
 model Lead {
-  id        String   @id @default(uuid())
-  name      String
-  email     String
-  phone     String
-  message   String?
-  source    String?  @default("Website")
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  name         String
+  email        String?
+  phone        String
+  propertyType String?  // Residential, Commercial, etc.
+  message      String?
+  status       String   @default("New") // New, Contacted, Closed
+  createdAt    DateTime @default(now())
 }

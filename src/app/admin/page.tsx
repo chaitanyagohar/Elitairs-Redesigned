@@ -49,37 +49,7 @@ export default async function AdminIndex() {
         </div>
       </div>
 
-      <section>
-        <h2 className="text-lg text-black font-semibold mb-3">Recent Leads</h2>
-        <div className="bg-white rounded text-black shadow overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-green-600 text-white">
-              <tr>
-                <th className="p-3 text-left">Date</th>
-                <th className="p-3 text-left">Name</th>
-                <th className="p-3 text-left">Phone</th>
-                <th className="p-3 text-left">Message</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* server-side fetch top 5 leads */}
-              {/* placeholder rows */}
-              <tr className="border-b">
-                <td className="p-3">28/11/2025</td>
-                <td className="p-3">John Doe</td>
-                <td className="p-3">9876543210</td>
-                <td className="p-3">Interested in 3BHK</td>
-              </tr>
-              <tr className="border-b">
-                <td className="p-3">27/11/2025</td>
-                <td className="p-3">Jane Smith</td>
-                <td className="p-3">9123456780</td>
-                <td className="p-3">Send brochure</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
+    
     </div>
   );
 }
