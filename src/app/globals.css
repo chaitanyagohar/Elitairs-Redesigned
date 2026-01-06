@@ -185,3 +185,31 @@ html {
     animation-duration: 65s;
   }
 }
+
+/* --- Floating WhatsApp Animations --- */
+
+/* 1. Constant Floating Motion */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* 2. Slide Out & In Loop (Peek-a-boo) */
+@keyframes slide-in-out {
+  0%, 100% { 
+    opacity: 0; 
+    transform: translateX(60px); /* Hidden behind button */
+  }
+  15%, 85% { 
+    opacity: 1; 
+    transform: translateX(0); /* Visible */
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-slide-loop {
+  animation: slide-in-out 6s ease-in-out infinite; /* Runs every 6 seconds */
+}

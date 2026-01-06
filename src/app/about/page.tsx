@@ -85,8 +85,9 @@ export default function AboutPage() {
                 </span>
               </h1>
               <div className="mt-6 lg:mt-0 lg:max-w-xl text-right">
+                {/* REPHRASED: Removed "More than brokers" */}
                 <p className="text-lg text-black font-medium mb-2">
-                  More than brokers. We are your strategic investment partners.
+                  Beyond transactions. We are your strategic wealth partners.
                 </p>
                 <p className="text-sm md:text-base text-gray-900 font-light leading-relaxed">
                   Navigating the complexities of Gurugram’s real estate market requires precision, data, and foresight. We structure wealth through high-value assets, ensuring every square foot you own contributes to your financial legacy.
@@ -118,14 +119,14 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="mt-8">
-                 <Link href="/contact" className="group flex items-center justify-between w-full py-3 border-b border-black hover:border-[#FFC40C] transition-colors">
+                  <Link href="/contact" className="group flex items-center justify-between w-full py-3 border-b border-black hover:border-[#FFC40C] transition-colors">
                     <span className="font-bold text-base">Get Advice</span>
                     <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
-                 </Link>
-                 <Link href="/services" className="group flex items-center justify-between w-full py-3 border-b border-black/10 hover:border-[#FFC40C] transition-colors">
+                  </Link>
+                  <Link href="/services" className="group flex items-center justify-between w-full py-3 border-b border-black/10 hover:border-[#FFC40C] transition-colors">
                     <span className="font-bold text-base text-gray-600 group-hover:text-black">Our Services</span>
                     <span className="group-hover:translate-x-2 transition-transform duration-300 text-gray-400 group-hover:text-black">→</span>
-                 </Link>
+                  </Link>
               </div>
             </div>
           </div>
@@ -176,7 +177,7 @@ export default function AboutPage() {
 
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
+             
             {/* Image Side */}
             <div className="relative">
               <Reveal>
@@ -184,7 +185,7 @@ export default function AboutPage() {
                     <img 
                       src="/saurabh.png" 
                       alt="Saurabh Puri" 
-                      className="w-full h-[550px] object-cover object-top grayscale hover:grayscale-0 transition-all duration-700 shadow-xl rounded-sm"
+                      className="w-full h-[550px] object-cover object-top transition-all duration-700 shadow-xl rounded-sm"
                     />
                     <div className="absolute bottom-0 left-0 bg-black text-white p-5 md:p-6 w-full opacity-90">
                        <p className="text-xs tracking-widest uppercase text-[#FFC40C] mb-1">Founder & CEO</p>
@@ -208,7 +209,9 @@ export default function AboutPage() {
 
                 <div className="prose text-gray-600 mb-6 text-base leading-relaxed">
                    <p className="mb-4">
-                     Saurabh Puri brings over <strong className="text-black">15 years of deep expertise</strong> in real estate consulting. Unlike typical brokerage, his approach is rooted in financial structuring—understanding market cycles to enter and exit at the right time.
+                     Saurabh Puri brings over <strong className="text-black">15 years of deep expertise</strong> in real estate consulting. 
+                     {/* REPHRASED: "Unlike typical brokerage" */}
+                     Distinct from conventional agencies, his approach is rooted in financial structuring—understanding market cycles to enter and exit at the right time.
                    </p>
                    <p className="mb-4">
                      Based out of Gurugram, he has cultivated a network of HNIs and UHNIs who trust Elitairs for <strong className="text-black">Risk Mitigation</strong> and <strong className="text-black">Capital Appreciation</strong>.
@@ -236,6 +239,50 @@ export default function AboutPage() {
               </Reveal>
             </div>
           </div>
+        </div>
+      </section>
+{/* ===== NEW: FOUNDER'S MESSAGE ===== */}
+      <section className="py-24 bg-[#F9F9F9]">
+        <div className="container mx-auto px-6 max-w-5xl">
+            <Reveal>
+                <div className="text-center mb-12">
+                     <span className="text-[#FFC40C] font-bold tracking-[0.2em] text-xs uppercase block mb-4">Founder’s Message</span>
+                     <h2 className="text-3xl md:text-5xl font-serif text-black leading-tight">
+                         "Real estate is not a transaction— <br/>it is a strategic financial asset class."
+                     </h2>
+                </div>
+
+                <div className="bg-white p-10 md:p-16 shadow-lg border border-gray-100 rounded-lg relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-[#FFC40C]"></div>
+                    <div className="prose prose-lg max-w-none text-gray-600 leading-relaxed font-light">
+                        <p className="mb-6">
+                            {/* Wraps "At" in a span to make both letters big */}
+                            <span className="text-5xl font-serif font-bold text-black mr-3 float-left leading-[0.8] mt-2">
+                              At
+                            </span>
+                            Elitairs, real estate is not viewed as a transaction—it is treated as a strategic financial asset class.
+                        </p>
+                        <p className="mb-6">
+                            Over the last 15 years, I have worked closely with HNIs and UHNIs to help them navigate complex real estate decisions—whether it involves portfolio restructuring, land banking, joint ventures, or institutional-grade investments. My philosophy has always been simple: capital protection first, performance next, and sustainability always.
+                        </p>
+                        <p className="mb-8">
+                            Markets evolve, cycles change, and sentiment fluctuates—but well-structured real estate continues to create enduring wealth. At Elitairs, every advisory mandate is driven by research, market intelligence, and a long-term vision aligned with our clients’ financial objectives.
+                        </p>
+                        
+                        <div className="p-6 bg-gray-50 border-l-4 border-black mb-8 italic text-black font-medium">
+                            Our role is not to sell property, but to build wealth frameworks through real estate—with discretion, precision, and accountability.
+                        </div>
+
+                        <div className="flex items-center gap-4 mt-10 pt-8 border-t border-gray-100">
+                             <img src="/saurabh10.webp" alt="Saurabh Puri" className="w-16 h-16 rounded-full object-fit " />
+                             <div>
+                                 <h4 className="font-serif text-xl font-bold text-black">Saurabh Puri</h4>
+                                 <p className="text-[#FFC40C] text-xs uppercase tracking-wider font-bold">Founder & CEO, Elitairs</p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </Reveal>
         </div>
       </section>
 
@@ -320,11 +367,11 @@ export default function AboutPage() {
       <section className="bg-gray-50 py-24">
         <div className="container mx-auto px-6 max-w-7xl">
            <div className="mb-16 relative">
-              <h2 className="text-6xl font-bold font-serif text-gray-200 absolute select-none -translate-y-8 z-0">PROCESS</h2>
-              <h2 className="text-3xl md:text-4xl font-bold relative z-10 pl-2">How We Work</h2>
-              <p className="mt-4 text-gray-500 max-w-2xl relative z-10">
-                Our workflow is designed to eliminate ambiguity. We follow a structured three-step protocol to ensure every transaction is compliant, profitable, and smooth.
-              </p>
+             <h2 className="text-6xl font-bold font-serif text-gray-200 absolute select-none -translate-y-8 z-0">PROCESS</h2>
+             <h2 className="text-3xl md:text-4xl font-bold relative z-10 pl-2">How We Work</h2>
+             <p className="mt-4 text-gray-500 max-w-2xl relative z-10">
+               Our workflow is designed to eliminate ambiguity. We follow a structured three-step protocol to ensure every transaction is compliant, profitable, and smooth.
+             </p>
            </div>
 
            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -382,7 +429,8 @@ export default function AboutPage() {
             <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-800 pb-6">
                <h2 className="text-3xl md:text-5xl font-serif">Why Choose <span className="text-[#FFC40C]">Us?</span></h2>
                <p className="text-gray-400 max-w-md mt-6 md:mt-0 text-right text-sm">
-                 We bridge the gap between "Property Dealer" and "Wealth Manager".
+                 {/* REPHRASED: "Property Dealer" */}
+                 We elevate the experience from "Asset Acquisition" to "Wealth Management".
                </p>
             </div>
 
@@ -397,7 +445,7 @@ export default function AboutPage() {
                ].map((item, i) => (
                  <Reveal key={i} delay={i * 50}>
                     <div className="bg-[#111] p-8 h-full hover:bg-[#1a1a1a] transition-colors group">
-                       <div className="text-2xl mb-4 grayscale group-hover:grayscale-0 transition-all">{item.icon}</div>
+                       <div className="text-2xl mb-4transition-all">{item.icon}</div>
                        <h4 className="text-lg font-bold mb-2 text-[#FFC40C]">{item.title}</h4>
                        <p className="text-xs text-gray-400 leading-relaxed group-hover:text-gray-300">{item.desc}</p>
                     </div>
@@ -442,20 +490,20 @@ export default function AboutPage() {
       <section className="py-24 bg-white text-center">
         <div className="container mx-auto px-6 max-w-4xl">
            <Reveal>
-              <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                Let your wealth grow <br/> in your <span className="text-[#FFC40C]">homeland.</span>
-              </h2>
-              <p className="text-lg text-gray-500 mb-10 font-light">
-                Professional NRI services, Commercial Structuring, and Luxury Residential consulting await at Elitairs.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+             <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+               Let your wealth grow <br/> in your <span className="text-[#FFC40C]">homeland.</span>
+             </h2>
+             <p className="text-lg text-gray-500 mb-10 font-light">
+               Professional NRI services, Commercial Structuring, and Luxury Residential consulting await at Elitairs.
+             </p>
+             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                  <Link href="/contact" className="px-8 py-4 bg-black text-white text-base font-bold rounded hover:bg-[#FFC40C] hover:text-black transition-all duration-300">
-                    Contact Us
+                   Contact Us
                  </Link>
                  <a href="tel:+917081808180" className="px-8 py-4 border-2 border-black text-black text-base font-bold rounded hover:bg-black hover:text-white transition-all duration-300">
-                    +91 70818 08180
+                   +91 70818 08180
                  </a>
-              </div>
+             </div>
            </Reveal>
         </div>
       </section>

@@ -137,7 +137,7 @@ export default function ConsultingPage() {
                ].map((item, i) => (
                  <Reveal key={i} delay={i * 100}>
                    <div className="p-8 border border-white/10 hover:border-[#FFC40C] bg-white/5 hover:bg-white/10 transition-all duration-300 rounded-xl group h-full">
-                      <div className="text-4xl mb-6 grayscale group-hover:grayscale-0 transition-all">{item.icon}</div>
+                      <div className="text-4xl mb-6 transition-all">{item.icon}</div>
                       <h3 className="text-xl font-bold mb-4 group-hover:text-[#FFC40C] transition-colors">{item.title}</h3>
                       <p className="text-gray-400 text-sm leading-relaxed">
                         {item.desc}

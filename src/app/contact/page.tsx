@@ -2,7 +2,7 @@
 import React, { useState, useRef } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import ReCAPTCHA from "react-google-recaptcha"; // ✅ Import
+import ReCAPTCHA from "react-google-recaptcha"; 
 
 export default function ContactPage() {
   // Form States
@@ -18,7 +18,7 @@ export default function ContactPage() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   
-  // ✅ CAPTCHA State
+  // CAPTCHA State
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
@@ -41,13 +41,13 @@ export default function ContactPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // Honeypot Check (Anti-Bot Layer 1)
+    // Honeypot Check
     if (formData.honey) return;
 
-    // Validation Check (Data Integrity Layer 2)
+    // Validation Check
     if (!validateForm()) return;
 
-    // ✅ CAPTCHA Check (Anti-Bot Layer 3)
+    // CAPTCHA Check
     if (!captchaToken) {
       alert("Please verify that you are not a robot.");
       return;
@@ -55,17 +55,13 @@ export default function ContactPage() {
 
     setStatus("submitting");
 
-    // --- Backend Integration Note ---
-    // In a real app, send 'captchaToken' to your API.
-    // Your API will verify it with Google before saving the lead.
-    
     console.log("Submitting with Captcha Token:", captchaToken);
 
     setTimeout(() => {
       setStatus("success");
       setFormData({ name: "", email: "", phone: "", message: "", honey: "" });
       setCaptchaToken(null);
-      recaptchaRef.current?.reset(); // Reset captcha for next use
+      recaptchaRef.current?.reset(); 
     }, 1500);
   }
 
@@ -96,15 +92,18 @@ export default function ContactPage() {
       </section>
 
       <section className="py-24 px-6 container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
-         <div className="flex flex-col justify-center">
+         
+         {/* LEFT COLUMN: Contact Info + MAP */}
+         <div className="flex flex-col">
             <h2 className="text-4xl font-bold mb-8">Contact Information</h2>
             <p className="text-gray-500 mb-12 text-lg">
               Our consultants are ready to assist you.
             </p>
-            <div className="space-y-8 text-lg font-light text-black">
+            
+            <div className="space-y-8 text-lg font-light text-black mb-12">
                <div className="border-l-4 border-[#C5A059] pl-6">
                   <p className="uppercase text-xs font-bold text-gray-400 mb-1">Visit</p>
-                  <p className="font-medium">2nd floor, Cross, Point Mall, 307, opposite Galleria Market, Galleria Market, Sector 28, DLF Phase IV, Gurugram, Haryana 122009</p>
+                  <p className="font-medium">2nd floor, Cross Point Mall, 307, Opposite Galleria Market, Sector 28, DLF Phase IV, Gurugram, Haryana 122009</p>
                </div>
                <div className="border-l-4 border-gray-200 pl-6">
                   <p className="uppercase text-xs font-bold text-gray-400 mb-1">Call</p>
@@ -115,9 +114,28 @@ export default function ContactPage() {
                   <p className="font-medium hover:text-[#C5A059] cursor-pointer">info@elitairs.com</p>
                </div>
             </div>
+
+            {/* ✅ GOOGLE MAP ADDED HERE */}
+            <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg border border-gray-100 relative group">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.4112281189273!2d77.07922007528266!3d28.467159775755448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d191751850aad%3A0xea9c107b7288b8f4!2sElitairs!5e0!3m2!1sen!2sin!4v1767016799849!5m2!1sen!2sin"
+          className="absolute inset-0 w-full h-full border-0"
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Office Location"
+                ></iframe>
+                 {/* Hover Overlay Hint */}
+                 <div className="absolute inset-0 bg-black/10 pointer-events-none group-hover:bg-transparent transition-colors" />
+            </div>
+
          </div>
 
-         <div className="bg-gray-50 p-8 lg:p-12 border border-gray-100 shadow-xl rounded-sm">
+         {/* RIGHT COLUMN: Form */}
+         <div className="bg-gray-50 p-8 lg:p-12 border border-gray-100 shadow-xl rounded-sm h-fit">
             {status === "success" ? (
                <div className="text-center py-20">
                   <div className="text-6xl mb-6 text-[#C5A059]">✓</div>
@@ -152,7 +170,7 @@ export default function ContactPage() {
                       <textarea name="message" value={formData.message} onChange={handleChange} rows={3} className="w-full bg-white border border-gray-200 p-4 text-black focus:outline-none focus:border-[#C5A059] resize-none" placeholder="I am interested in..." required></textarea>
                   </div>
 
-                  {/* ✅ RECAPTCHA WIDGET */}
+                  {/* RECAPTCHA WIDGET */}
                   <div className="flex justify-center md:justify-start">
                     <ReCAPTCHA
                         ref={recaptchaRef}

@@ -25,7 +25,7 @@ export default function PartnerSlider() {
         {/* First Set of Logos */}
         <div className="flex gap-20 px-10 items-center">
           {partners.map((p, i) => (
-            <div key={`a-${i}`} className="w-32 h-20 relative grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+            <div key={`a-${i}`} className="w-32 h-20 relative hover:opacity-100 transition-all duration-300 flex items-center justify-center">
               <img 
                 src={p.logo} 
                 alt={p.name} 

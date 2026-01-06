@@ -6,18 +6,20 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#050505] text-white pt-20 pb-10 border-t border-[#FFC40C]/20 font-sans relative overflow-hidden">
-      
-      {/* Golden Glow Effect at top */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFC40C] to-transparent shadow-[0_0_10px_#FFC40C]"></div>
+    <footer className="bg-[#050505] text-white pt-16 md:pt-20 pb-10 border-t border-[#FFC40C]/20 font-sans relative overflow-hidden">
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-          
+      {/* Golden Glow Effect */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFC40C] to-transparent shadow-[0_0_10px_#FFC40C]" />
+
+      <div className="container mx-auto px-5 sm:px-6 relative z-10">
+
+        {/* MAIN GRID */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 mb-14">
+
           {/* BRAND */}
           <div className="lg:col-span-2 space-y-6">
             <Link href="/" className="inline-block">
-              <div className="relative w-40 h-12">
+              <div className="relative w-36 sm:w-40 h-12">
                 <Image
                   src="/elitairs-logo2trans.png"
                   alt="Elitairs"
@@ -27,8 +29,9 @@ export default function Footer() {
               </div>
             </Link>
 
-            <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-              Architects of legacy. We curate the finest real estate experiences in Gurugram & NCR, bridging the gap between luxury and lifestyle.
+            <p className="text-gray-400 text-sm leading-relaxed max-w-md">
+              We curate legacy-defining real estate across Gurugram & NCR,
+              harmonizing architectural excellence with an elevated lifestyle.
             </p>
 
             {/* SOCIALS */}
@@ -93,7 +96,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-gray-400">
               <li><Link href="/about" className="hover:text-[#FFC40C]">About Elitairs</Link></li>
               <li><Link href="/nri" className="hover:text-[#FFC40C]">NRI Services</Link></li>
-              <li><Link href="/careers" className="hover:text-[#FFC40C]">Careers</Link></li>
+              <li><Link href="/master-plan" className="hover:text-[#FFC40C]">Gurgaon Master Plan 2031</Link></li>
               <li><Link href="/contact" className="hover:text-[#FFC40C]">Contact Us</Link></li>
             </ul>
           </div>
@@ -114,32 +117,24 @@ export default function Footer() {
               </p>
 
               <div className="pt-2">
-                <a
-                  href="tel:+917081808180"
-                  className="block text-white font-bold hover:text-[#FFC40C] transition-colors text-lg"
-                >
+                <a href="tel:+917081808180" className="block text-white font-bold hover:text-[#FFC40C] text-lg">
                   +91 70818 08180
                 </a>
-                <a
-                  href="mailto:info@elitairs.com"
-                  className="block hover:text-[#FFC40C] transition-colors"
-                >
+                <a href="mailto:info@elitairs.com" className="block hover:text-[#FFC40C]">
                   info@elitairs.com
                 </a>
               </div>
             </div>
           </div>
-
         </div>
 
         {/* BOTTOM BAR */}
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest">
+        <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest text-center md:text-left">
           <p>&copy; {currentYear} Elitairs. All Rights Reserved.</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap justify-center md:justify-end gap-4">
             <Link href="/privacy-policy" className="hover:text-[#FFC40C]">Privacy Policy</Link>
             <Link href="/disclaimer" className="hover:text-[#FFC40C]">Disclaimer</Link>
             <Link href="/terms-conditions" className="hover:text-[#FFC40C]">Terms & Conditions</Link>
-            <span className="hidden md:inline text-white/20">|</span>
             <span className="hover:text-white cursor-pointer">RERA Compliant</span>
           </div>
         </div>

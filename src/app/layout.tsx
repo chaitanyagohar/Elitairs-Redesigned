@@ -2,6 +2,8 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import React from "react";
+import AutoPopupModal from "@/components/ui/AutoPopupModal";
+import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 
 // Configure fonts with weights and CSS variable names
 const inter = Inter({
@@ -33,6 +35,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       {/* Body uses the site-wide color scheme and default sans font */}
       <body className="font-sans bg-black text-white">
+        <AutoPopupModal />
+        <FloatingWhatsApp />
         {children}
       </body>
     </html>
