@@ -8,34 +8,25 @@ type Builder = {
 };
 
 const BUILDERS: Builder[] = [
-  {
-    name: "M3M",
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKsK4ekBAXB_CR3XCKyIicc0JazZXY5aXz2Q&s",
-  },
-  { name: "Aarize", url: "/builders/aarize.png" }, // Ensure this path exists or use placeholder
-  {
-    name: "Neo Developers",
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8Rln7SSJ7Entkd2hCHlOAniR_JRRN2BymQQ&s",
-  },
-  {
-    name: "Sobha",
-    url: "https://cdn.worldvectorlogo.com/logos/sobha-realty-logo.svg",
-  },
+  // {
+  //   name: "Sobha",
+  //   url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwuEFbs-ekyT1y8l5Mpc8YV4aIPwIE4sTAZA&s",
+  // },
   {
     name: "Adani",
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Adani_logo_2012.svg/1200px-Adani_logo_2012.svg.png",
   },
   {
     name: "Elan",
-    url: "https://www.elan-developer.com/elan/elan-group-logo.png",
+    url: "https://elanltd.in/wp-content/uploads/2023/11/elan-logo.png",
   },
   {
     name: "SPJ",
-    url: "https://www.shopertyy.com/wp-content/uploads/2025/06/Untitled-design-69.png",
+    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQus-VdHxosGGN2gnjOct5E5IleOPoylbzz4Q&s",
   },
   {
     name: "Emaar",
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Emaar_logo.svg/1200px-Emaar_logo.svg.png",
+    url: "https://upload.wikimedia.org/wikipedia/en/thumb/6/66/Emaar_India.svg/1200px-Emaar_India.svg.png",
   },
   {
     name: "Omaxe",
@@ -69,7 +60,7 @@ const BUILDERS: Builder[] = [
 export default function BuilderLogos() {
   return (
     <section className="py-16 bg-[#FFFFFF] overflow-hidden relative">
-      {/* Background decoration (optional subtle grid) */}
+
 <div 
   className="
     absolute inset-0 
@@ -115,7 +106,7 @@ export default function BuilderLogos() {
                   alt={builder.name}
                   title={builder.name}
                   className="
-                    max-h-14 max-w-[140px] w-auto h-auto object-contain
+                    max-h-26 max-w-[150px] w-auto h-auto object-contain
                     transition-all duration-500 ease-in-out
                      hover:opacity-100 hover:scale-110
                     /* Mix blend helps remove white box backgrounds on logos */
