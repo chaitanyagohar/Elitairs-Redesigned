@@ -59,7 +59,7 @@ const BUILDERS: Builder[] = [
 
 export default function BuilderLogos() {
   return (
-    <section className="py-16 bg-[#FFFFFF] overflow-hidden relative">
+    <section className="py-12 bg-[#FFFFFF] overflow-hidden relative">
 
 <div 
   className="
@@ -106,7 +106,7 @@ export default function BuilderLogos() {
                   alt={builder.name}
                   title={builder.name}
                   className="
-                    max-h-26 max-w-[150px] w-auto h-auto object-contain
+                    max-h-24 max-w-[150px] w-auto h-auto object-contain
                     transition-all duration-500 ease-in-out
                      hover:opacity-100 hover:scale-110
                     /* Mix blend helps remove white box backgrounds on logos */
