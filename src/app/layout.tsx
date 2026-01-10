@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import React from "react";
 import AutoPopupModal from "@/components/ui/AutoPopupModal";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
+import NextTopLoader from 'nextjs-toploader';
 
 // Configure fonts with weights and CSS variable names
 const inter = Inter({
@@ -35,6 +36,17 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       {/* Body uses the site-wide color scheme and default sans font */}
       <body className="font-sans bg-black text-white">
+        <NextTopLoader
+          color="#FFC40C"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false} // Spinner looks cheap, keep it false
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #FFC40C,0 0 5px #FFC40C" // Adds a nice gold glow
+        />
         <AutoPopupModal />
         <FloatingWhatsApp />
         {children}

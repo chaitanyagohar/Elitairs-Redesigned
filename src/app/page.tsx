@@ -522,7 +522,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
         
         {/* Google Map Embed */}
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.4112281189273!2d77.07922007528266!3d28.467159775755448!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d191751850aad%3A0xea9c107b7288b8f4!2sElitairs!5e0!3m2!1sen!2sin!4v1767016799849!5m2!1sen!2sin"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1753.7056136962813!2d77.08099147974633!3d28.467159797639116!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d191751850aad%3A0xea9c107b7288b8f4!2sElitairs!5e0!3m2!1sen!2sin!4v1767945775855!5m2!1sen!2sin"
           className="absolute inset-0 w-full h-full border-0"
           allowFullScreen
           loading="lazy"

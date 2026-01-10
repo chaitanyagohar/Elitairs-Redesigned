@@ -88,18 +88,72 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* COMPANY */}
-          <div>
-            <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6 border-b border-[#FFC40C] inline-block pb-1">
-              Company
-            </h4>
-            <ul className="space-y-3 text-sm text-gray-400">
-              <li><Link href="/about" className="hover:text-[#FFC40C]">About Elitairs</Link></li>
-              <li><Link href="/nri" className="hover:text-[#FFC40C]">NRI Services</Link></li>
-              <li><Link href="/master-plan" className="hover:text-[#FFC40C]">Gurgaon Master Plan 2031</Link></li>
-              <li><Link href="/contact" className="hover:text-[#FFC40C]">Contact Us</Link></li>
-            </ul>
-          </div>
+       {/* COMPANY */}
+<div>
+  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6 border-b border-[#FFC40C] inline-block pb-1">
+    Company
+  </h4>
+
+  <ul className="space-y-3 text-sm text-gray-400">
+    <li>
+      <Link href="/about" className="hover:text-[#FFC40C]">
+        About Elitairs
+      </Link>
+    </li>
+    <li>
+      <Link href="/nri" className="hover:text-[#FFC40C]">
+        NRI Services
+      </Link>
+    </li>
+
+    {/* MASTER PLANS GROUP */}
+    <li className="pt-3">
+      <span className="block text-white font-semibold mb-2">
+        Master Plans
+      </span>
+
+      <ul className="ml-3 space-y-2 text-gray-400 text-[13px]">
+        <li>
+          <Link href="/master-plan/gurgaon" className="hover:text-[#FFC40C]">
+            Gurgaon 2031
+          </Link>
+        </li>
+        <li>
+          <Link href="/master-plan/delhi" className="hover:text-[#FFC40C]">
+            Delhi
+          </Link>
+        </li>
+        <li>
+          <Link href="/master-plan/noida" className="hover:text-[#FFC40C]">
+            Noida
+          </Link>
+        </li>
+        <li>
+          <Link href="/master-plan/yamuna" className="hover:text-[#FFC40C]">
+            Yamuna Expressway
+          </Link>
+        </li>
+        <li>
+          <Link href="/master-plan/sohna" className="hover:text-[#FFC40C]">
+            Sohna
+          </Link>
+        </li>
+        <li>
+          <Link href="/master-plan/faridabad" className="hover:text-[#FFC40C]">
+            Faridabad
+          </Link>
+        </li>
+      </ul>
+    </li>
+
+    <li className="pt-3">
+      <Link href="/contact" className="hover:text-[#FFC40C]">
+        Contact Us
+      </Link>
+    </li>
+  </ul>
+</div>
+
 
           {/* VISIT US */}
           <div>

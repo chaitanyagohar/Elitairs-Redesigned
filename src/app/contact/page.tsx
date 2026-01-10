@@ -140,7 +140,7 @@ export default function ContactPage() {
             {/* GOOGLE MAP */}
             <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg border border-gray-100 relative group">
                 <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.892695573419!2d77.0890669!3d28.4754563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d1f6096576d17%3A0x6b1f2e7c4f4b0f0!2sCross%20Point%20Mall!5e0!3m2!1sen!2sin!4v1709664582394!5m2!1sen!2sin"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1753.7056136962813!2d77.08099147974633!3d28.467159797639116!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d191751850aad%3A0xea9c107b7288b8f4!2sElitairs!5e0!3m2!1sen!2sin!4v1767945775855!5m2!1sen!2sin"
                     className="absolute inset-0 w-full h-full border-0"
                     width="100%" 
                     height="100%" 
