@@ -100,7 +100,7 @@ export default function AboutPage() {
             <div className="lg:col-span-8 relative group overflow-hidden rounded-xl">
                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-all duration-700 z-10"></div>
                <img
-                src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?q=80&w=2000&auto=format&fit=crop"
+                src="/about-hero.png"
                 alt="Elitairs Luxury Property"
                 className="w-full h-[450px] md:h-[550px] object-cover transition-transform duration-1000 transform group-hover:scale-105"
               />
