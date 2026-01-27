@@ -14,7 +14,7 @@ const BUILDERS: Builder[] = [
   // },
   {
     name: "Adani",
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Adani_logo_2012.svg/1200px-Adani_logo_2012.svg.png",
+    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL0iXSede8rDaQG8VqQoXfUuU92A8WXmaTfQ&s",
   },
   {
     name: "Elan",
@@ -26,7 +26,7 @@ const BUILDERS: Builder[] = [
   },
   {
     name: "Emaar",
-    url: "https://upload.wikimedia.org/wikipedia/en/thumb/6/66/Emaar_India.svg/1200px-Emaar_India.svg.png",
+    url: "/builders/emaar.png",
   },
   {
     name: "Omaxe",
@@ -34,11 +34,11 @@ const BUILDERS: Builder[] = [
   },
   {
     name: "Trehan",
-    url: "https://trehanluxuryfloors.com/wp-content/uploads/2025/05/Logo-Website.png",
+    url: "/builders/trehan.png",
   },
   {
     name: "Silverglades",
-    url: "https://www.3horizons.in/images/builders/502291867silverglad-logo.png",
+    url: "https://www.eliteproinfra.com/uploads/builder/1678530693.png",
   },
   {
     name: "Godrej Properties",
@@ -66,7 +66,7 @@ export default function BuilderLogos() {
     absolute inset-0 
     opacity-[0.4] 
     pointer-events-none 
-    bg-[radial-gradient(#cbd5e1_2px,transparent_1px)] 
+    bg-[radial-gradient(#cbd5e1_1px,transparent_2px)] 
     [background-size:16px_16px]
     [mask-image:linear-gradient(to_bottom,transparent,black_6rem)]
   " 
@@ -108,7 +108,7 @@ export default function BuilderLogos() {
                   className="
                     max-h-24 max-w-[150px] w-auto h-auto object-contain
                     transition-all duration-500 ease-in-out
-                     hover:opacity-100 hover:scale-110
+                   scale-110
                     /* Mix blend helps remove white box backgrounds on logos */
                     mix-blend-multiply
                   "
