@@ -5,6 +5,7 @@ import React from "react";
 import AutoPopupModal from "@/components/ui/AutoPopupModal";
 import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 import NextTopLoader from 'nextjs-toploader';
+import DisclaimerModal from "@/components/ui/DisclaimerModal";
 
 // Configure fonts with weights and CSS variable names
 const inter = Inter({
@@ -47,6 +48,7 @@ export default function RootLayout({
           speed={200}
           shadow="0 0 10px #FFC40C,0 0 5px #FFC40C" // Adds a nice gold glow
         />
+        <DisclaimerModal />
         <AutoPopupModal />
         <FloatingWhatsApp />
         {children}

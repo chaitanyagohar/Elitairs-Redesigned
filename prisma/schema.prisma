@@ -110,4 +110,8 @@ model Lead {
   message      String?
   status       String   @default("New") // New, Contacted, Closed
   createdAt    DateTime @default(now())
+  
+  consent      Boolean  @default(false)   // ✅ NEW
+  ipAddress    String?                    // ✅ NEW
+  userAgent    String?  
 }
