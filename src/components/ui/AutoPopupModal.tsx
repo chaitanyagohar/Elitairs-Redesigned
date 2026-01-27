@@ -242,7 +242,7 @@ export default function AutoPopupModal() {
                   {/* Title */}
                   <div className="text-center mb-2">
 
-                    <h2 className="text-lg font-bold uppercase">
+                    <h2 className="text-black font-bold uppercase">
                       Enquire Now
                     </h2>
 
@@ -307,17 +307,16 @@ export default function AutoPopupModal() {
                     className="w-full bg-gray-50 border py-2 px-3 text-black resize-none"
                   />
 
-                  {/* CAPTCHA */}
-                  <div className="flex justify-center scale-85">
-                    <ReCAPTCHA
-                      ref={recaptchaRef}
-                      sitekey={
-                        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ||
-                        ""
-                      }
-                      onChange={(t) => setCaptchaToken(t)}
-                    />
-                  </div>
+              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+  <div className="flex justify-center scale-85">
+    <ReCAPTCHA
+      ref={recaptchaRef}
+      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+      onChange={(token) => setCaptchaToken(token)}
+    />
+  </div>
+)}
+
 
                   {/* Consent */}
                   <div className="flex gap-2 text-[9px] text-gray-600">
