@@ -1,34 +1,46 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-// ✅ 1. EXACT CONSTANTS FROM ADMIN FORM (Do not change spelling)
+// ✅ CONSTANTS
 const CITIES = ["Gurugram", "New Delhi", "Noida", "Faridabad", "Dwarka"];
 const BHKS = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot", "SCO"];
 const PROPERTY_TYPES = ["Residential", "Commercial", "Plots", "Industrial"];
 const STATUSES = ["New Launch", "Under Construction", "Ready to Move", "Sold Out"];
-
-// Price ranges for UI (Backend logic handles the comparison)
 const PRICES = ["50 L", "1 Cr", "1.5 Cr", "2 Cr", "2.5 Cr", "3 Cr", "4 Cr", "5 Cr", "10 Cr"];
 
 export default function ProjectFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  
+  // ✅ Local loading state for the "Hard Reload"
+  const [isReloading, setIsReloading] = useState(false);
 
-  // ✅ 2. SYNC STATE WITH URL PARAMS
+  // ✅ STATE
   const [filters, setFilters] = useState({
-    city: searchParams.get("city") || "", // Changed from 'location' to 'city' to match DB field
-    bhk: searchParams.getAll("bhk"),
-    type: searchParams.get("type") || "",
-    status: searchParams.get("status") || "",
-    minPrice: searchParams.get("minPrice") || "",
-    maxPrice: searchParams.get("maxPrice") || "",
+    city: "",
+    bhk: [] as string[],
+    type: "",
+    status: "",
+    minPrice: "",
+    maxPrice: "",
   });
 
-  // Helper: Toggle BHK (Multi-select)
+  // ✅ SYNC: Update local state when URL changes
+  useEffect(() => {
+    setFilters({
+      city: searchParams.get("city") || searchParams.get("location") || "",
+      bhk: searchParams.getAll("bhk"),
+      type: searchParams.get("type") || searchParams.get("propertyType") || "",
+      status: searchParams.get("status") || "",
+      minPrice: searchParams.get("minPrice") || "",
+      maxPrice: searchParams.get("maxPrice") || "",
+    });
+  }, [searchParams]);
+
+  // Helper: Toggle BHK
   const toggleBHK = (val: string) => {
     setFilters(prev => {
       const current = prev.bhk;
@@ -37,38 +49,39 @@ export default function ProjectFilters() {
     });
   };
 
-  // ✅ 3. APPLY FILTERS (Push to URL)
+  // ✅ APPLY FILTERS (THE FIX: Force Hard Reload)
   const applyFilters = () => {
+    setIsReloading(true); // Show loading spinner immediately
+
     const params = new URLSearchParams();
     
-    // Keep existing search text if any
+    // 1. Preserve existing search text
     const currentSearch = searchParams.get("search");
     if (currentSearch) params.set("search", currentSearch);
 
-    // Append Filters
-    if (filters.city) params.set("city", filters.city);
+    // 2. Append only active filters
+    if (filters.city) params.set("location", filters.city);
     if (filters.type) params.set("type", filters.type);
     if (filters.status) params.set("status", filters.status);
     if (filters.minPrice) params.set("minPrice", filters.minPrice);
     if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
     
-    // Append Arrays
+    // 3. Append Arrays correctly
     filters.bhk.forEach(b => params.append("bhk", b));
 
-    startTransition(() => {
-      router.push(`/projects?${params.toString()}`, { scroll: false });
-      setShowMobileFilters(false);
-    });
+    // 🚀 CRITICAL CHANGE: Force browser reload
+    window.location.href = `/projects?${params.toString()}`;
   };
 
   const resetFilters = () => {
+    setIsReloading(true);
     setFilters({ city: "", bhk: [], type: "", status: "", minPrice: "", maxPrice: "" });
-    startTransition(() => router.push("/projects"));
+    window.location.href = "/projects";
   };
 
-  // --- FILTER UI COMPONENT ---
+  // --- FILTER UI (No Visual Changes) ---
   const FilterContent = () => (
-    <div className={`space-y-6 ${isPending ? "opacity-50 pointer-events-none" : ""}`}>
+    <div className={`space-y-6 ${isReloading ? "opacity-50 pointer-events-none" : ""}`}>
       
       {/* 1. CITY */}
       <div>
@@ -132,7 +145,6 @@ export default function ProjectFilters() {
               <span className="text-sm text-gray-700">{s}</span>
             </label>
           ))}
-          {/* Option to clear status specifically */}
           {filters.status && (
              <button onClick={() => setFilters({...filters, status: ""})} className="text-xs text-gray-400 underline pl-6">Clear</button>
           )}
@@ -165,10 +177,10 @@ export default function ProjectFilters() {
 
       <button 
         onClick={applyFilters}
-        disabled={isPending}
+        disabled={isReloading}
         className="w-full bg-[#FFC40C] text-black font-bold py-3 rounded uppercase text-sm hover:bg-black hover:text-white transition-all shadow-md flex justify-center items-center gap-2"
       >
-        {isPending ? "Filtering..." : "View Results"}
+        {isReloading ? "Refreshing..." : "View Results"}
       </button>
     </div>
   );

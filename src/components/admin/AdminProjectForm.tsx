@@ -4,16 +4,29 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import CloudinaryUploader from "@/app/admin/CloudinaryUploader";
 
-const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK", "4 BHK", "4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot", "SCO"];
+const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK","3.5 BHK", "4 BHK", "4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot", "SCO"];
 const CITY_OPTIONS = ["Gurugram", "New Delhi", "Noida", "Faridabad", "Dwarka"];
 const STATUS_OPTIONS = ["New Launch", "Under Construction", "Ready to Move", "Sold Out"];
 const TYPE_OPTIONS = ["Residential", "Commercial", "Plots", "Industrial"];
 
-const COMMON_AMENITIES = [
-  "Swimming Pool", "Gym", "24/7 Security", "Power Backup", 
-  "Car Parking", "Kids Play Area", "Club House", "Jogging Track", 
-  "Yoga Room", "Pet Park", "Senior Citizen Sit Out", "Tennis Court",
-  "Badminton Court", "Basketball Court", "Library", "Spa & Sauna"
+// ✅ 1. Define Common Amenities with Default Placeholder Images
+const COMMON_AMENITIES_DATA = [
+  { name: "Swimming Pool", defaultImg: "https://images.pexels.com/photos/18167966/pexels-photo-18167966.jpeg" },
+  { name: "Gym", defaultImg: "https://images.pexels.com/photos/6046983/pexels-photo-6046983.png" },
+  { name: "24/7 Security", defaultImg: "https://images.pexels.com/photos/13051291/pexels-photo-13051291.jpeg" },
+  { name: "Power Backup", defaultImg: "https://static.vecteezy.com/system/resources/thumbnails/024/721/212/small/high-tech-equipment-room-with-advanced-machinery-and-computers-generative-ai-photo.jpeg" },
+  { name: "Car Parking", defaultImg: "https://images.unsplash.com/photo-1590674899484-d5640e854abe?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGFya2luZ3xlbnwwfHwwfHx8MA%3D%3D" },
+  { name: "Kids Play Area", defaultImg: "/kids play area.jpeg" },
+  { name: "Club House", defaultImg: "https://images.unsplash.com/photo-1761971976133-5b0cbaee8c89?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNsdWJob3VzZXxlbnwwfHwwfHx8MA%3D%3D" },
+  { name: "Jogging Track", defaultImg: "https://images.unsplash.com/photo-1594911772125-07fc7a2d8d9f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
+  { name: "Yoga Room", defaultImg: "https://plus.unsplash.com/premium_photo-1661777196224-bfda51e61cfd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8eW9nYXxlbnwwfHwwfHx8MA%3D%3D" },
+  { name: "Pet Park", defaultImg: "https://images.unsplash.com/photo-1681392067024-1223e4f3454f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGV0JTIwcGFya3xlbnwwfHwwfHx8MA%3D%3D" },
+  { name: "Senior Citizen Sit Out", defaultImg: "https://images.unsplash.com/photo-1504004030892-d06adf9ffbcf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2VuaW9yJTIwY2l0aXplbnN8ZW58MHx8MHx8fDA%3D" },
+  { name: "Tennis Court", defaultImg: "https://images.unsplash.com/photo-1542144582-1ba00456b5e3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dGVubmlzfGVufDB8fDB8fHww" },
+  { name: "Badminton Court", defaultImg: "https://images.unsplash.com/photo-1626721105368-a69248e93b32?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YmFkbWludG9ufGVufDB8fDB8fHww" },
+  { name: "Basketball Court", defaultImg: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGJhc2tldGJhbGx8ZW58MHx8MHx8fDA%3D" },
+  { name: "Library", defaultImg: "https://plus.unsplash.com/premium_photo-1664300897489-fd98eee64faf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bGlicmFyeXxlbnwwfHwwfHx8MA%3D%3D" },
+  { name: "Spa & Sauna", defaultImg: "https://images.unsplash.com/photo-1583417267826-aebc4d1542e1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNwYXxlbnwwfHwwfHx8MA%3D%3D" }
 ];
 
 export default function AdminProjectForm({ initialData }: { initialData?: any }) {
@@ -41,17 +54,25 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     videoUrl: initialData?.videoUrl || "", 
     googleMapUrl: initialData?.googleMapUrl || "",
 
-    // ✅ LOCALITY ARRAYS (Updated)
+    // Locality
     connectivity: initialData?.connectivity || [],
-    schools: initialData?.schools || [],       // New
-    hospitals: initialData?.hospitals || [],   // New
-    nearbyAmenities: initialData?.nearbyAmenities || [], // Malls/Business Hubs
+    schools: initialData?.schools || [],       
+    hospitals: initialData?.hospitals || [],   
+    nearbyAmenities: initialData?.nearbyAmenities || [], 
     
-    amenities: initialData?.amenities || [], 
     configurations: initialData?.configurations || [],
 
+    // ✅ UPDATED: We use projectAmenities (List of Objects {name, icon}) for everything now
+    projectAmenities: initialData?.projectAmenities?.length 
+        ? initialData.projectAmenities 
+        : initialData?.amenities?.length 
+            ? initialData.amenities.map((name: string) => {
+                const found = COMMON_AMENITIES_DATA.find(a => a.name === name);
+                return { name, icon: found?.defaultImg || "" };
+              })
+            : [],
+
     // Visual Assets
-    projectAmenities: initialData?.projectAmenities || [], 
     floorPlans: initialData?.floorplans || [], 
     coverImage: initialData?.coverImage || "",
     brochureUrl: initialData?.brochure || "",
@@ -64,9 +85,9 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     otherBuilder: "",
   });
 
-  // Local state for Visual Amenity
-  const [newAmenityName, setNewAmenityName] = useState("");
-  const [newAmenityImage, setNewAmenityImage] = useState("");
+  // Local state for adding CUSTOM amenity if needed
+  const [customAmenityName, setCustomAmenityName] = useState("");
+  const [customAmenityImage, setCustomAmenityImage] = useState("");
 
   // Handlers
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -90,18 +111,44 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     }
   };
 
-  const toggleSelection = (field: "amenities" | "configurations", value: string) => {
+  const toggleConfiguration = (value: string) => {
     setFormData(prev => {
-        const current = prev[field] || [];
+        const current = prev.configurations || [];
         if (current.includes(value)) {
-            return { ...prev, [field]: current.filter((c: string) => c !== value) };
+            return { ...prev, configurations: current.filter((c: string) => c !== value) };
         } else {
-            return { ...prev, [field]: [...current, value] };
+            return { ...prev, configurations: [...current, value] };
         }
     });
   };
 
-  // ✅ GENERIC ARRAY HANDLER (For Connectivity, Schools, Hospitals, Landmarks)
+  // ✅ NEW: TOGGLE VISUAL AMENITY (Adds object with background image)
+  const toggleAmenity = (amenityName: string, defaultImage: string) => {
+    setFormData(prev => {
+        const currentList = prev.projectAmenities || [];
+        const exists = currentList.find((a: any) => a.name === amenityName);
+
+        if (exists) {
+            // Remove it
+            return { ...prev, projectAmenities: currentList.filter((a: any) => a.name !== amenityName) };
+        } else {
+            // Add it with default image
+            return { ...prev, projectAmenities: [...currentList, { name: amenityName, icon: defaultImage }] };
+        }
+    });
+  };
+
+  // ✅ NEW: UPDATE IMAGE FOR SPECIFIC AMENITY
+  const updateAmenityImage = (amenityName: string, newUrl: string) => {
+    setFormData(prev => ({
+        ...prev,
+        projectAmenities: prev.projectAmenities.map((a: any) => 
+            a.name === amenityName ? { ...a, icon: newUrl } : a
+        )
+    }));
+  };
+
+  // Generic Array Handlers
   const addItem = (field: "connectivity" | "schools" | "hospitals" | "nearbyAmenities", value: string) => {
     if (!value.trim()) return;
     setFormData(prev => ({ ...prev, [field]: [...(prev[field] as string[]), value] }));
@@ -110,29 +157,25 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     setFormData(prev => ({ ...prev, [field]: (prev[field] as string[]).filter((_, i) => i !== index) }));
   };
 
-  // Visual Amenity Helpers
-  const addVisualAmenity = () => {
-    if (!newAmenityName || !newAmenityImage) return alert("Please enter title and upload an image");
+  // Custom Visual Amenity Helpers
+  const addCustomAmenity = () => {
+    if (!customAmenityName || !customAmenityImage) return alert("Please enter title and upload an image");
     setFormData(prev => ({
       ...prev,
-      projectAmenities: [...prev.projectAmenities, { name: newAmenityName, icon: newAmenityImage }]
+      projectAmenities: [...prev.projectAmenities, { name: customAmenityName, icon: customAmenityImage }]
     }));
-    setNewAmenityName("");
-    setNewAmenityImage("");
-  };
-  const removeVisualAmenity = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      projectAmenities: prev.projectAmenities.filter((_: any, i: number) => i !== index)
-    }));
+    setCustomAmenityName("");
+    setCustomAmenityImage("");
   };
 
   // Media Helpers
+  const addGalleryImage = (res: any) => { if (res?.url) setFormData(prev => ({ ...prev, gallery: [...prev.gallery, { url: res.url, alt: "" }] })); };
+  const removeGalleryImage = (index: number) => { setFormData(prev => ({ ...prev, gallery: prev.gallery.filter((_: any, i: number) => i !== index) })); };
+
+  // ✅ RESTORED: Floor Plan Helpers
   const addFloorPlan = (res: any) => { if (res?.url) setFormData(prev => ({ ...prev, floorPlans: [...prev.floorPlans, { url: res.url, alt: "" }] })); };
   const updateFloorPlanTitle = (index: number, title: string) => { const updated = [...formData.floorPlans]; updated[index].alt = title; setFormData(prev => ({ ...prev, floorPlans: updated })); };
   const removeFloorPlan = (index: number) => { setFormData(prev => ({ ...prev, floorPlans: prev.floorPlans.filter((_: any, i: number) => i !== index) })); };
-  const addGalleryImage = (res: any) => { if (res?.url) setFormData(prev => ({ ...prev, gallery: [...prev.gallery, { url: res.url, alt: "" }] })); };
-  const removeGalleryImage = (index: number) => { setFormData(prev => ({ ...prev, gallery: prev.gallery.filter((_: any, i: number) => i !== index) })); };
 
   // Submit
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,7 +187,9 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
         ...formData, 
         builder: finalBuilder,
         slug: formData.slug || formData.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
-        status: formData.projectStatus 
+        status: formData.projectStatus,
+        // Ensure amenities is synced with projectAmenities names just in case legacy code needs it
+        amenities: formData.projectAmenities.map((a: any) => a.name) 
       };
 
       const url = isEditMode ? `/api/projects/${initialData.id}` : `/api/projects/create`;
@@ -167,7 +212,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
     }
   };
 
-  // ✅ REUSABLE INPUT LIST COMPONENT
+  // Reusable Input List Component
   const InputList = ({ label, field, placeholder, icon }: { label: string, field: "connectivity" | "schools" | "hospitals" | "nearbyAmenities", placeholder: string, icon: string }) => (
     <div>
       <label className="block text-sm font-bold mb-1 text-gray-700 flex items-center gap-2">
@@ -231,7 +276,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
           <div>
              <label className="block text-sm font-medium mb-1">Builder</label>
              <select name="builder" value={formData.builder} onChange={handleChange} className="w-full border p-2 rounded">
-                 <option value="Sobha">Sobha</option><option value="DLF">DLF</option><option value="Godrej">Godrej</option><option value="Other">Other</option>
+                 <option value="Sobha">Sobha</option><option value="Emaar">Emaar</option><option value="Godrej">Godrej</option><option value="Other">Other</option>
              </select>
              {formData.builder === "Other" && <input name="otherBuilder" value={formData.otherBuilder} onChange={handleChange} className="w-full border p-2 mt-2 rounded" placeholder="Builder Name"/>}
           </div>
@@ -249,7 +294,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
                 {CONFIG_OPTIONS.map((conf) => (
                     <label key={conf} className={`flex items-center gap-2 cursor-pointer p-3 rounded border shadow-sm transition-all ${formData.configurations.includes(conf) ? "bg-yellow-50 border-[#FFC40C]" : "bg-white hover:border-gray-300"}`}>
-                        <input type="checkbox" checked={formData.configurations.includes(conf)} onChange={() => toggleSelection("configurations", conf)} className="w-4 h-4 accent-[#FFC40C]" />
+                        <input type="checkbox" checked={formData.configurations.includes(conf)} onChange={() => toggleConfiguration(conf)} className="w-4 h-4 accent-[#FFC40C]" />
                         <span className="text-xs font-bold text-gray-700">{conf}</span>
                     </label>
                 ))}
@@ -290,28 +335,75 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
         </div>
       </div>
 
-      {/* D. GENERAL AMENITIES (CHECKBOXES) */}
+      {/* D. VISUAL AMENITIES */}
       <div className="mb-10">
-        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">D. General Amenities</h3>
+        <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">D. Premium Amenities</h3>
         <div className="bg-gray-50 p-6 rounded border">
-            <p className="text-xs text-gray-500 mb-4 uppercase font-bold">Select features included in this project:</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                {COMMON_AMENITIES.map((am) => (
-                    <label key={am} className={`flex items-center gap-2 cursor-pointer p-3 rounded border shadow-sm transition-all ${formData.amenities.includes(am) ? "bg-yellow-50 border-[#FFC40C]" : "bg-white hover:border-gray-300"}`}>
-                        <input type="checkbox" checked={formData.amenities.includes(am)} onChange={() => toggleSelection("amenities", am)} className="w-4 h-4 accent-[#FFC40C]" />
-                        <span className="text-xs font-bold text-gray-700">{am}</span>
-                    </label>
-                ))}
+            <p className="text-xs text-gray-500 mb-4 uppercase font-bold">Select amenities (Each comes with a background image)</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {COMMON_AMENITIES_DATA.map((am) => {
+                    const isSelected = formData.projectAmenities.find((a: any) => a.name === am.name);
+                    
+                    return (
+                        <div key={am.name} className={`relative p-3 rounded border transition-all ${isSelected ? "border-[#FFC40C] bg-white shadow-md" : "border-gray-200 bg-gray-50 opacity-75 hover:opacity-100"}`}>
+                             
+                             <div className="flex items-center justify-between mb-2">
+                                <label className="flex items-center gap-2 cursor-pointer select-none">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={!!isSelected} 
+                                        onChange={() => toggleAmenity(am.name, am.defaultImg)} 
+                                        className="w-4 h-4 accent-[#FFC40C]" 
+                                    />
+                                    <span className={`font-bold text-sm ${isSelected ? "text-black" : "text-gray-500"}`}>{am.name}</span>
+                                </label>
+                             </div>
+
+                             {isSelected && (
+                                 <div className="mt-2">
+                                     <div className="relative h-24 w-full rounded overflow-hidden mb-2 bg-gray-200 group">
+                                         <img src={isSelected.icon} alt={am.name} className="w-full h-full object-cover" />
+                                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                             <span className="text-white text-xs font-bold">Preview</span>
+                                         </div>
+                                     </div>
+                                     <div className="flex justify-end">
+                                        <CloudinaryUploader 
+                                            label="Change Image" 
+                                            onUpload={(res) => { if(res?.url) updateAmenityImage(am.name, res.url) }} 
+                                            multiple={true}   
+                                        />
+                                     </div>
+                                 </div>
+                             )}
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Custom Amenity Adder */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+                <h4 className="text-sm font-bold text-gray-700 mb-3">Add Custom Amenity</h4>
+                <div className="flex flex-col sm:flex-row gap-4 items-end bg-white p-4 rounded border">
+                    <div className="flex-1 w-full">
+                        <label className="text-xs block mb-1 font-bold text-gray-500">Name</label>
+                        <input value={customAmenityName} onChange={(e) => setCustomAmenityName(e.target.value)} placeholder="e.g. Golf View" className="w-full border p-2 rounded" />
+                    </div>
+                    <div className="flex-1 w-full">
+                        <label className="text-xs block mb-1 font-bold text-gray-500">Image</label>
+                        <CloudinaryUploader multiple={true} label="Upload Image" onUpload={(res) => { if(res?.url) setCustomAmenityImage(res.url) }} />
+                    </div>
+                    <button type="button" onClick={addCustomAmenity} className="px-6 py-2 bg-black text-white font-bold rounded">Add</button>
+                </div>
             </div>
         </div>
       </div>
 
-      {/* ✅ E. LOCALITY & SURROUNDINGS (UPDATED) */}
+      {/* E. LOCALITY & SURROUNDINGS */}
       <div className="mb-10">
         <h3 className="text-lg font-bold text-gray-800 border-b pb-2 mb-6 uppercase tracking-wider">E. Locality & Surroundings</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             
-             {/* Map */}
              <div className="md:col-span-2">
                 <label className="block text-sm font-medium mb-1">Google Map Embed Code</label>
                 <textarea 
@@ -322,17 +414,9 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
                     placeholder={'<iframe src="..." ...></iframe>'} 
                 />
              </div>
-
-             {/* 1. Connectivity */}
              <InputList icon="✈️" label="Connectivity" field="connectivity" placeholder="e.g. 5 min to Airport, Near NH-8" />
-             
-             {/* 2. Schools */}
              <InputList icon="🎓" label="Schools / Colleges" field="schools" placeholder="e.g. DPS (2km), GD Goenka (5km)" />
-             
-             {/* 3. Hospitals */}
              <InputList icon="🏥" label="Hospitals" field="hospitals" placeholder="e.g. Medanta (10 mins)" />
-             
-             {/* 4. Other Landmarks */}
              <InputList icon="🛍️" label="Malls & Business Hubs" field="nearbyAmenities" placeholder="e.g. Cyber City (15 mins)" />
         </div>
       </div>
@@ -348,7 +432,7 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
         </div>
         <div className="bg-gray-50 p-4 rounded border mb-6">
             <label className="block text-sm font-bold mb-2">Intro Video (Upload)</label>
-            <CloudinaryUploader label="Upload Video" accept="video/*" onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, videoUrl: res.url})) }} />
+            <CloudinaryUploader multiple={true} label="Upload Video" accept="video/*" onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, videoUrl: res.url})) }} />
             {formData.videoUrl && (
                 <div className="mt-2">
                     <video src={formData.videoUrl} controls className="w-full h-40 object-cover rounded bg-black" />
@@ -361,47 +445,43 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
            <div className="bg-gray-50 p-4 rounded border">
               <label className="block text-sm font-bold mb-2">Cover Image (Hero)</label>
-              <CloudinaryUploader onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, coverImage: res.url})) }} />
+              <CloudinaryUploader multiple={true} onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, coverImage: res.url})) }} />
               {formData.coverImage && <img src={formData.coverImage} className="mt-4 h-40 w-full object-cover rounded shadow-sm" />}
            </div>
            <div className="bg-gray-50 p-4 rounded border">
               <label className="block text-sm font-bold mb-2">Brochure (PDF)</label>
-              <CloudinaryUploader label="Upload PDF" accept="application/pdf" onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, brochureUrl: res.url})) }} />
+              <CloudinaryUploader multiple={true} label="Upload PDF" accept="application/pdf" onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, brochureUrl: res.url})) }} />
               {formData.brochureUrl && <p className="text-green-600 mt-2 text-sm">File Uploaded</p>}
            </div>
         </div>
-
-        {/* Visual Amenities Slider */}
-        <div className="bg-gray-50 p-6 rounded border mb-8">
-           <h4 className="font-bold mb-4 text-gray-900 text-lg">Visual Amenities (Slider)</h4>
-           <div className="flex flex-col sm:flex-row gap-4 mb-6 items-end bg-white p-4 rounded border shadow-sm">
-              <div className="flex-1 w-full">
-                 <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Title</label>
-                 <input value={newAmenityName} onChange={(e) => setNewAmenityName(e.target.value)} placeholder="e.g. Golf Course View" className="w-full border p-2 rounded" />
-              </div>
-              <div className="flex-1 w-full">
-                 <label className="text-xs block mb-1 font-bold text-gray-500 uppercase">Image</label>
-                 <CloudinaryUploader label="Upload Image" onUpload={(res) => { if(res?.url) setNewAmenityImage(res.url) }} />
-              </div>
-              <button type="button" onClick={addVisualAmenity} className="px-6 py-2 bg-black text-white font-bold rounded">Add</button>
-           </div>
-           {formData.projectAmenities.length > 0 && (
-               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {formData.projectAmenities.map((am: any, i: number) => (
-                    <div key={i} className="flex items-center gap-3 bg-white p-3 rounded border shadow-sm">
-                       <img src={am.icon} className="w-12 h-12 object-cover rounded bg-gray-100" alt={am.name} />
-                       <span className="text-sm font-medium">{am.name}</span>
-                       <button type="button" onClick={() => removeVisualAmenity(i)} className="ml-auto text-red-500 font-bold">×</button>
-                    </div>
-                  ))}
-               </div>
-           )}
-        </div>
         
+        {/* ✅ RESTORED: Floor Plans UI */}
+        <div className="bg-gray-50 p-6 rounded border mb-8">
+            <h4 className="font-bold mb-4 text-gray-900 text-lg">Floor Plans</h4>
+            <CloudinaryUploader multiple={true} label="Add Floor Plans" onUpload={addFloorPlan} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              {formData.floorPlans.map((plan: any, i: number) => (
+                <div key={i} className="flex gap-4 items-start bg-white p-3 rounded border">
+                   <img src={plan.url} className="w-20 h-20 object-cover rounded bg-gray-200" alt="floor plan thumb" />
+                   <div className="flex-1">
+                      <label className="text-xs font-bold text-gray-500 block mb-1">Title</label>
+                      <input 
+                        placeholder="e.g. 3BHK Layout" 
+                        value={plan.alt} 
+                        onChange={(e) => updateFloorPlanTitle(i, e.target.value)} 
+                        className="w-full border p-1 rounded text-sm"
+                      />
+                      <button type="button" onClick={() => removeFloorPlan(i)} className="text-red-500 text-xs mt-2 underline">Remove</button>
+                   </div>
+                </div>
+              ))}
+            </div>
+        </div>
+
         {/* Gallery */}
          <div className="bg-gray-50 p-6 rounded border">
             <h4 className="font-bold mb-4 text-gray-900 text-lg">Photo Gallery</h4>
-            <CloudinaryUploader label="Add Photos" onUpload={addGalleryImage} />
+            <CloudinaryUploader multiple={true} label="Add Photos" onUpload={addGalleryImage} />
             <div className="grid grid-cols-4 md:grid-cols-8 gap-4 mt-4">
               {formData.gallery.map((img: any, i: number) => (
                 <div key={i} className="relative group aspect-square">
