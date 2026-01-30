@@ -1,7 +1,7 @@
-// File: src/components/project/AmenitiesSlider.tsx
 "use client";
 
 import React from "react";
+import Image from "next/image"; // ✅ PERFORMANCE: Import Next.js Image
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -78,14 +78,17 @@ export default function AmenitiesSlider({
         className="w-full h-[350px] !pb-12"
       >
         {amenities.map((item, index) => (
-          <SwiperSlide key={index} className="h-full ">
+          <SwiperSlide key={index} className="h-full">
             <div className="relative w-full h-full rounded-sm overflow-hidden group shadow-lg cursor-pointer">
 
-              {/* Background Image */}
-              <img
+              {/* ✅ PERFORMANCE: Replaced <img> with <Image /> */}
+              {/* This automatically resizes images based on the user's device */}
+              <Image
                 src={item.icon || ""}
                 alt={item.name}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
               />
 
               {/* Gradient Overlay */}
@@ -135,7 +138,7 @@ export default function AmenitiesSlider({
 
         /* Active Pagination Dot */
         .swiper-pagination-bullet-active {
-          background: #c5a059 !important;
+          background: #C5A059 !important;
         }
       `}</style>
     </div>

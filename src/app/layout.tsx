@@ -2,12 +2,14 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import React from "react";
-import AutoPopupModal from "@/components/ui/AutoPopupModal";
-import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 import NextTopLoader from 'nextjs-toploader';
-import DisclaimerModal from "@/components/ui/DisclaimerModal";
+import dynamic from "next/dynamic"; // ✅ Import dynamic
 
-// Configure fonts with weights and CSS variable names
+// ✅ PERFORMANCE: Lazy load non-critical UI components
+const AutoPopupModal = dynamic(() => import("@/components/ui/AutoPopupModal"), { ssr: false });
+const FloatingWhatsApp = dynamic(() => import("@/components/ui/FloatingWhatsApp"), { ssr: false });
+const DisclaimerModal = dynamic(() => import("@/components/ui/DisclaimerModal"), { ssr: false });
+
 const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700"],
@@ -33,9 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // apply font variables on the html element so CSS can use them via var(--font-xxx)
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      {/* Body uses the site-wide color scheme and default sans font */}
       <body className="font-sans bg-black text-white">
         <NextTopLoader
           color="#FFC40C"
@@ -43,14 +43,17 @@ export default function RootLayout({
           crawlSpeed={200}
           height={3}
           crawl={true}
-          showSpinner={false} // Spinner looks cheap, keep it false
+          showSpinner={false}
           easing="ease"
           speed={200}
-          shadow="0 0 10px #FFC40C,0 0 5px #FFC40C" // Adds a nice gold glow
+          shadow="0 0 10px #FFC40C,0 0 5px #FFC40C"
         />
+        
+        {/* ✅ These now load in the background, improving initial load speed */}
         <DisclaimerModal />
         <AutoPopupModal />
         <FloatingWhatsApp />
+        
         {children}
       </body>
     </html>

@@ -35,7 +35,7 @@ export default function AutoPopupModal() {
 
     const timer = setTimeout(() => {
       setIsOpen(true);
-    }, 3000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [pathname]);
