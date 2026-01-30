@@ -225,7 +225,7 @@ export default function PrivacyPolicy() {
               
               </a>
               <a href="tel:+917081808180" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                        Or call <span className="font-semibold text-black">+91 70818 08180</span>
+                        Or call <span className="font-semibold text-black">+91 70 8180 8180</span>
                       </a>
             </p>
           </section>

@@ -293,7 +293,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
               </a>
               <a href="tel:+9170818 08180" className="hidden md:inline-flex items-center gap-2 text-sm text-gray-700 border border-gray-200 px-4 py-2 rounded-lg hover:bg-white/70 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#FFC40C]" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884l2-3A1 1 0 015 2h3a1 1 0 011 .883L9 6a1 1 0 01-.293.707l-1 1A13.034 13.034 0 0011 11a13.034 13.034 0 003.293-1.293l1-1A1 1 0 0116 8l3 1a1 1 0 01.883 1V16a1 1 0 01-1 1h-2c-7.18 0-13-5.82-13-13V6a1 1 0 01.003-.116z" /></svg>
-                +91 70818 08180
+                +91 70 8180 8180
               </a>
             </div>
           </div>
@@ -543,7 +543,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
          2nd floor, Cross, Point Mall, 307, opposite Galleria Market, Galleria Market, Sector 28, DLF Phase IV, Gurugram, Haryana 122009
         </p>
         <p className="font-bold text-[#FFC40C] mt-2">
-          +91 70818 08180
+          +91 70 8180 8180
         </p>
         <p className="text-sm text-gray-500">
           info@elitairs.com

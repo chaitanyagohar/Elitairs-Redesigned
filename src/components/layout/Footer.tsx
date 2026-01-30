@@ -172,7 +172,7 @@ export default function Footer() {
 
               <div className="pt-2">
                 <a href="tel:+917081808180" className="block text-white font-bold hover:text-[#FFC40C] text-lg">
-                  +91 70818 08180
+                  +91 70 8180 8180
                 </a>
                 <a href="mailto:info@elitairs.com" className="block hover:text-[#FFC40C]">
                   info@elitairs.com

@@ -501,7 +501,7 @@ export default function AboutPage() {
                    Contact Us
                  </Link>
                  <a href="tel:+917081808180" className="px-8 py-4 border-2 border-black text-black text-base font-bold rounded hover:bg-black hover:text-white transition-all duration-300">
-                   +91 70818 08180
+                   +91 70 8180 8180
                  </a>
              </div>
            </Reveal>

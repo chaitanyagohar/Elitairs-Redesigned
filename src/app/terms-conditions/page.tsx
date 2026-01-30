@@ -86,7 +86,7 @@ export default function TermsConditions() {
               </p>
               <p>
                 For any queries or grievances, clients may contact the Company
-                at <strong>+91 70818 08180</strong> or via email at{" "}
+                at <strong>+91 70 8180 8180</strong> or via email at{" "}
                 <strong>info@elitairs.com</strong>.
               </p>
               <p>

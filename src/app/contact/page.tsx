@@ -129,7 +129,7 @@ export default function ContactPage() {
                </div>
                <div className="border-l-4 border-gray-200 pl-6">
                   <p className="uppercase text-xs font-bold text-gray-400 mb-1">Call</p>
-                  <p className="font-medium hover:text-[#C5A059] cursor-pointer">+91 70818 08180</p>
+                  <p className="font-medium hover:text-[#C5A059] cursor-pointer">+91 70 8180 8180</p>
                </div>
                <div className="border-l-4 border-gray-200 pl-6">
                   <p className="uppercase text-xs font-bold text-gray-400 mb-1">Email</p>
