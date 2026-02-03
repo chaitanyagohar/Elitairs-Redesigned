@@ -222,35 +222,48 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
         <section id="overview" className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <div className="bg-[#FFF9F0] border border-[#FFE08A]/30 rounded-xl p-4 md:p-6 mb-12 shadow-sm">
-               {/* Stats Grid - Kept same content */}
-               <div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4 text-center divide-x-0 md:divide-x divide-[#FFE08A]/50">
-                  <div className="flex flex-col items-center">
-                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Config</span>
-                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.configurations?.length > 0 ? project.configurations[0] : "Multi"}</span>
-                  </div>
-                  {/* ... other stats items ... */}
-                  <div className="flex flex-col items-center">
-                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 12h20M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6" /></svg>
-                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Area</span>
-                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.area || "On Request"}</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 3h12M6 8h12M9 13h9M9 13l-3 8" /></svg>
-                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Price</span>
-                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.price || "Call"}</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 22h20M4 22V10l8-4 8 4v12M12 10v12" /></svg>
-                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Status</span>
-                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.status || "New"}</span>
-                  </div>
-                  <div className="flex flex-col items-center col-span-2 md:col-span-1">
-                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M21 10h-8.35A5.99 5.99 0 007 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 005.65-4H17v4h4v-4h2v-4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
-                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Possession</span>
-                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.launchDate || "Soon"}</span>
-                  </div>
-               </div>
+{/* Stats Grid */}
+<div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4 text-center divide-x-0 md:divide-x divide-[#FFE08A]/50">
+  
+  {/* 1. CONFIGURATION (Fixed) */}
+  <div className="flex flex-col items-center px-2">
+      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Config</span>
+      <span className="text-sm font-bold text-gray-900 mt-1 leading-tight">
+        {project?.configurations && project.configurations.length > 0 
+          ? project.configurations.join(", ") 
+          : "On Request"}
+      </span>
+  </div>
+
+  {/* 2. AREA */}
+  <div className="flex flex-col items-center px-2">
+      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 12h20M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6" /></svg>
+      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Area</span>
+      <span className="text-sm font-bold text-gray-900 mt-1">{project?.area || "On Request"}</span>
+  </div>
+
+  {/* 3. PRICE */}
+  <div className="flex flex-col items-center px-2">
+      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 3h12M6 8h12M9 13h9M9 13l-3 8" /></svg>
+      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Price</span>
+      <span className="text-sm font-bold text-gray-900 mt-1">{project?.price || "Call for Price"}</span>
+  </div>
+
+  {/* 4. STATUS */}
+  <div className="flex flex-col items-center px-2">
+      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 22h20M4 22V10l8-4 8 4v12M12 10v12" /></svg>
+      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Status</span>
+      <span className="text-sm font-bold text-gray-900 mt-1">{project?.status || "New Launch"}</span>
+  </div>
+
+  {/* 5. POSSESSION */}
+  <div className="flex flex-col items-center col-span-2 md:col-span-1 px-2">
+      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M21 10h-8.35A5.99 5.99 0 007 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 005.65-4H17v4h4v-4h2v-4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
+      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Possession</span>
+      <span className="text-sm font-bold text-gray-900 mt-1">{project?.launchDate || "Soon"}</span>
+  </div>
+</div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">

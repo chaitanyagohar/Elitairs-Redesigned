@@ -43,7 +43,7 @@ export default function ConsultingPage() {
       <section className="relative h-[70vh] flex flex-col justify-center items-center text-center px-6 pt-20">
          <div className="absolute inset-0 z-0">
             <img 
-              src="/cons.jpg"
+              src="/cons.webp"
               className="w-full h-full object-cover opacity-100"
               alt="Consulting Hero" 
             />

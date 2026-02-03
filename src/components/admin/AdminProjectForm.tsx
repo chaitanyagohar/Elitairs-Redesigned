@@ -26,7 +26,8 @@ const COMMON_AMENITIES_DATA = [
   { name: "Badminton Court", defaultImg: "https://images.unsplash.com/photo-1626721105368-a69248e93b32?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8YmFkbWludG9ufGVufDB8fDB8fHww" },
   { name: "Basketball Court", defaultImg: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGJhc2tldGJhbGx8ZW58MHx8MHx8fDA%3D" },
   { name: "Library", defaultImg: "https://plus.unsplash.com/premium_photo-1664300897489-fd98eee64faf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bGlicmFyeXxlbnwwfHwwfHx8MA%3D%3D" },
-  { name: "Spa & Sauna", defaultImg: "https://images.unsplash.com/photo-1583417267826-aebc4d1542e1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNwYXxlbnwwfHwwfHx8MA%3D%3D" }
+  { name: "Spa & Sauna", defaultImg: "https://images.unsplash.com/photo-1583417267826-aebc4d1542e1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNwYXxlbnwwfHwwfHx8MA%3D%3D" },
+  { name: "Mini Theatre", defaultImg: "https://www.paripoornashelters.com/Assests/images/gallery/mini-theatre-inner.jpg" },
 ];
 
 export default function AdminProjectForm({ initialData }: { initialData?: any }) {
@@ -430,13 +431,69 @@ export default function AdminProjectForm({ initialData }: { initialData?: any })
             <label className="block text-sm font-medium mb-1">Overview Text *</label>
             <textarea required name="overview" value={formData.overview} onChange={handleChange} rows={5} className="w-full border p-2 rounded" />
         </div>
+
+        {/* ✅ MODIFIED: Intro Video Section */}
         <div className="bg-gray-50 p-4 rounded border mb-6">
-            <label className="block text-sm font-bold mb-2">Intro Video (Upload)</label>
-            <CloudinaryUploader multiple={true} label="Upload Video" accept="video/*" onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, videoUrl: res.url})) }} />
+            <label className="block text-sm font-bold mb-3">Intro Video</label>
+            
+            <div className="flex flex-col gap-4">
+                {/* Option 1: Upload */}
+                <div>
+                    <span className="text-xs text-gray-500 font-semibold mb-1 block">Option A: Upload File</span>
+                    <CloudinaryUploader 
+                        multiple={false} 
+                        label="Upload Video File" 
+                        accept="video/*" 
+                        onUpload={(res) => { if(res?.url) setFormData(prev => ({...prev, videoUrl: res.url})) }} 
+                    />
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <div className="h-[1px] flex-1 bg-gray-200"></div>
+                    <span className="text-xs text-gray-400 font-bold uppercase">OR</span>
+                    <div className="h-[1px] flex-1 bg-gray-200"></div>
+                </div>
+
+                {/* Option 2: YouTube Link */}
+                <div>
+                    <span className="text-xs text-gray-500 font-semibold mb-1 block">Option B: YouTube URL</span>
+                    <input 
+                        type="text" 
+                        placeholder="https://www.youtube.com/watch?v=..." 
+                        value={formData.videoUrl} 
+                        onChange={(e) => setFormData(prev => ({...prev, videoUrl: e.target.value}))}
+                        className="w-full border p-2 rounded text-sm focus:border-[#FFC40C] outline-none"
+                    />
+                </div>
+            </div>
+
+            {/* Preview */}
             {formData.videoUrl && (
-                <div className="mt-2">
-                    <video src={formData.videoUrl} controls className="w-full h-40 object-cover rounded bg-black" />
-                    <button type="button" onClick={() => setFormData(prev => ({...prev, videoUrl: ""}))} className="text-xs text-red-500 underline mt-1">Remove</button>
+                <div className="mt-4 p-3 bg-white border border-gray-200 rounded shadow-sm">
+                    <p className="text-xs text-gray-500 mb-2 truncate max-w-full"><strong>Source:</strong> {formData.videoUrl}</p>
+                    
+                    {/* Check if Youtube */}
+                    {(formData.videoUrl.includes("youtube.com") || formData.videoUrl.includes("youtu.be")) ? (
+                         <div className="aspect-video bg-black rounded overflow-hidden">
+                            {(() => {
+                                const videoId = formData.videoUrl.split('v=')[1]?.split('&')[0] ?? formData.videoUrl.split('/').pop();
+                                return (
+                                    <iframe 
+                                        src={`https://www.youtube.com/embed/${videoId}`} 
+                                        className="w-full h-full"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    />
+                                )
+                            })()}
+                         </div>
+                    ) : (
+                        <video src={formData.videoUrl} controls className="w-full h-40 object-cover rounded bg-black" />
+                    )}
+                    
+                    <button type="button" onClick={() => setFormData(prev => ({...prev, videoUrl: ""}))} className="text-xs text-red-500 font-bold hover:text-red-700 underline mt-2">
+                        Remove Video
+                    </button>
                 </div>
             )}
         </div>

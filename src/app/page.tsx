@@ -298,7 +298,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
               {
                 title: "Real Estate Consulting",
                 desc: "Advisory-led property selection based on budget, location fundamentals, and long-term appreciation potential.",
-                img: "/services/consulting.jpg",
+                img: "/public/services/consulting.jpg",
               },
               {
                 title: "Research & Analysis",
