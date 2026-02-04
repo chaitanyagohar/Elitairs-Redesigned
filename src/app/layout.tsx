@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import React from "react";
 import NextTopLoader from 'nextjs-toploader';
 import dynamic from "next/dynamic"; // ✅ Import dynamic
+import Preloader from "@/components/ui/Preloader";
 
 // ✅ PERFORMANCE: Lazy load non-critical UI components
 const AutoPopupModal = dynamic(() => import("@/components/ui/AutoPopupModal"), { ssr: false });
@@ -37,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="font-sans bg-black text-white">
+        <Preloader />
         <NextTopLoader
           color="#FFC40C"
           initialPosition={0.08}

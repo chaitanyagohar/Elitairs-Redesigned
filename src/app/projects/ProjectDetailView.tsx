@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image"; // ⚡ PERFORMANCE: Import Next Image
-import dynamic from "next/dynamic"; // ⚡ PERFORMANCE: Import Dynamic for lazy loading
+import Image from "next/image"; // ⚡ PERFORMANCE
+import dynamic from "next/dynamic"; // ⚡ LAZY LOAD
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 import ProjectSliderClientWrapper from "@/components/project/ProjectSliderClientWrapper";
 import AmenitiesSlider from "@/components/project/AmenitiesSlider";
 
-// ⚡ PERFORMANCE: Lazy load the Map component so it doesn't slow down initial page load
+// ⚡ LAZY LOAD MAP
 const ProjectMap = dynamic(() => import("@/components/project/ProjectMap"), {
   loading: () => <div className="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center text-gray-400 text-xs">Loading Map...</div>,
   ssr: false
@@ -63,10 +63,8 @@ const GoldIcon = ({ name }: { name: string }) => {
   const n = name.toLowerCase();
   const color = "#B08D55"; 
   let path = <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />;
-  // (Keeping existing logic for paths...)
   if (n.includes("pool")) path = <path d="M2 20c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 16c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2M2 12c2 0 3-2 5-2s3 2 5 2 3-2 5-2 3 2 5 2" />;
   else if (n.includes("gym") || n.includes("fitness")) path = <path d="M6.5 6.5l11 11M21 21l-1-1M3 3l1 1M18 22l3-3-3-3M3 6l3-3 3 3M18 2l3 3-3 3M3 22l3-3-3-3M2 20l20-20" />; 
-  // ... (rest of your icon logic remains exactly same as before)
   return <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mb-2 transition-transform duration-300 group-hover:scale-110">{path}</svg>;
 };
 
@@ -93,7 +91,9 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
 
   const navSections = ["Overview"];
   if (videoContent) navSections.push("Video");
-  navSections.push("Amenities", "Plans", "Location", "Gallery");
+  // Only push Plans if they exist
+  if (floorPlans.length > 0) navSections.push("Plans");
+  navSections.push("Amenities", "Location", "Gallery");
 
   useEffect(() => {
     const handler = () => {
@@ -174,7 +174,6 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           {project?.coverImage ? (
-            // ⚡ PERFORMANCE: Replaced <img> with <Image> for automatic resizing & priority loading
             <Image 
               src={getHighQualityUrl(project.coverImage)} 
               alt={project.title} 
@@ -222,48 +221,49 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
         <section id="overview" className="py-16 bg-white">
           <div className="container mx-auto px-6">
             <div className="bg-[#FFF9F0] border border-[#FFE08A]/30 rounded-xl p-4 md:p-6 mb-12 shadow-sm">
-{/* Stats Grid */}
-<div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4 text-center divide-x-0 md:divide-x divide-[#FFE08A]/50">
-  
-  {/* 1. CONFIGURATION (Fixed) */}
-  <div className="flex flex-col items-center px-2">
-      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Config</span>
-      <span className="text-sm font-bold text-gray-900 mt-1 leading-tight">
-        {project?.configurations && project.configurations.length > 0 
-          ? project.configurations.join(", ") 
-          : "On Request"}
-      </span>
-  </div>
+                
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 gap-x-4 text-center divide-x-0 md:divide-x divide-[#FFE08A]/50">
+                  
+                  {/* 1. CONFIGURATION */}
+                  <div className="flex flex-col items-center px-2">
+                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Config</span>
+                      <span className="text-sm font-bold text-gray-900 mt-1 leading-tight">
+                        {project?.configurations && project.configurations.length > 0 
+                          ? project.configurations.join(", ") 
+                          : "On Request"}
+                      </span>
+                  </div>
 
-  {/* 2. AREA */}
-  <div className="flex flex-col items-center px-2">
-      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 12h20M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6" /></svg>
-      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Area</span>
-      <span className="text-sm font-bold text-gray-900 mt-1">{project?.area || "On Request"}</span>
-  </div>
+                  {/* 2. AREA */}
+                  <div className="flex flex-col items-center px-2">
+                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 12h20M2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6" /></svg>
+                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Area</span>
+                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.area || "On Request"}</span>
+                  </div>
 
-  {/* 3. PRICE */}
-  <div className="flex flex-col items-center px-2">
-      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 3h12M6 8h12M9 13h9M9 13l-3 8" /></svg>
-      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Price</span>
-      <span className="text-sm font-bold text-gray-900 mt-1">{project?.price || "Call for Price"}</span>
-  </div>
+                  {/* 3. PRICE */}
+                  <div className="flex flex-col items-center px-2">
+                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 3h12M6 8h12M9 13h9M9 13l-3 8" /></svg>
+                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Price</span>
+                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.price || "Call for Price"}</span>
+                  </div>
 
-  {/* 4. STATUS */}
-  <div className="flex flex-col items-center px-2">
-      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 22h20M4 22V10l8-4 8 4v12M12 10v12" /></svg>
-      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Status</span>
-      <span className="text-sm font-bold text-gray-900 mt-1">{project?.status || "New Launch"}</span>
-  </div>
+                  {/* 4. STATUS */}
+                  <div className="flex flex-col items-center px-2">
+                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M2 22h20M4 22V10l8-4 8 4v12M12 10v12" /></svg>
+                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Status</span>
+                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.status || "New Launch"}</span>
+                  </div>
 
-  {/* 5. POSSESSION */}
-  <div className="flex flex-col items-center col-span-2 md:col-span-1 px-2">
-      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M21 10h-8.35A5.99 5.99 0 007 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 005.65-4H17v4h4v-4h2v-4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
-      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Possession</span>
-      <span className="text-sm font-bold text-gray-900 mt-1">{project?.launchDate || "Soon"}</span>
-  </div>
-</div>
+                  {/* 5. POSSESSION */}
+                  <div className="flex flex-col items-center col-span-2 md:col-span-1 px-2">
+                      <svg className="w-6 h-6 text-[#B08D55] mb-1" fill="currentColor" viewBox="0 0 24 24"><path d="M21 10h-8.35A5.99 5.99 0 007 6c-3.31 0-6 2.69-6 6s2.69 6 6 6a5.99 5.99 0 005.65-4H17v4h4v-4h2v-4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3z"/></svg>
+                      <span className="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Possession</span>
+                      <span className="text-sm font-bold text-gray-900 mt-1">{project?.launchDate || "Soon"}</span>
+                  </div>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
@@ -285,7 +285,6 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
               <div>
                 <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-200 shadow-2xl relative">
                   {project?.coverImage ? (
-                    // ⚡ PERFORMANCE: Optimized Side Image
                     <Image 
                         src={getHighQualityUrl(project.coverImage)} 
                         alt="cover" 
@@ -302,7 +301,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
           </div>
         </section>
 
-        {/* ✅ VIDEO SECTION */}
+        {/* ✅ VIDEO SECTION (Auto Hides if no video) */}
         {videoContent && (
           <section id="video" className="py-0 bg-black text-white">
             <div className="container mx-auto">
@@ -314,7 +313,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                       className="w-full h-full border-0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
-                      loading="lazy" // Lazy load iframe
+                      loading="lazy"
                     />
                   ) : (
                     <video src={videoContent.src} autoPlay loop muted className="w-full h-full object-cover" />
@@ -349,50 +348,47 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
           </div>
         </section>
 
-        {/* --- PLANS --- */}
-        <section id="plans" className="py-16 bg-[#F8F9FA] border-t border-gray-200">
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-12">
-              <span className="text-[#FFC40C] text-xs uppercase font-bold">Blueprints</span>
-              <h2 className="text-3xl font-bold mt-2 uppercase">Floor Plans</h2>
-            </div>
+        {/* ✅ PLANS SECTION (Auto Hides if no floor plans) */}
+        {floorPlans && floorPlans.length > 0 && (
+            <section id="plans" className="py-16 bg-[#F8F9FA] border-t border-gray-200">
+              <div className="container mx-auto px-6">
+                <div className="text-center mb-12">
+                  <span className="text-[#FFC40C] text-xs uppercase font-bold">Blueprints</span>
+                  <h2 className="text-3xl font-bold mt-2 uppercase">Floor Plans</h2>
+                </div>
 
-            {floorPlans.length ? (
-               <div className="flex overflow-x-auto momentum-scroll gap-6 pb-8 snap-x snap-mandatory scrollbar-hide">
+                <div className="flex overflow-x-auto momentum-scroll gap-6 pb-8 snap-x snap-mandatory scrollbar-hide">
                   {floorPlans.map((p: any, i: number) => (
-                     <div key={i} className="min-w-[280px] md:min-w-[350px] bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden snap-center group">
+                      <div key={i} className="min-w-[280px] md:min-w-[350px] bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden snap-center group">
                         <div 
                             className="h-[250px] p-4 flex items-center justify-center bg-gray-50 relative cursor-pointer hover:bg-gray-100 transition-colors"
                             onClick={() => setSelectedFloorPlan(getHighQualityUrl(p.url))}
                         >
-                           {/* ⚡ PERFORMANCE: Optimized Floor Plan Images */}
-                           <div className="relative w-full h-full">
-                               <Image 
+                            <div className="relative w-full h-full">
+                                <Image 
                                     src={getHighQualityUrl(p.url)} 
                                     alt={p.alt || "Plan"} 
                                     fill
                                     sizes="(max-width: 768px) 100vw, 33vw"
                                     className="object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105" 
                                 />
-                           </div>
-                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5">
+                            </div>
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/5">
                                 <span className="bg-white/90 text-black text-xs font-bold px-3 py-1 rounded shadow-sm">View Full Screen</span>
-                           </div>
+                            </div>
                         </div>
                         <div className="p-4 border-t border-gray-100 bg-white">
                            <h4 className="font-bold text-lg text-gray-800">{p.alt || `Unit Plan ${i + 1}`}</h4>
                            <span className="text-xs text-gray-400 uppercase tracking-widest mt-1 block">Layout Configuration</span>
                         </div>
-                     </div>
+                      </div>
                   ))}
-               </div>
-            ) : (
-              <div className="text-center text-gray-400 py-12 bg-white rounded-lg border border-dashed">No Plans Uploaded</div>
-            )}
-          </div>
-        </section>
+                </div>
+              </div>
+            </section>
+        )}
 
-        {/* ✅ LOCATION SECTION (Lazy Loaded Map) */}
+        {/* --- LOCATION --- */}
         <section id="location" className="py-16 bg-white border-t border-gray-200">
             <div className="container mx-auto px-6">
                 <div className="text-center mb-16">
@@ -403,7 +399,6 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                 <div className="flex flex-col lg:grid lg:grid-cols-3 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 h-auto lg:h-[500px]">
                     <div className="lg:col-span-2 bg-gray-200 relative h-[300px] lg:h-full w-full">
                         {mapUrl ? (
-                            // ⚡ PERFORMANCE: Using Lazy Loaded Map Component
                             <ProjectMap mapUrl={mapUrl} />
                         ) : (
                             <div className="absolute inset-0 flex items-center justify-center text-gray-500">Map Not Available</div>
@@ -484,13 +479,13 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                <button onClick={closeLightbox} className="absolute top-6 right-6 text-white p-2 bg-black/40 rounded-full z-50">✕</button>
                <div className="relative w-full h-full max-w-[95vw] max-h-[90vh]">
                    <Image 
-                        src={getHighQualityUrl(gallery[lightboxIndex].url)} 
-                        alt="Lightbox" 
-                        fill
-                        sizes="100vw"
-                        className="object-contain" 
-                        onClick={(e) => e.stopPropagation()} 
-                    />
+                       src={getHighQualityUrl(gallery[lightboxIndex].url)} 
+                       alt="Lightbox" 
+                       fill
+                       sizes="100vw"
+                       className="object-contain" 
+                       onClick={(e) => e.stopPropagation()} 
+                   />
                </div>
             </div>
           )}

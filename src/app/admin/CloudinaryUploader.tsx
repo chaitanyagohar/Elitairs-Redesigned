@@ -10,111 +10,85 @@ type UploadResult = {
 
 export default function CloudinaryUploader({
   onUpload,
-  accept = "image/*",
+  accept = "image/*", // You can pass "video/*" or "image/*,video/*"
   label = "Upload File",
-  multiple = false, // ✅ NEW
+  multiple = false,
 }: {
   onUpload: (res: UploadResult) => void;
   accept?: string;
   label?: string;
-  multiple?: boolean; // ✅ NEW
+  multiple?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
-
     if (!files || files.length === 0) return;
 
     setLoading(true);
+
+    // 1. Get Config from Env
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+    if (!cloudName || !uploadPreset) {
+      alert("Missing Cloudinary configuration. Check your .env file.");
+      setLoading(false);
+      return;
+    }
 
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
 
-        // Size check (8MB per file)
-        if (file.size > 8 * 1024 * 1024) {
-          alert(`${file.name} is larger than 8MB. Skipped.`);
+        // 2. Size Limit Check: 50MB
+        // 50 MB * 1024 KB * 1024 Bytes
+        if (file.size > 50 * 1024 * 1024) {
+          alert(`File "${file.name}" is too large (Over 50MB).`);
           continue;
         }
 
-        // Convert to base64
-        const base64 = await readFileAsDataURL(file);
+        // 3. Auto-detect if it's a Video or Image
+        // If it starts with "video/", use "video", otherwise default to "image"
+        const resourceType = file.type.startsWith("video/") ? "video" : "image";
 
-        const res = await fetch("/api/upload/image", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            file: base64,
-            filename: file.name,
-            contentType: file.type,
-          }),
-        });
+        // 4. Prepare Data for Direct Upload
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", uploadPreset);
+
+        // 5. Upload Directly to Cloudinary
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         if (!res.ok) {
-          let errText = "Upload failed";
-
-          try {
-            const errJson = await res.json();
-            errText =
-              errJson.error ||
-              errJson.message ||
-              JSON.stringify(errJson);
-          } catch {}
-
-          throw new Error(errText);
+          const err = await res.json();
+          throw new Error(err.error?.message || "Upload failed");
         }
 
         const json = await res.json();
 
-        const candidates = [
-          json.secure_url,
-          json.url,
-          json.result?.secure_url,
-          json.data?.secure_url,
-          json.data?.url,
-          json.result?.url,
-          json.secureUrl,
-          json.link,
-        ];
-
-        const finalUrl =
-          candidates.find(
-            (c: any) => typeof c === "string" && c.length > 0
-          ) || null;
-
-        const public_id =
-          json.public_id ||
-          json.result?.public_id ||
-          json.data?.public_id ||
-          null;
-
-        // Send each file result separately
+        // 6. Success! Send data back to your form
         onUpload({
-          url: finalUrl,
-          secure_url: finalUrl,
-          public_id,
+          url: json.secure_url,
+          secure_url: json.secure_url,
+          public_id: json.public_id,
           raw: json,
         });
       }
     } catch (err: any) {
       console.error("Upload Error:", err);
-      alert(`Upload Failed: ${err.message || err}`);
-      onUpload(null);
+      alert(`Upload Failed: ${err.message || "Unknown error"}`);
     } finally {
       setLoading(false);
-
       if (e.target) e.target.value = "";
     }
   }
-
-  const readFileAsDataURL = (file: File) =>
-    new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
 
   return (
     <div className="inline-block">
@@ -155,7 +129,7 @@ export default function CloudinaryUploader({
           type="file"
           className="hidden"
           accept={accept}
-          multiple={multiple} // ✅ KEY CHANGE
+          multiple={multiple}
           onChange={handleFile}
           disabled={loading}
         />

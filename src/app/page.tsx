@@ -193,7 +193,9 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
         <div className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 reveal-on-scroll" data-delay="100">
           {premiumPicks.length > 0 ? (
             premiumPicks.map((project) => (
-              <div key={project.id} className="min-w-[300px] md:min-w-[350px] snap-center">
+              // ✅ FIXED: Used fixed width 'w-' instead of 'min-w-' to prevent stretching
+              // ✅ FIXED: Added 'flex-shrink-0' so it doesn't shrink
+              <div key={project.id} className="w-[300px] md:w-[350px] flex-shrink-0 snap-center">
                 <ProjectCard project={project} />
               </div>
             ))
@@ -298,7 +300,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
               {
                 title: "Real Estate Consulting",
                 desc: "Advisory-led property selection based on budget, location fundamentals, and long-term appreciation potential.",
-                img: "/public/services/consulting.jpg",
+                img: "/services/consulting.jpg",
               },
               {
                 title: "Research & Analysis",
@@ -341,7 +343,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 
           <div className="mt-10 bg-white/80 border border-gray-100 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-3">
             <div className="text-center md:text-left">
-              <p className="text-sm text-gray-700"><span className="font-semibold">Need a personalised plan?</span> We&apos;ll craft a shortlist of properties tailored to your budget and goal.</p>
+              <p className="text-sm text-gray-700"><span className="font-semibold">Need a personalised plan?</span> We'll craft a shortlist of properties tailored to your budget and goal.</p>
             </div>
             <div className="flex w-full md:w-auto gap-3 flex-col sm:flex-row mt-3 md:mt-0">
               <a href="/projects" className="w-full sm:w-auto px-4 py-2 rounded-md bg-transparent border border-[#FFC40C] text-[#B06C00] font-semibold hover:bg-[#FFF0C6] transition text-center">View Properties</a>
@@ -364,7 +366,8 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
            </div>
            <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                {dwarkaProjects.map((p) => (
-                   <div key={p.id} className="min-w-[260px] md:min-w-[320px] snap-center">
+                   // ✅ FIXED: Used fixed width 'w-' instead of 'min-w-'
+                   <div key={p.id} className="w-[300px] md:w-[350px] flex-shrink-0 snap-center">
                        <ProjectCard project={p} />
                    </div>
                ))}
@@ -377,7 +380,8 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
            </div>
            <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
                {sprProjects.map((p) => (
-                   <div key={p.id} className="min-w-[260px] md:min-w-[320px] snap-center">
+                   // ✅ FIXED: Used fixed width 'w-' instead of 'min-w-'
+                   <div key={p.id} className="w-[300px] md:w-[350px] flex-shrink-0 snap-center">
                        <ProjectCard project={p} />
                    </div>
                ))}
@@ -620,7 +624,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 function ProjectCard({ project }: { project: any }) {
     return (
         <Link href={`/projects/${project.slug ?? project.id}`} className="group block bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-            <div className="relative h-40 md:h-48 bg-gray-200 overflow-hidden">
+            <div className="relative h-64 bg-gray-200 overflow-hidden">
                 {project.coverImage ? (
                     // ✅ PERFORMANCE
                     <Image 

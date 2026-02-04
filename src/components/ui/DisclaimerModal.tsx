@@ -2,11 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation"; // ✅ 1. Import Hook
 
 export default function DisclaimerModal() {
+  const pathname = usePathname(); // ✅ 2. Get current path
   const [show, setShow] = useState(false);
 
+  // ✅ 3. Check if we are on an admin page
+  const isAdmin = pathname?.startsWith("/admin");
+
   useEffect(() => {
+    // ✅ 4. If on Admin page, do nothing
+    if (isAdmin) return;
+
     const accepted = localStorage.getItem("disclaimerAccepted");
 
     if (!accepted) {
@@ -16,14 +24,15 @@ export default function DisclaimerModal() {
 
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isAdmin]); // ✅ Add dependency
 
   const handleAgree = () => {
     localStorage.setItem("disclaimerAccepted", "true");
     setShow(false);
   };
 
-  if (!show) return null;
+  // ✅ 5. Render NOTHING if on admin page or if not meant to show yet
+  if (isAdmin || !show) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-3">

@@ -36,7 +36,7 @@ export default function AdminLoginPage() {
 
       // short pause to let browser persist cookie
       await new Promise((r) => setTimeout(r, 120));
-      router.replace("/admin/dashboard");
+      router.replace("/admin");
     } catch (err) {
       console.error(err);
       setError("Network error — try again");
