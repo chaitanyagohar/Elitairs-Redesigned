@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Metadata } from "next"; // ✅ Import Metadata type
 
-// Import Views
+// Import View
 import ProjectDetailView from "../ProjectDetailView";
 
 export const dynamic = "force-dynamic";
@@ -89,14 +89,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
     },
   };
 
-  // ✅ 4️⃣ CHECK PROPERTY TYPE
-  const isCommercial = 
-    project.propertyType === "Commercial" || 
-    project.propertyType === "SCO" || 
-    project.propertyType === "Industrial" ||
-    project.propertyType === "Retail";
-
-  // 5️⃣ RETURN VIEW
+  // 4️⃣ RETURN VIEW
   return (
     <>
       {/* Inject Schema for Google (Invisible to user) */}
@@ -105,12 +98,8 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* View Switcher */}
-      {isCommercial ? (
-        <CommercialProjectView project={project} />
-      ) : (
-        <ProjectDetailView project={project} similarProjects={similarProjects} />
-      )}
+      {/* Single View for ALL projects */}
+      <ProjectDetailView project={project} similarProjects={similarProjects} />
     </>
   );
 }
