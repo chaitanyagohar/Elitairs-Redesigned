@@ -153,7 +153,7 @@ export async function POST(request: Request) {
 
     const mailOptions = {
       from: `"Elitairs Website" <${process.env.EMAIL_USER}>`,
-      to: "goharchaitanya04@gmail.com",
+      to: "info@elitairs.com",
 
       subject: `🔥 New Lead: ${safeName} (${safeProperty})`,
 
