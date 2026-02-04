@@ -1,12 +1,38 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import { Metadata } from "next"; // ✅ Import Metadata type
+
+// Import Views
 import ProjectDetailView from "../ProjectDetailView";
 
 export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: { slug: string };
+}
+
+// ✅ 1. DYNAMIC SEO METADATA
+// This runs before the page loads to set the correct Title and Description for Google/Social Media
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const project = await prisma.project.findFirst({
+    where: { 
+      OR: [{ slug: params.slug }, { id: params.slug }] 
+    },
+    select: { title: true, overview: true, coverImage: true, location: true, city: true }
+  });
+
+  if (!project) return { title: "Project Not Found" };
+
+  return {
+    title: project.title,
+    description: project.overview?.slice(0, 160) || `Luxury property in ${project.location}, ${project.city}.`,
+    openGraph: {
+      title: project.title,
+      description: `Check out ${project.title} located in ${project.location}.`,
+      images: [project.coverImage || "/og-image.jpg"],
+    },
+  };
 }
 
 export default async function ProjectDetailsPage({ params }: PageProps) {
@@ -38,9 +64,53 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
     orderBy: {
       createdAt: "desc",
     },
-    take: 4, // show latest 4 projects
+    take: 4, 
   });
 
-  // 3️⃣ Return updated view
-  return <ProjectDetailView project={project} similarProjects={similarProjects} />;
+  // ✅ 3️⃣ STRUCTURED DATA (JSON-LD)
+  // This helps Google understand pricing, reviews, and availability
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product", // Real Estate is often treated as a Product or SingleFamilyResidence
+    name: project.title,
+    description: project.overview?.slice(0, 300),
+    image: [project.coverImage, ...(project.gallery?.map(g => g.url) || [])],
+    brand: {
+      "@type": "Brand",
+      name: project.builder || "Elitairs",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `https://www.elitairs.com/projects/${project.slug}`,
+      priceCurrency: "INR",
+      price: project.price, 
+      itemCondition: "https://schema.org/NewCondition",
+      availability: "https://schema.org/InStock",
+    },
+  };
+
+  // ✅ 4️⃣ CHECK PROPERTY TYPE
+  const isCommercial = 
+    project.propertyType === "Commercial" || 
+    project.propertyType === "SCO" || 
+    project.propertyType === "Industrial" ||
+    project.propertyType === "Retail";
+
+  // 5️⃣ RETURN VIEW
+  return (
+    <>
+      {/* Inject Schema for Google (Invisible to user) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      {/* View Switcher */}
+      {isCommercial ? (
+        <CommercialProjectView project={project} />
+      ) : (
+        <ProjectDetailView project={project} similarProjects={similarProjects} />
+      )}
+    </>
+  );
 }
