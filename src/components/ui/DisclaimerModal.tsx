@@ -50,6 +50,7 @@ export default function DisclaimerModal() {
               alt="Logo"
               fill
               className="object-contain"
+              sizes="(max-width: 768px) 100px, 200px" // Tells browser: "It's small, don't download the huge version
             />
           </div>
 
