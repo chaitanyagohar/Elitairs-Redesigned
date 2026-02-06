@@ -29,6 +29,15 @@ const nextConfig = {
     deviceSizes: [320, 420, 768, 1024, 1200, 1600, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
   },
+  async redirects() {
+    return [
+      {
+        source: '/contact-us',
+        destination: '/contact',
+        permanent: true, // ✅ crucial: tells Google to update the search result
+      },
+    ]
+  },
 };
 
 module.exports = nextConfig;
