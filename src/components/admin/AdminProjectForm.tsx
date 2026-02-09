@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import CloudinaryUploader from "@/app/admin/CloudinaryUploader";
 
-const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK","3.5 BHK", "4 BHK", "4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot", "SCO"];
+const CONFIG_OPTIONS = ["1 BHK", "2 BHK", "3 BHK","3 BHK + Utility","3.5 BHK", "4 BHK","4 BHK + Utility", "4.5 BHK", "5+ BHK", "Penthouse", "Villa", "Plot", "SCO"];
 const CITY_OPTIONS = ["Gurugram", "New Delhi", "Noida", "Faridabad", "Dwarka"];
 const STATUS_OPTIONS = ["New Launch", "Under Construction", "Ready to Move", "Sold Out"];
 const TYPE_OPTIONS = ["Residential", "Commercial", "Plots", "Industrial"];
