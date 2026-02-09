@@ -2,43 +2,34 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation"; // ✅ 1. Import Hook
+import { usePathname } from "next/navigation";
+import { useStartup } from "@/context/StartupContext"; // ✅ Import Context
 
 export default function DisclaimerModal() {
-  const pathname = usePathname(); // ✅ 2. Get current path
-  const [show, setShow] = useState(false);
+  const { stage, acceptDisclaimer } = useStartup(); // ✅ Get brain signals
+  const pathname = usePathname();
 
-  // ✅ 3. Check if we are on an admin page
+  // 1. Check if admin
   const isAdmin = pathname?.startsWith("/admin");
 
-  useEffect(() => {
-    // ✅ 4. If on Admin page, do nothing
-    if (isAdmin) return;
+  // 2. Check if it's the right time in the sequence
+  // The context handles the 4-second delay after preloader automatically.
+  const show = stage === "disclaimer" && !isAdmin;
 
-    const accepted = localStorage.getItem("disclaimerAccepted");
-
-    if (!accepted) {
-      const timer = setTimeout(() => {
-        setShow(true);
-      }, 2000); // 2 sec delay
-
-      return () => clearTimeout(timer);
-    }
-  }, [isAdmin]); // ✅ Add dependency
-
+  // 3. Handle Agreement
   const handleAgree = () => {
-    localStorage.setItem("disclaimerAccepted", "true");
-    setShow(false);
+    // This tells the Brain: "I agreed, start the 6-second timer for the Form"
+    acceptDisclaimer();
   };
 
-  // ✅ 5. Render NOTHING if on admin page or if not meant to show yet
-  if (isAdmin || !show) return null;
+  // 4. Render nothing if it's not time yet
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-3">
 
       {/* Modal Box */}
-      <div className="bg-white w-full max-w-2xl rounded-lg shadow-2xl overflow-hidden border border-gray-200">
+      <div className="bg-white w-full max-w-2xl rounded-lg shadow-2xl overflow-hidden border border-gray-200 animate-in fade-in zoom-in duration-300">
 
         {/* Header */}
         <div className="flex flex-col items-center gap-2 bg-[#050505] py-3 border-b border-gray-700">
@@ -50,7 +41,7 @@ export default function DisclaimerModal() {
               alt="Logo"
               fill
               className="object-contain"
-              sizes="(max-width: 768px) 100px, 200px" // Tells browser: "It's small, don't download the huge version
+              sizes="(max-width: 768px) 100px, 200px"
             />
           </div>
 

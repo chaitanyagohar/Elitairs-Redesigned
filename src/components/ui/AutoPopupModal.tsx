@@ -3,70 +3,53 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import ReCAPTCHA from "react-google-recaptcha";
-import { usePathname } from "next/navigation"; 
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useStartup } from "@/context/StartupContext"; // ✅ Import Context
 
 export default function AutoPopupModal() {
-  const pathname = usePathname(); 
+  const { stage, unlockWebsite } = useStartup(); // ✅ Get brain signals
+  const pathname = usePathname();
 
-  const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
   const [agreed, setAgreed] = useState(false);
 
-  const [formData, setFormData] = useState({ 
-    name: "", 
-    email: "", 
-    phone: "", 
-    propertyType: "Residential", 
-    message: "", 
-    honey: "" 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    propertyType: "Residential",
+    message: "",
+    honey: ""
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  /* ---------------- Trigger Popup (MANDATORY LOGIC) ---------------- */
+  // 1. Determine Visibility based on Context Stage
+  // The popup ONLY shows when the brain says "form"
+  const isOpen = stage === "form" && !pathname?.startsWith("/admin");
 
+  // 2. Lock Scroll when Open
   useEffect(() => {
-    // 1. Don't block Admin pages
-    if (pathname?.startsWith("/admin")) return;
-
-    // 2. Check if user already submitted before
-    const hasSubmitted = localStorage.getItem("elitairs_lead_submitted");
-
-    if (!hasSubmitted) {
-      // ✅ CHANGE THIS NUMBER TO ADJUST TIMING
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        document.body.style.overflow = "hidden"; 
-      }, 10000); // 10 seconds delay
-
-      return () => clearTimeout(timer); 
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
     } else {
-      setIsOpen(false);
       document.body.style.overflow = "auto";
     }
-
     return () => { document.body.style.overflow = "auto"; };
-  }, [pathname]);
+  }, [isOpen]);
 
   if (pathname?.startsWith("/admin")) return null;
-
-  /* ---------------- Helper: Unlock Site ---------------- */
-  const unlockSite = () => {
-    localStorage.setItem("elitairs_lead_submitted", "true"); // ✅ Mark as done
-    setIsOpen(false);
-    document.body.style.overflow = "auto"; // 🔓 Unlock Scroll
-  };
 
   /* ---------------- WhatsApp ---------------- */
 
   const handleWhatsApp = () => {
-    // ✅ Unlocks site when they go to WhatsApp
-    unlockSite(); 
+    // ✅ Tell Brain: User chose WhatsApp, unlock the site
+    unlockWebsite();
 
-    const phone = "917081808180"; 
+    const phone = "917081808180";
     const text = `Hi Elitairs, I am interested in *${formData.propertyType}* properties. Please assist me.`;
 
     window.open(
@@ -120,8 +103,8 @@ export default function AutoPopupModal() {
         setStatus("success");
 
         setTimeout(() => {
-          // ✅ Unlock the site on success
-          unlockSite();
+          // ✅ Tell Brain: Success, unlock the site
+          unlockWebsite();
 
           setStatus("idle");
           setFormData({
@@ -171,7 +154,7 @@ export default function AutoPopupModal() {
 
           {/* Overlay */}
           <motion.div
-            className="absolute inset-0 bg-black/10 backdrop-blur-sm" // Darker background to emphasize mandatory nature
+            className="absolute inset-0 bg-black/90 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -222,7 +205,7 @@ export default function AutoPopupModal() {
 
                 <form onSubmit={handleSubmit} className="space-y-3">
 
-                  {/* ✅ UPDATED TITLE SECTION */}
+                  {/* Title Section */}
                   <div className="text-center mb-3">
                     <h2 className="text-black font-bold uppercase tracking-wide">
                       Unlock Website Access
@@ -230,7 +213,7 @@ export default function AutoPopupModal() {
                     <div className="flex items-center justify-center gap-1 mt-1 text-red-600">
                       <span className="text-xs">🔒</span>
                       <p className="text-[11px] font-semibold">
-                         Fill this form to continue browsing.
+                        Fill this form to continue browsing.
                       </p>
                     </div>
                   </div>

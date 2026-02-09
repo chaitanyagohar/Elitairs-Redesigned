@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { usePathname } from "next/navigation"; // ✅ 1. Import Hook
+import { useStartup } from "@/context/StartupContext";
 
 export default function Preloader() {
+  const { finishPreloader } = useStartup(); // ✅ Get function
   const pathname = usePathname(); // ✅ 2. Get current path
   const [isLoading, setIsLoading] = useState(true);
   const [counter, setCounter] = useState(0);
@@ -36,6 +38,8 @@ export default function Preloader() {
     const timer = setTimeout(() => {
       setIsLoading(false);
       document.body.style.overflow = "";
+      // ✅ TELL THE BRAIN: "I AM DONE"
+      finishPreloader();
     }, 2500);
 
     return () => {
