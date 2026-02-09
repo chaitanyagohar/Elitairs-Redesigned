@@ -1,7 +1,7 @@
 import React from "react";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { Metadata } from "next"; // ✅ Import Metadata type
+import { Metadata } from "next"; 
 
 // Import View
 import ProjectDetailView from "../ProjectDetailView";
@@ -13,7 +13,6 @@ interface PageProps {
 }
 
 // ✅ 1. DYNAMIC SEO METADATA
-// This runs before the page loads to set the correct Title and Description for Google/Social Media
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const project = await prisma.project.findFirst({
     where: { 
@@ -54,7 +53,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
     notFound();
   }
 
-  // 2️⃣ Fetch similar/latest projects (excluding current project)
+  // 2️⃣ Fetch similar/latest projects
   const similarProjects = await prisma.project.findMany({
     where: {
       id: {
@@ -68,13 +67,18 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
   });
 
   // ✅ 3️⃣ STRUCTURED DATA (JSON-LD)
-  // This helps Google understand pricing, reviews, and availability
+  // Logic updated to cleanly filter out any missing images
+  const allImages = [
+    project.coverImage,
+    ...(project.gallery?.map((g) => g.url) || [])
+  ].filter(Boolean) as string[]; // Removes null/undefined values
+
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product", // Real Estate is often treated as a Product or SingleFamilyResidence
+    "@type": "Product", // Helps in Rich Results
     name: project.title,
     description: project.overview?.slice(0, 300),
-    image: [project.coverImage, ...(project.gallery?.map(g => g.url) || [])],
+    image: allImages, // ✅ Passing the clean array of all project images
     brand: {
       "@type": "Brand",
       name: project.builder || "Elitairs",
@@ -92,7 +96,7 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
   // 4️⃣ RETURN VIEW
   return (
     <>
-      {/* Inject Schema for Google (Invisible to user) */}
+      {/* Inject Schema for Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

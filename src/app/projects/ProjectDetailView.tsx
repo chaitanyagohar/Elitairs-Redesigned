@@ -166,6 +166,11 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
     return [];
   };
 
+  // ✅ HELPER: Generate SEO-Friendly Alt Text
+  const getSeoAlt = (suffix: string) => {
+    return `${project?.title || "Property"} ${project?.propertyType || "Real Estate"} in ${project?.location || "Gurugram"} - ${suffix}`;
+  };
+
   return (
     <div className="bg-white text-black font-sans selection:bg-[#FFC40C] selection:text-white">
       <Navbar />
@@ -176,7 +181,9 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
           {project?.coverImage ? (
             <Image 
               src={getHighQualityUrl(project.coverImage)} 
-              alt={project.title} 
+              // ✅ SEO OPTIMIZED ALT
+              alt={getSeoAlt("High Rise Exterior View & Elevation")}
+              title={`${project.title} - ${project.location} Overview`}
               fill
               priority
               sizes="(max-width: 768px) 100vw, 100vw"
@@ -287,7 +294,9 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                   {project?.coverImage ? (
                     <Image 
                         src={getHighQualityUrl(project.coverImage)} 
-                        alt="cover" 
+                        // ✅ SEO OPTIMIZED ALT
+                        alt={getSeoAlt("High End Apartment Facade")}
+                        title={`${project.title} - Front Elevation`}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover" 
@@ -367,7 +376,9 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                             <div className="relative w-full h-full">
                                 <Image 
                                     src={getHighQualityUrl(p.url)} 
-                                    alt={p.alt || "Plan"} 
+                                    // ✅ SEO OPTIMIZED ALT
+                                    alt={p.alt || getSeoAlt(`Floor Plan Layout - ${i + 1} BHK`)}
+                                    title={`${project?.title} - Unit Plan Layout ${i + 1}`}
                                     fill
                                     sizes="(max-width: 768px) 100vw, 33vw"
                                     className="object-contain mix-blend-multiply transition-transform duration-300 group-hover:scale-105" 
@@ -440,7 +451,14 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                   <div ref={verticalThumbsRef} className="space-y-3 max-h-[520px] overflow-y-auto scrollbar-hide">
                     {gallery.map((img: any, i: number) => (
                       <button key={i} onClick={() => { handleInteractionStart(); goTo(i); handleInteractionEnd(); }} className={`relative w-full h-20 rounded-md overflow-hidden border-2 ${galleryIndex === i ? "border-[#FFC40C]" : "border-transparent"} transition-all`}>
-                        <Image src={getHighQualityUrl(img.url)} alt={`thumb-${i}`} fill sizes="100px" className="object-cover" />
+                        <Image 
+                            src={getHighQualityUrl(img.url)} 
+                            // ✅ SEO OPTIMIZED ALT
+                            alt={getSeoAlt(`Thumbnail Photo ${i + 1}`)}
+                            fill 
+                            sizes="100px" 
+                            className="object-cover" 
+                        />
                       </button>
                     ))}
                   </div>
@@ -449,7 +467,9 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                   <div className="rounded-lg overflow-hidden bg-gray-800 relative w-full h-[220px] sm:h-[300px] md:h-[420px] lg:h-[520px]" onMouseEnter={handleInteractionStart} onMouseLeave={handleInteractionEnd}>
                     <Image 
                         src={getHighQualityUrl(gallery[galleryIndex].url)} 
-                        alt={`Gallery ${galleryIndex + 1}`} 
+                        // ✅ SEO OPTIMIZED ALT
+                        alt={getSeoAlt(`Sample Flat Photo ${galleryIndex + 1} - Interior & Amenities`)}
+                        title={`${project?.title} - Photo Gallery ${galleryIndex + 1}`}
                         fill
                         sizes="100vw"
                         className="object-cover transition-all duration-500" 
@@ -465,7 +485,14 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                     <div ref={thumbsRowRef} className="flex gap-3 overflow-x-auto momentum-scroll scrollbar-hide pb-2 px-1">
                       {gallery.map((img: any, i: number) => (
                         <button key={`mthumb-${i}`} onClick={() => goTo(i)} className={`relative flex-shrink-0 w-24 h-16 rounded-md overflow-hidden border-2 ${galleryIndex === i ? "border-[#FFC40C]" : "border-transparent"}`}>
-                          <Image src={getHighQualityUrl(img.url)} alt={`mthumb-${i}`} fill sizes="100px" className="object-cover" />
+                          <Image 
+                            src={getHighQualityUrl(img.url)} 
+                            // ✅ SEO OPTIMIZED ALT
+                            alt={getSeoAlt(`Mobile Thumbnail ${i + 1}`)} 
+                            fill 
+                            sizes="100px" 
+                            className="object-cover" 
+                          />
                         </button>
                       ))}
                     </div>
@@ -480,7 +507,8 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                <div className="relative w-full h-full max-w-[95vw] max-h-[90vh]">
                    <Image 
                        src={getHighQualityUrl(gallery[lightboxIndex].url)} 
-                       alt="Lightbox" 
+                       // ✅ SEO OPTIMIZED ALT
+                       alt={getSeoAlt(`Full Screen View ${lightboxIndex + 1}`)}
                        fill
                        sizes="100vw"
                        className="object-contain" 
@@ -509,7 +537,8 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
             <div className="relative w-full h-full max-w-[95vw] max-h-[90vh]">
                 <Image 
                     src={selectedFloorPlan} 
-                    alt="Floor Plan Full View"
+                    // ✅ SEO OPTIMIZED ALT
+                    alt={getSeoAlt("Floor Plan Blueprint High Resolution")}
                     fill
                     sizes="100vw"
                     className="object-contain rounded shadow-2xl bg-white" 
