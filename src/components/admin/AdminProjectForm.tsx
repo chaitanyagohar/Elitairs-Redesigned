@@ -27,7 +27,7 @@ const COMMON_AMENITIES_DATA = [
   { name: "Basketball Court", defaultImg: "https://images.unsplash.com/photo-1519861531473-9200262188bf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGJhc2tldGJhbGx8ZW58MHx8MHx8fDA%3D" },
   { name: "Library", defaultImg: "https://plus.unsplash.com/premium_photo-1664300897489-fd98eee64faf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bGlicmFyeXxlbnwwfHwwfHx8MA%3D%3D" },
   { name: "Spa & Sauna", defaultImg: "https://images.unsplash.com/photo-1583417267826-aebc4d1542e1?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNwYXxlbnwwfHwwfHx8MA%3D%3D" },
-  { name: "Mini Theatre", defaultImg: "https://www.paripoornashelters.com/Assests/images/gallery/mini-theatre-inner.jpg" },
+  { name: "Mini Theatre", defaultImg: "https://media.istockphoto.com/id/1047762070/photo/small-movie-theater.jpg?s=612x612&w=0&k=20&c=tVqKDamk2QEsUe9kYlaJc9A5cQvRFtRqCuTYvLXvT2s=" },
 ];
 
 export default function AdminProjectForm({ initialData }: { initialData?: any }) {

@@ -24,6 +24,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'static.vecteezy.com', // Needed for the Power Backup image
       },
+       {
+        protocol: "https",
+        hostname: "www.paripoornashelters.com",
+        pathname: "/**",
+      },
     ],
     // Your custom sizes (kept as is)
     deviceSizes: [320, 420, 768, 1024, 1200, 1600, 1920],

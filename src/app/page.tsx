@@ -37,7 +37,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
     );
   }
   // Limit to top 8 for the slider (so it scrolls)
-  premiumPicks = premiumPicks.slice(0, 8);
+  premiumPicks = premiumPicks.slice(0, 10);
 
   // 4. ✅ PREPARE IMAGES FOR SLIDESHOW
   const slideshowImages = premiumPicks
