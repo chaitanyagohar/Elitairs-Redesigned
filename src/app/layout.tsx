@@ -28,12 +28,15 @@ const playfair = Playfair_Display({
 
 // ✅ SEO: Enhanced Metadata Configuration
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.elitairs.com"), // ⚠️ REPLACE with your actual domain
+  // 1. Base URL is critical for images to show up on WhatsApp
+  metadataBase: new URL("https://www.elitairs.com"), 
+
   title: {
     default: "Elitairs | Luxury Real Estate in Gurugram",
     template: "%s | Elitairs",
   },
   description: "Discover premium real estate, luxury apartments, and commercial properties in Gurugram. Expert consultation for high-end investments.",
+  
   keywords: [
     "Luxury Real Estate", 
     "Gurugram Property", 
@@ -42,15 +45,25 @@ export const metadata: Metadata = {
     "Elitairs", 
     "Property Investment India"
   ],
+  
   authors: [{ name: "Elitairs" }],
+  
+  // 2. Favicon & Icons (Shows in Browser Tab & Phone Home Screen)
+  icons: {
+    icon: "/elitairs-logo2trans.png", // Using your existing logo
+    shortcut: "/elitairs-logo2trans.png",
+    apple: "/elitairs-logo2trans.png", // For iPhone/iPad home screen
+  },
+
+  // 3. Open Graph (Facebook, LinkedIn, WhatsApp, iMessage)
   openGraph: {
-    title: "Elitairs | Luxury Real Estate",
-    description: "Premium properties and investment opportunities in Gurugram.",
+    title: "Elitairs | Premium Real Estate Consultants",
+    description: "Exclusive access to Gurugram's finest residential and commercial properties. Invest with confidence.",
     url: "https://www.elitairs.com",
     siteName: "Elitairs",
     images: [
       {
-        url: "/og-image.jpg", // ⚠️ Ensure you have an image named 'og-image.jpg' in your public folder
+        url: "/og-image.jpg", // ✅ Must exist in public folder
         width: 1200,
         height: 630,
         alt: "Elitairs Luxury Real Estate",
@@ -59,12 +72,15 @@ export const metadata: Metadata = {
     locale: "en_IN",
     type: "website",
   },
+
+  // 4. Twitter Card (X)
   twitter: {
     card: "summary_large_image",
     title: "Elitairs | Luxury Real Estate",
     description: "Premium properties and investment opportunities in Gurugram.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.jpeg"], // ✅ Must exist in public folder
   },
+
   robots: {
     index: true,
     follow: true,
@@ -76,7 +92,8 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  // ⚠️ ADD YOUR VERIFICATION CODE FROM GOOGLE SEARCH CONSOLE HERE
+  
+  // 5. Verification (Add code later if you have it)
   verification: {
     google: "YOUR_GOOGLE_VERIFICATION_CODE_HERE", 
   },
