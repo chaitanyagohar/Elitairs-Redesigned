@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     siteName: "Elitairs",
     images: [
       {
-        url: "/og-image.jpg", // ✅ Must exist in public folder
+        url: "/og-image.jpeg", // ✅ Must exist in public folder
         width: 1200,
         height: 630,
         alt: "Elitairs Luxury Real Estate",
