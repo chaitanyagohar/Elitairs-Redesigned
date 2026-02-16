@@ -7,15 +7,15 @@ export default function Footer() {
 
   return (
     <footer className="bg-[#050505] text-white pt-16 md:pt-20 pb-10 border-t border-[#FFC40C]/20 font-sans relative overflow-hidden">
-
+      
       {/* Golden Glow Effect */}
       <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#FFC40C] to-transparent shadow-[0_0_10px_#FFC40C]" />
 
       <div className="container mx-auto px-5 sm:px-6 relative z-10">
-
+        
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 mb-14">
-
+          
           {/* BRAND */}
           <div className="lg:col-span-2 space-y-6">
             <Link href="/" className="inline-block">
@@ -25,7 +25,7 @@ export default function Footer() {
                   alt="Elitairs"
                   fill
                   className="object-contain object-left"
-                  sizes="(max-width: 768px) 100px, 200px" // Tells browser: "It's small, don't download the huge version
+                  sizes="(max-width: 768px) 100px, 200px"
                 />
               </div>
             </Link>
@@ -61,6 +61,19 @@ export default function Footer() {
                 </svg>
               </a>
 
+              {/* Facebook - Added Here */}
+              <a
+                href="https://www.facebook.com/profile.php?id=61578775435127&rdid=CVxbWsEceTUjVTdx&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CDKR3yMp1%2F#" // Replace with your actual Facebook URL
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 backdrop-blur border border-white/10 flex items-center justify-center transition-all hover:scale-105"
+                aria-label="Facebook"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 fill-[#1877F2]">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+              </a>
+
               {/* LinkedIn */}
               <a
                 href="https://www.linkedin.com/company/elitairs/"
@@ -89,72 +102,71 @@ export default function Footer() {
             </ul>
           </div>
 
-       {/* COMPANY */}
-<div>
-  <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6 border-b border-[#FFC40C] inline-block pb-1">
-    Company
-  </h4>
+          {/* COMPANY */}
+          <div>
+            <h4 className="text-white font-bold text-sm uppercase tracking-widest mb-6 border-b border-[#FFC40C] inline-block pb-1">
+              Company
+            </h4>
 
-  <ul className="space-y-3 text-sm text-gray-400">
-    <li>
-      <Link href="/about" className="hover:text-[#FFC40C]">
-        About Elitairs
-      </Link>
-    </li>
-    <li>
-      <Link href="/nri" className="hover:text-[#FFC40C]">
-        NRI Services
-      </Link>
-    </li>
+            <ul className="space-y-3 text-sm text-gray-400">
+              <li>
+                <Link href="/about" className="hover:text-[#FFC40C]">
+                  About Elitairs
+                </Link>
+              </li>
+              <li>
+                <Link href="/nri" className="hover:text-[#FFC40C]">
+                  NRI Services
+                </Link>
+              </li>
 
-    {/* MASTER PLANS GROUP */}
-    <li className="pt-3">
-      <span className="block text-white font-semibold mb-2">
-        Master Plans
-      </span>
+              {/* MASTER PLANS GROUP */}
+              <li className="pt-3">
+                <span className="block text-white font-semibold mb-2">
+                  Master Plans
+                </span>
 
-      <ul className="ml-3 space-y-2 text-gray-400 text-[13px]">
-        <li>
-          <Link href="/master-plan/gurgaon" className="hover:text-[#FFC40C]">
-            Gurgaon 2031
-          </Link>
-        </li>
-        <li>
-          <Link href="/master-plan/delhi" className="hover:text-[#FFC40C]">
-            Delhi
-          </Link>
-        </li>
-        <li>
-          <Link href="/master-plan/noida" className="hover:text-[#FFC40C]">
-            Noida
-          </Link>
-        </li>
-        <li>
-          <Link href="/master-plan/yamuna" className="hover:text-[#FFC40C]">
-            Yamuna Expressway
-          </Link>
-        </li>
-        <li>
-          <Link href="/master-plan/sohna" className="hover:text-[#FFC40C]">
-            Sohna
-          </Link>
-        </li>
-        <li>
-          <Link href="/master-plan/faridabad" className="hover:text-[#FFC40C]">
-            Faridabad
-          </Link>
-        </li>
-      </ul>
-    </li>
+                <ul className="ml-3 space-y-2 text-gray-400 text-[13px]">
+                  <li>
+                    <Link href="/master-plan/gurgaon" className="hover:text-[#FFC40C]">
+                      Gurgaon 2031
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/master-plan/delhi" className="hover:text-[#FFC40C]">
+                      Delhi
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/master-plan/noida" className="hover:text-[#FFC40C]">
+                      Noida
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/master-plan/yamuna" className="hover:text-[#FFC40C]">
+                      Yamuna Expressway
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/master-plan/sohna" className="hover:text-[#FFC40C]">
+                      Sohna
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/master-plan/faridabad" className="hover:text-[#FFC40C]">
+                      Faridabad
+                    </Link>
+                  </li>
+                </ul>
+              </li>
 
-    <li className="pt-3">
-      <Link href="/contact" className="hover:text-[#FFC40C]">
-        Contact Us
-      </Link>
-    </li>
-  </ul>
-</div>
-
+              <li className="pt-3">
+                <Link href="/contact" className="hover:text-[#FFC40C]">
+                  Contact Us
+                </Link>
+              </li>
+            </ul>
+          </div>
 
           {/* VISIT US */}
           <div>
