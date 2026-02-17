@@ -7,8 +7,15 @@ import RevealStyles from "@/components/home/RevealStyles";
 import ScrollReveal from "@/components/home/ScrollReveal";
 import ProjectFilters from "@/components/project/ProjectFilters";
 import ProjectSort from "@/components/project/ProjectSort";
+import { Metadata } from "next"; // ✅ 1. Import Metadata
 
 export const dynamic = "force-dynamic";
+
+// ✅ 2. ADD THIS: Isse Google Search par title fix ho jayega
+export const metadata: Metadata = {
+  title: "Luxury Properties in Gurugram | Elitairs Real Estate",
+  description: "Browse our exclusive collection of luxury apartments, penthouses, and commercial properties in Gurugram's prime locations.",
+};
 
 // --- HELPER: Price Logic ---
 function parsePrice(priceStr: string | null): number {
@@ -90,13 +97,17 @@ export default async function ProjectsPage({
       <Navbar />
       <ScrollReveal />
       <RevealStyles />
-<section className="bg-gradient-to-b from-black via-gray-500 to-white border-b border-gray-200 pt-24 pb-4 md:pb-8 sticky top-0 z-30 lg:relative lg:top-auto">
+      <section className="bg-gradient-to-b from-black via-gray-500 to-white border-b border-gray-200 pt-24 pb-4 md:pb-8 sticky top-0 z-30 lg:relative lg:top-auto">
         <div className="container mx-auto px-4">
             <div className="text-xs md:text-sm text-gray-800 mb-1 md:mb-2">
                 <Link href="/" className="hover:text-white">Home</Link> &gt; <span className="text-gray-800">Properties</span>
             </div>
             <h1 className="text-xl md:text-3xl font-bold text-gray-900">
                 {searchTerm ? `Results for "${searchTerm}"` : "All Properties"} 
+                
+                {/* ✅ Agar aap chahein toh screen se bhi count hata sakte hain 
+                   bas niche wali line delete kar dein: 
+                */}
                 <span className="text-[#ffb900] font-normal text-sm md:text-lg ml-2">({projects.length} Listings)</span>
             </h1>
         </div>
@@ -152,7 +163,7 @@ export default async function ProjectsPage({
                                         </div>
                                     </div>
 
-                                    {/* ✅ NEW: INFORMATIVE GRID */}
+                                    {/* INFO GRID */}
                                     <div className="grid grid-cols-2 gap-3 my-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
                                         <div className="flex items-center gap-2">
                                             <span className="text-lg">🏠</span>

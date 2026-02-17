@@ -10,6 +10,7 @@ import RevealStyles from "@/components/home/RevealStyles";
 import StatsStrip from "@/components/home/StatsStrip";
 import BuilderLogos from "@/components/home/BuildersLogo";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
+import PremiumGallery from "@/components/home/PremiumGallery";
 
 export const dynamic = "force-dynamic";
 
@@ -492,38 +493,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
 
       <StatsStrip items={statsData} />
 
- {/* --- 9. GALLERY --- */}
-<section className="py-12 md:py-20 container mx-auto px-4 text-center">
-  <h2 className="text-2xl md:text-3xl font-bold mb-2">
-    Frames of Excellence
-  </h2>
-  <p className="text-sm md:text-base text-gray-500 mb-6 md:mb-8">
-    Where vision meets reality at Elitairs.
-  </p>
-
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-    {[
-      "/saurabh1.jpeg",
-      "/saurabh2.jpeg",
-      "/saurabh3.jpeg",
-      "/saurabh4.jpeg",
-    ].map((src, i) => (
-      <div
-        key={i}
-        className="group aspect-square rounded-xl overflow-hidden shadow-lg bg-gray-100 relative"
-      >
-        {/* ✅ PERFORMANCE */}
-        <Image
-          src={src}
-          alt={`Elitairs Gallery ${i + 1}`}
-          fill
-          sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-110"
-        />
-      </div>
-    ))}
-  </div>
-</section>
+<PremiumGallery />
 
 
     <TestimonialSlider />
