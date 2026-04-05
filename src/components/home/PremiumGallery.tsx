@@ -9,10 +9,12 @@ const galleryImages = [
   "/saurabh2.jpeg",
   "/saurabh3.jpeg",
   "/saurabh4.jpeg",
+   "/saurabh5.jpeg",
   "/saurabh6.jpeg",
   "/saurabh7.jpeg",
   "/saurabh8.jpeg",
-  "/saurabh10.jpeg",
+  "/saurabh9.jpeg",
+  "/saurabh10.jpeg"
 ];
 
 /* Animation Variants */
@@ -63,7 +65,7 @@ export default function PremiumGallery() {
             grid-cols-2
             sm:grid-cols-2
             md:grid-cols-3
-            lg:grid-cols-4
+            lg:grid-cols-5
             gap-6 sm:gap-8 md:gap-10
           "
         >
