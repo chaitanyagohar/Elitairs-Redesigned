@@ -11,6 +11,7 @@ import StatsStrip from "@/components/home/StatsStrip";
 import BuilderLogos from "@/components/home/BuildersLogo";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
 import PremiumGallery from "@/components/home/PremiumGallery";
+import LiveVisitorTicker from "@/components/ui/LiveVisitorTicker";
 
 export const dynamic = "force-dynamic";
 
@@ -162,6 +163,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                 </button>
             </form>
         </div>
+        <LiveVisitorTicker />
       </section>
 
       {/* --- 2. PREMIUM PICKS --- */}

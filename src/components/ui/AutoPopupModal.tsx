@@ -5,10 +5,10 @@ import Image from "next/image";
 import ReCAPTCHA from "react-google-recaptcha";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useStartup } from "@/context/StartupContext"; // ✅ Import Context
+import { useStartup } from "@/context/StartupContext";
 
 export default function AutoPopupModal() {
-  const { stage, unlockWebsite } = useStartup(); // ✅ Get brain signals
+  const { stage, unlockWebsite } = useStartup(); 
   const pathname = usePathname();
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
@@ -27,11 +27,8 @@ export default function AutoPopupModal() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  // 1. Determine Visibility based on Context Stage
-  // The popup ONLY shows when the brain says "form"
   const isOpen = stage === "form" && !pathname?.startsWith("/admin");
 
-  // 2. Lock Scroll when Open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -43,44 +40,36 @@ export default function AutoPopupModal() {
 
   if (pathname?.startsWith("/admin")) return null;
 
+  /* ---------------- ✅ NEW: Close/Skip Logic ---------------- */
+  const handleClose = () => {
+    unlockWebsite(); // Tells the Brain: "User dismissed the form, let them browse."
+  };
+
   /* ---------------- WhatsApp ---------------- */
-
   const handleWhatsApp = () => {
-    // ✅ Tell Brain: User chose WhatsApp, unlock the site
     unlockWebsite();
-
     const phone = "917081808180";
     const text = `Hi Elitairs, I am interested in *${formData.propertyType}* properties. Please assist me.`;
-
-    window.open(
-      `https://wa.me/${phone}?text=${encodeURIComponent(text)}`,
-      "_blank"
-    );
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   /* ---------------- Validation ---------------- */
-
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-
     if (formData.name.length < 3) newErrors.name = "Name is too short";
-
     if (!/^[6-9]\d{9}$/.test(formData.phone)) {
       newErrors.phone = "Invalid number";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   /* ---------------- Submit ---------------- */
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.honey) return;
     if (!validateForm()) return;
-
     if (!agreed) return alert("Accept consent first");
     if (!captchaToken) return alert("Complete CAPTCHA");
 
@@ -101,21 +90,10 @@ export default function AutoPopupModal() {
 
       if (res.ok && data.success) {
         setStatus("success");
-
         setTimeout(() => {
-          // ✅ Tell Brain: Success, unlock the site
           unlockWebsite();
-
           setStatus("idle");
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            propertyType: "Residential",
-            message: "",
-            honey: "",
-          });
-
+          setFormData({ name: "", email: "", phone: "", propertyType: "Residential", message: "", honey: "" });
           setAgreed(false);
           setCaptchaToken(null);
           recaptchaRef.current?.reset();
@@ -127,23 +105,16 @@ export default function AutoPopupModal() {
     }
   };
 
-  /* ---------------- Input Change ---------------- */
-
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: "" });
     }
   };
 
-  /* ================================================= */
-
   return (
     <AnimatePresence>
-
       {isOpen && (
-
         <motion.div
           className="fixed inset-0 z-[9999] flex items-center justify-center p-3"
           initial={{ opacity: 0 }}
@@ -152,33 +123,37 @@ export default function AutoPopupModal() {
           transition={{ duration: 0.35 }}
         >
 
-          {/* Overlay */}
+          {/* ✅ Overlay (Now Clickable to Close & slightly more transparent) */}
           <motion.div
-            className="absolute inset-0 bg-black/90 backdrop-blur-md"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={handleClose} 
           />
 
           {/* Modal */}
           <motion.div
-            className="relative w-full max-w-md bg-white rounded-lg overflow-hidden shadow-2xl border border-[#FFC40C]"
+            className="relative w-full max-w-md bg-white rounded-lg overflow-hidden shadow-2xl border border-gray-200"
             initial={{ opacity: 0, scale: 0.9, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 30 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
           >
+            
+            {/* ✅ Close Button (X) */}
+            <button 
+                onClick={handleClose}
+                className="absolute top-3 right-3 text-gray-400 hover:text-white bg-gray-900 hover:bg-black rounded-full w-7 h-7 flex items-center justify-center z-50 transition-colors"
+                aria-label="Close"
+            >
+                ✕
+            </button>
 
             {/* Header */}
             <div className="bg-[#050505] px-5 py-3 flex justify-center items-center border-b border-[#FFC40C]/30">
               <div className="relative w-24 h-6">
-                <Image
-                  src="/elitairs-logo2trans.png"
-                  alt="Elitairs"
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 100px, 200px"
-                />
+                <Image src="/elitairs-logo2trans.png" alt="Elitairs" fill className="object-contain" sizes="(max-width: 768px) 100px, 200px" />
               </div>
             </div>
 
@@ -186,48 +161,28 @@ export default function AutoPopupModal() {
             <div className="p-4">
 
               {status === "success" ? (
-
-                <motion.div
-                  className="text-center py-6"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                >
-                  <div className="text-4xl mb-2 text-[#FFC40C]">✓</div>
-                  <h3 className="text-lg font-bold mb-1">
-                    Access Granted
-                  </h3>
-                  <p className="text-gray-500 text-sm">
-                    Thank you. Unlocking website...
-                  </p>
+                <motion.div className="text-center py-6" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+                  <div className="text-4xl mb-2 text-[#25A244]">✓</div>
+                  <h3 className="text-lg font-bold mb-1">Inquiry Sent!</h3>
+                  <p className="text-gray-500 text-sm">Our experts will contact you shortly.</p>
                 </motion.div>
-
               ) : (
 
                 <form onSubmit={handleSubmit} className="space-y-3">
-
-                  {/* Title Section */}
+                  
+                  {/* ✅ Softer Title Section */}
                   <div className="text-center mb-3">
                     <h2 className="text-black font-bold uppercase tracking-wide">
-                      Unlock Website Access
+                      Register Your Interest
                     </h2>
-                    <div className="flex items-center justify-center gap-1 mt-1 text-red-600">
-                      <span className="text-xs">🔒</span>
-                      <p className="text-[11px] font-semibold">
-                        Fill this form to continue browsing.
-                      </p>
-                    </div>
+                    <p className="text-[11px] font-semibold text-gray-500 mt-1">
+                      Drop your details for exclusive project insights.
+                    </p>
                   </div>
 
                   {/* Honeypot */}
-                  <input
-                    type="text"
-                    name="honey"
-                    className="hidden"
-                    value={formData.honey}
-                    onChange={handleChange}
-                  />
+                  <input type="text" name="honey" className="hidden" value={formData.honey} onChange={handleChange} />
 
-                  {/* Name */}
                   <input
                     name="name"
                     placeholder="Full Name"
@@ -238,7 +193,6 @@ export default function AutoPopupModal() {
                     className="w-full bg-gray-50 border py-2 px-3 text-black outline-none focus:border-[#FFC40C]"
                   />
 
-                  {/* Phone */}
                   <input
                     name="phone"
                     placeholder="Phone Number"
@@ -250,7 +204,6 @@ export default function AutoPopupModal() {
                     className="w-full bg-gray-50 border py-2 px-3 text-black outline-none focus:border-[#FFC40C]"
                   />
 
-                  {/* Property */}
                   <select
                     name="propertyType"
                     value={formData.propertyType}
@@ -263,7 +216,6 @@ export default function AutoPopupModal() {
                     <option>SCO</option>
                   </select>
 
-                  {/* Message */}
                   <textarea
                     name="message"
                     rows={2}
@@ -283,35 +235,19 @@ export default function AutoPopupModal() {
                     </div>
                   )}
 
-                  {/* Consent */}
                   <div className="flex gap-2 text-[9px] text-gray-600">
-                    <input
-                      type="checkbox"
-                      checked={agreed}
-                      onChange={(e) => setAgreed(e.target.checked)}
-                      className="accent-[#FFC40C]"
-                    />
+                    <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="accent-[#FFC40C] mt-0.5" />
                     <p>
-                      I agree to the{" "}
-                      <a href="/terms-conditions" target="_blank" className="text-[#FFC40C] underline">
-                        terms & conditions
-                      </a>{" "}
-                      & to be contacted by team{" "}
-                      <span className="font-semibold">Elitairs</span> via WhatsApp,
-                      phone, SMS & e-mail.
+                      I agree to the <a href="/terms-conditions" target="_blank" className="text-[#FFC40C] underline">terms & conditions</a> & to be contacted by team <span className="font-semibold">Elitairs</span> via WhatsApp, phone, & e-mail.
                     </p>
                   </div>
 
-                  {/* Buttons */}
-                  <div className="space-y-2">
-
+                  <div className="space-y-2 pt-2">
                     <button
                       disabled={!agreed || status === "submitting"}
                       className="w-full py-3 bg-black text-white text-[11px] font-bold uppercase hover:bg-[#FFC40C] hover:text-black transition"
                     >
-                      {status === "submitting"
-                        ? "Verifying..."
-                        : "Unlock Website"}
+                      {status === "submitting" ? "Submitting..." : "Submit Inquiry"}
                     </button>
 
                     <button
@@ -319,21 +255,15 @@ export default function AutoPopupModal() {
                       onClick={handleWhatsApp}
                       className="w-full py-2.5 bg-[#25D366] text-white text-[11px] font-bold uppercase hover:bg-[#128C7E]"
                     >
-                      Chat on WhatsApp to Unlock
+                      Connect on WhatsApp
                     </button>
-
                   </div>
-
                 </form>
-
               )}
-
             </div>
           </motion.div>
         </motion.div>
-
       )}
-
     </AnimatePresence>
   );
 }
