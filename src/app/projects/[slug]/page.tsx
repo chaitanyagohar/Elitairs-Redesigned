@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: project.title,
       description: `Check out ${project.title} located in ${project.location}.`,
-      images: [project.coverImage || "/og-image.jpg"],
+      images: [project.coverImage || "/og-image.jpeg"],
     },
   };
 }
@@ -67,29 +67,42 @@ export default async function ProjectDetailsPage({ params }: PageProps) {
   });
 
   // ✅ 3️⃣ STRUCTURED DATA (JSON-LD)
-  // Logic updated to cleanly filter out any missing images
   const allImages = [
     project.coverImage,
     ...(project.gallery?.map((g) => g.url) || [])
-  ].filter(Boolean) as string[]; // Removes null/undefined values
+  ].filter(Boolean) as string[]; 
+
+  // Fallback to default OG image if no images exist to satisfy Google's image requirement
+  if (allImages.length === 0) {
+    allImages.push("https://www.elitairs.com/og-image.jpeg");
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product", // Helps in Rich Results
+    "@type": "Product", 
     name: project.title,
-    description: project.overview?.slice(0, 300),
-    image: allImages, // ✅ Passing the clean array of all project images
+    description: project.overview?.slice(0, 300) || `Explore ${project.title} in ${project.location}, ${project.city}.`,
+    image: allImages,
+    sku: project.id, // Added to fix "Missing field 'sku'" error
     brand: {
       "@type": "Brand",
       name: project.builder || "Elitairs",
     },
     offers: {
       "@type": "Offer",
-      url: `https://www.elitairs.com/projects/${project.slug}`,
+      url: `https://www.elitairs.com/projects/${project.slug || project.id}`,
       priceCurrency: "INR",
-      price: project.price, 
+      // Strips text (like "Cr", "Lakhs") to satisfy Google's raw number requirement
+      price: project.price ? project.price.replace(/[^0-9.]/g, "") || "0" : "0", 
       itemCondition: "https://schema.org/NewCondition",
-      availability: "https://schema.org/InStock",
+      availability: project.status === "Sold Out" 
+        ? "https://schema.org/OutOfStock" 
+        : "https://schema.org/InStock",
+      // Added to fix Merchant Listing "Missing field 'seller'" error
+      seller: {
+        "@type": "Organization",
+        name: "Elitairs Real Estate"
+      }
     },
   };
 
