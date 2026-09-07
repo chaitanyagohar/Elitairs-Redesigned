@@ -185,7 +185,6 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
               alt={getSeoAlt("High Rise Exterior View & Elevation")}
               title={`${project.title} - ${project.location} Overview`}
               fill
-              priority
               sizes="(max-width: 768px) 100vw, 100vw"
               className="object-cover animate-scale-slow" 
             />
