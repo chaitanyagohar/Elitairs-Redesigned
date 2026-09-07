@@ -71,7 +71,7 @@ export default function CityMasterPlan({ params }: any) {
 
       {/* HERO */}
       <section className="relative h-[60vh] flex items-center justify-center text-white">
-        <Image src={city.hero} fill className="object-cover" alt="" />
+        <Image priority={true}src={city.hero} fill className="object-cover" alt="" />
         <div className="absolute inset-0 bg-black/70" />
         <h1 className="relative z-10 text-6xl font-bold">
           {city.name} Master Plan

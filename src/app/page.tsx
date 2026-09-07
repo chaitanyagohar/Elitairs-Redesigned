@@ -324,7 +324,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
               <article key={i} className="group bg-white rounded-2xl overflow-hidden shadow-sm border border-transparent md:hover:border-[#FFE08A] md:group-hover:shadow-lg transition">
                 <div className="w-full h-32 md:h-40 overflow-hidden bg-gray-100 relative">
                   {/* ✅ PERFORMANCE */}
-                  <Image 
+                  <Image priority={true}
                     src={item.img} 
                     alt={item.title} 
                     fill 
@@ -396,7 +396,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
       <section className="w-full h-[300px] md:h-[400px] bg-gray-900 relative flex items-center justify-center reveal-on-scroll">
          <div className="absolute inset-0 opacity-40">
            {/* ✅ PERFORMANCE */}
-           <Image 
+           <Image priority={true}
              src="/homepage-about.jpeg" 
              alt="Luxury Banner" 
              fill 
@@ -421,7 +421,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 h-auto md:h-[400px]">
                 <div className="md:col-span-2 md:row-span-2 relative group overflow-hidden rounded-xl h-[200px] md:h-full">
                     {/* ✅ PERFORMANCE */}
-                    <Image src="/img8.jpg" alt="New Delhi" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <Image priority={true}src="/img8.jpg" alt="New Delhi" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 text-white">
                         <h3 className="text-lg md:text-2xl font-bold">New Delhi</h3>
@@ -429,7 +429,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                     </div>
                 </div>
                 <div className="relative group overflow-hidden rounded-xl h-[200px] md:h-auto">
-                    <Image src="/img6.jpg" alt="Gurugram" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <Image priority={true}src="/img6.jpg" alt="Gurugram" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 text-white">
                         <h3 className="text-lg font-bold">Gurugram</h3>
@@ -437,7 +437,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                     </div>
                 </div>
                 <div className="relative group overflow-hidden rounded-xl h-[200px] md:h-auto">
-                    <Image src="/img7.jpg" alt="Faridabad" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <Image priority={true}src="/img7.jpg" alt="Faridabad" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 text-white">
                         <h3 className="text-lg font-bold">Faridabad</h3>
@@ -445,7 +445,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                     </div>
                 </div>
                 <div className="md:col-span-2 relative group overflow-hidden rounded-xl h-[200px] md:h-auto">
-                    <Image src="/noida.avif" alt="Noida" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <Image priority={true}src="/noida.avif" alt="Noida" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 text-white">
                         <h3 className="text-lg md:text-2xl font-bold">Noida</h3>
@@ -477,7 +477,7 @@ export default async function HomePage({ searchParams }: { searchParams: { city?
                 <Link href={`/media/${item.slug}`} key={i} className="group cursor-pointer block h-full">
                     <div className="h-48 md:h-56 bg-gray-200 rounded-xl mb-4 overflow-hidden relative">
                          {/* ✅ PERFORMANCE */}
-                         <Image src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                         <Image priority={true}src={item.image} alt={item.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                          <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
                          <div className="absolute bottom-4 left-4">
                             <span className="bg-[#FFC40C] text-black text-[10px] md:text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-widest">{item.tag}</span>
@@ -599,7 +599,7 @@ function ProjectCard({ project }: { project: any }) {
             <div className="relative h-64 bg-gray-200 overflow-hidden">
                 {project.coverImage ? (
                     // ✅ PERFORMANCE
-                    <Image 
+                    <Image priority={true}
                       src={project.coverImage} 
                       alt={project.title} 
                       fill 

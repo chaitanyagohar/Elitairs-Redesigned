@@ -109,7 +109,7 @@ export default function Preloader() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="relative w-56 h-20 md:w-72 md:h-24"
               >
-                <Image 
+                <Image priority={true}
                   src="/elitairs-logo2trans.png" 
                   alt="Elitairs Logo" 
                   fill 

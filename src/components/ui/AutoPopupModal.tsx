@@ -153,7 +153,7 @@ export default function AutoPopupModal() {
             {/* Header */}
             <div className="bg-[#050505] px-5 py-3 flex justify-center items-center border-b border-[#FFC40C]/30">
               <div className="relative w-24 h-6">
-                <Image src="/elitairs-logo2trans.png" alt="Elitairs" fill className="object-contain" sizes="(max-width: 768px) 100px, 200px" />
+                <Image priority={true}src="/elitairs-logo2trans.png" alt="Elitairs" fill className="object-contain" sizes="(max-width: 768px) 100px, 200px" />
               </div>
             </div>
 

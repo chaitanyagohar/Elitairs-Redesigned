@@ -81,7 +81,7 @@ export default function AmenitiesSlider({
           <SwiperSlide key={index} className="h-full">
             <div className="relative w-full h-full rounded-sm overflow-hidden group shadow-lg cursor-pointer">
 
-              {/* ✅ PERFORMANCE: Replaced <img> with <Image /> */}
+              {/* ✅ PERFORMANCE: Replaced <img> with <Image priority={true}/> */}
               {/* This automatically resizes images based on the user's device */}
               <Image
                 src={item.icon || ""}

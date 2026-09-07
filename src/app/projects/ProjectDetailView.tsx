@@ -179,7 +179,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
       <section className="relative h-screen w-full overflow-hidden">
         <div className="absolute inset-0 z-0">
           {project?.coverImage ? (
-            <Image 
+            <Image priority={true}
               src={getHighQualityUrl(project.coverImage)} 
               // ✅ SEO OPTIMIZED ALT
               alt={getSeoAlt("High Rise Exterior View & Elevation")}
@@ -292,7 +292,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
               <div>
                 <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-200 shadow-2xl relative">
                   {project?.coverImage ? (
-                    <Image 
+                    <Image priority={true}
                         src={getHighQualityUrl(project.coverImage)} 
                         // ✅ SEO OPTIMIZED ALT
                         alt={getSeoAlt("High End Apartment Facade")}
@@ -374,7 +374,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                             onClick={() => setSelectedFloorPlan(getHighQualityUrl(p.url))}
                         >
                             <div className="relative w-full h-full">
-                                <Image 
+                                <Image priority={true}
                                     src={getHighQualityUrl(p.url)} 
                                     // ✅ SEO OPTIMIZED ALT
                                     alt={p.alt || getSeoAlt(`Floor Plan Layout - ${i + 1} BHK`)}
@@ -451,7 +451,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                   <div ref={verticalThumbsRef} className="space-y-3 max-h-[520px] overflow-y-auto scrollbar-hide">
                     {gallery.map((img: any, i: number) => (
                       <button key={i} onClick={() => { handleInteractionStart(); goTo(i); handleInteractionEnd(); }} className={`relative w-full h-20 rounded-md overflow-hidden border-2 ${galleryIndex === i ? "border-[#FFC40C]" : "border-transparent"} transition-all`}>
-                        <Image 
+                        <Image priority={true}
                             src={getHighQualityUrl(img.url)} 
                             // ✅ SEO OPTIMIZED ALT
                             alt={getSeoAlt(`Thumbnail Photo ${i + 1}`)}
@@ -465,7 +465,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                 </div>
                 <div className="flex-1 relative">
                   <div className="rounded-lg overflow-hidden bg-gray-800 relative w-full h-[220px] sm:h-[300px] md:h-[420px] lg:h-[520px]" onMouseEnter={handleInteractionStart} onMouseLeave={handleInteractionEnd}>
-                    <Image 
+                    <Image priority={true}
                         src={getHighQualityUrl(gallery[galleryIndex].url)} 
                         // ✅ SEO OPTIMIZED ALT
                         alt={getSeoAlt(`Sample Flat Photo ${galleryIndex + 1} - Interior & Amenities`)}
@@ -485,7 +485,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
                     <div ref={thumbsRowRef} className="flex gap-3 overflow-x-auto momentum-scroll scrollbar-hide pb-2 px-1">
                       {gallery.map((img: any, i: number) => (
                         <button key={`mthumb-${i}`} onClick={() => goTo(i)} className={`relative flex-shrink-0 w-24 h-16 rounded-md overflow-hidden border-2 ${galleryIndex === i ? "border-[#FFC40C]" : "border-transparent"}`}>
-                          <Image 
+                          <Image priority={true}
                             src={getHighQualityUrl(img.url)} 
                             // ✅ SEO OPTIMIZED ALT
                             alt={getSeoAlt(`Mobile Thumbnail ${i + 1}`)} 
@@ -505,7 +505,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4" onClick={closeLightbox}>
                <button onClick={closeLightbox} className="absolute top-6 right-6 text-white p-2 bg-black/40 rounded-full z-50">✕</button>
                <div className="relative w-full h-full max-w-[95vw] max-h-[90vh]">
-                   <Image 
+                   <Image priority={true}
                        src={getHighQualityUrl(gallery[lightboxIndex].url)} 
                        // ✅ SEO OPTIMIZED ALT
                        alt={getSeoAlt(`Full Screen View ${lightboxIndex + 1}`)}
@@ -535,7 +535,7 @@ export default function ProjectDetailView({ project, similarProjects }: any) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" onClick={() => setSelectedFloorPlan(null)}>
             <button onClick={() => setSelectedFloorPlan(null)} className="absolute top-6 right-6 text-white p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors z-50">✕</button>
             <div className="relative w-full h-full max-w-[95vw] max-h-[90vh]">
-                <Image 
+                <Image priority={true}
                     src={selectedFloorPlan} 
                     // ✅ SEO OPTIMIZED ALT
                     alt={getSeoAlt("Floor Plan Blueprint High Resolution")}
