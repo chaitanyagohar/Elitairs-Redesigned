@@ -37,11 +37,6 @@ const testimonials = [
     author: "Sanjay Gupta",
     role: "Retail Chain Owner",
   },
-  {
-    text: "Trustworthy and data-driven. I rely on their quarterly reports for all my investment moves.",
-    author: "Kevin Pietersen",
-    role: "Global Investor",
-  },
 ];
 
 export default function TestimonialSection() {

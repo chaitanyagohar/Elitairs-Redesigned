@@ -10,8 +10,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       slug: true,
       id: true,
       updatedAt: true,
-      title: true,      // ✅ Required for Image SEO
-      coverImage: true, // ✅ Required for Image SEO
+      title: true,      
+      coverImage: true, 
     },
   })
 
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     };
 
-    // ✅ Add Image Sitemap Extension (This triggers Google Image Indexing)
+    // Add Image Sitemap Extension (This triggers Google Image Indexing)
     if (project.coverImage) {
       entry.images = [
         {
