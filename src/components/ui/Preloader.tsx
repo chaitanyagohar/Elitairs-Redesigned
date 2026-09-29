@@ -114,7 +114,7 @@ export default function Preloader() {
                   alt="Elitairs Logo" 
                   fill 
                   className="object-contain"
-                  sizes="(max-width: 768px) 100px, 200px" // Tells browser: "It's small, don't download the huge version
+                  sizes="(max-width: 768px) 100px, 200px" 
                 />
               </motion.div>
             </div>

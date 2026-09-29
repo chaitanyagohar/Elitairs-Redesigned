@@ -61,9 +61,9 @@ export default function Footer() {
                 </svg>
               </a>
 
-              {/* Facebook - Added Here */}
+              {/* Facebook */}
               <a
-                href="https://www.facebook.com/profile.php?id=61578775435127&rdid=CVxbWsEceTUjVTdx&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CDKR3yMp1%2F#" // Replace with your actual Facebook URL
+                href="https://www.facebook.com/profile.php?id=61578775435127&rdid=CVxbWsEceTUjVTdx&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1CDKR3yMp1%2F#" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-white/5 backdrop-blur border border-white/10 flex items-center justify-center transition-all hover:scale-105"
@@ -195,15 +195,32 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* BOTTOM BAR */}
+        {/* BOTTOM BAR WITH SEO BACKLINK */}
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-gray-500 uppercase tracking-widest text-center md:text-left">
-          <p>&copy; {currentYear} Elitairs. All Rights Reserved.</p>
+          
+          <div className="flex flex-col gap-1.5 items-center md:items-start">
+            <p>&copy; {currentYear} Elitairs. All Rights Reserved.</p>
+            {/* ODDLAMBDA BACKLINK */}
+            <p className="normal-case tracking-normal text-[11px]">
+              Designed & Developed by{" "}
+              <a 
+                href="https://oddlambda.com" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-gray-400 font-semibold hover:text-[#FFC40C] transition-colors"
+              >
+                Oddlambda
+              </a>
+            </p>
+          </div>
+
           <div className="flex flex-wrap justify-center md:justify-end gap-4">
             <Link href="/privacy-policy" className="hover:text-[#FFC40C]">Privacy Policy</Link>
             <Link href="/disclaimer" className="hover:text-[#FFC40C]">Disclaimer</Link>
             <Link href="/terms-conditions" className="hover:text-[#FFC40C]">Terms & Conditions</Link>
             <span className="hover:text-white cursor-pointer">RERA Compliant</span>
           </div>
+
         </div>
       </div>
     </footer>
